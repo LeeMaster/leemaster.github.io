@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Compiler Theory,Algorithms," />
 
 
 
@@ -79,17 +79,20 @@
 
 
 
-<meta name="description" content="LeeMaster&apos;s Blog">
-<meta name="keywords" content="LeeMaster">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LeeMaster&#39;s Blog">
-<meta property="og:url" content="http://leemaster.cn/index.html">
+<meta name="description" content="Compiler PrincipleIn the recentl days,I was learning the JVM and how to use Golang implement a JVM for simple use , but also learning the unix kernel the process will run in ELF which is a file format">
+<meta name="keywords" content="Compiler Theory,Algorithms">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Compiler Theory -  NFA and DFA">
+<meta property="og:url" content="http://leemaster.cn/2018/05/16/Compiler-Theory-NFA-and-DFA/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="LeeMaster&apos;s Blog">
+<meta property="og:description" content="Compiler PrincipleIn the recentl days,I was learning the JVM and how to use Golang implement a JVM for simple use , but also learning the unix kernel the process will run in ELF which is a file format">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/0079qc5ply1fre6u3cjx1j30n20aut8o.jpg">
+<meta property="og:updated_time" content="2018-05-17T03:44:45.458Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeeMaster&#39;s Blog">
-<meta name="twitter:description" content="LeeMaster&apos;s Blog">
+<meta name="twitter:title" content="Compiler Theory -  NFA and DFA">
+<meta name="twitter:description" content="Compiler PrincipleIn the recentl days,I was learning the JVM and how to use Golang implement a JVM for simple use , but also learning the unix kernel the process will run in ELF which is a file format">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/0079qc5ply1fre6u3cjx1j30n20aut8o.jpg">
 
 
 
@@ -119,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://leemaster.cn/"/>
+  <link rel="canonical" href="http://leemaster.cn/2018/05/16/Compiler-Theory-NFA-and-DFA/"/>
 
 
 
 
 
-  <title>LeeMaster's Blog</title>
+  <title>Compiler Theory -  NFA and DFA | LeeMaster's Blog</title>
   
 
 
@@ -144,8 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,9 +250,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -280,9 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/16/Compiler-Theory-NFA-and-DFA/" itemprop="url">Compiler Theory -  NFA and DFA</a></h1>
+          <h1 class="post-title" itemprop="name headline">Compiler Theory -  NFA and DFA</h1>
         
 
         <div class="post-meta">
@@ -354,19 +354,13 @@
       
 
       
-        
-          <h1 id="Compiler-Principle"><a href="#Compiler-Principle" class="headerlink" title="Compiler Principle"></a>Compiler Principle</h1><p>In the recentl days,I was learning the JVM and how to use Golang implement a JVM for simple use , but also learning the unix kernel the process will run in ELF which is a file format of the execute file.</p>
+        <h1 id="Compiler-Principle"><a href="#Compiler-Principle" class="headerlink" title="Compiler Principle"></a>Compiler Principle</h1><p>In the recentl days,I was learning the JVM and how to use Golang implement a JVM for simple use , but also learning the unix kernel the process will run in ELF which is a file format of the execute file.</p>
 <p>So I buied the <strong><em>Moden Compiler implemention</em></strong> book to learn the compiler theroy in action</p>
 <p>As we know that not only the progrmming language need a grammer but also the common language that be used in the daily life for our commuication such as English Chinese or more.</p>
 <p>But how to describe a language in a logical method is a very problem for me to know,and the compiler need what wo implement itself and how the GNU gcc work , It’s a realy intresting thing in the way learning CS in my school life.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/16/Compiler-Theory-NFA-and-DFA/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+<a id="more"></a>
+<h2 id="Project-management"><a href="#Project-management" class="headerlink" title="Project management"></a>Project management</h2><p><img src="http://ww1.sinaimg.cn/large/0079qc5ply1fre6u3cjx1j30n20aut8o.jpg" alt="From Re to NFA"></p>
+<h2 id="Language-Structure"><a href="#Language-Structure" class="headerlink" title="Language Structure"></a>Language Structure</h2><h1 id="Regular-Expression"><a href="#Regular-Expression" class="headerlink" title="Regular Expression"></a>Regular Expression</h1><h2 id="NFA-and-DFA-Start"><a href="#NFA-and-DFA-Start" class="headerlink" title="NFA and DFA Start"></a>NFA and DFA Start</h2><h2 id="RegExp-To-NFA"><a href="#RegExp-To-NFA" class="headerlink" title="RegExp To NFA"></a>RegExp To NFA</h2><h2 id="NFA-TO-DFA"><a href="#NFA-TO-DFA" class="headerlink" title="NFA TO DFA"></a>NFA TO DFA</h2><h2 id="Lex-Usage"><a href="#Lex-Usage" class="headerlink" title="Lex Usage"></a>Lex Usage</h2>
       
     </div>
     
@@ -381,161 +375,38 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/05/15/Algorithms-Design-Recursion-and-Divide-conquer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LeeMaster">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LeeMaster's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/15/Algorithms-Design-Recursion-and-Divide-conquer/" itemprop="url">Algorithms Design Recursion and Divide conquer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-15T09:04:37Z">
-                2018-05-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Algorithms/" itemprop="url" rel="index">
-                    <span itemprop="name">Algorithms</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/Compiler-Theory/" rel="tag"># Compiler Theory</a>
           
-
+            <a href="/tags/Algorithms/" rel="tag"># Algorithms</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <h1 id="Description-of-Recursion-and-Divide"><a href="#Description-of-Recursion-and-Divide" class="headerlink" title="Description of Recursion and Divide"></a>Description of Recursion and Divide</h1><p>Maybe in every CS student will learn the problem of Hanoi tower as the first step to learn the <strong>Recursion</strong>  and <strong>Divide</strong></p>
-<p>But this problem is seem difficult and abstract in our brain . So in a easy I will summarize the common characters in our actural life</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/15/Algorithms-Design-Recursion-and-Divide-conquer/#more" rel="contents">
-              Read more &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/15/Algorithms-Design-Recursion-and-Divide-conquer/" rel="next" title="Algorithms Design Recursion and Divide conquer">
+                <i class="fa fa-chevron-left"></i> Algorithms Design Recursion and Divide conquer
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -545,10 +416,11 @@
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -556,6 +428,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -576,8 +452,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -637,6 +522,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Compiler-Principle"><span class="nav-number">1.</span> <span class="nav-text">Compiler Principle</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Project-management"><span class="nav-number">1.1.</span> <span class="nav-text">Project management</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Language-Structure"><span class="nav-number">1.2.</span> <span class="nav-text">Language Structure</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Regular-Expression"><span class="nav-number">2.</span> <span class="nav-text">Regular Expression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NFA-and-DFA-Start"><span class="nav-number">2.1.</span> <span class="nav-text">NFA and DFA Start</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RegExp-To-NFA"><span class="nav-number">2.2.</span> <span class="nav-text">RegExp To NFA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NFA-TO-DFA"><span class="nav-number">2.3.</span> <span class="nav-text">NFA TO DFA</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lex-Usage"><span class="nav-number">2.4.</span> <span class="nav-text">Lex Usage</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -770,6 +671,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
