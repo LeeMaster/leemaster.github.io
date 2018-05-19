@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Go,tutorial," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Why use GoBefore I was a Java developer in application of web , sometimes had tried Scala and kotlin but not like them as Go . Recent day I had join the Meituan-Dianping cloud computing department , a">
+<meta name="keywords" content="Go,tutorial">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go Tutorial - programming in senquence">
+<meta property="og:url" content="http://leemaster.cn/2018/05/19/Go-Tutorial-programming-in-senquence/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="Why use GoBefore I was a Java developer in application of web , sometimes had tried Scala and kotlin but not like them as Go . Recent day I had join the Meituan-Dianping cloud computing department , a">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-05-19T10:51:14.590Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go Tutorial - programming in senquence">
+<meta name="twitter:description" content="Why use GoBefore I was a Java developer in application of web , sometimes had tried Scala and kotlin but not like them as Go . Recent day I had join the Meituan-Dianping cloud computing department , a">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2018/05/19/Go-Tutorial-programming-in-senquence/"/>
+
+
+
+
+
+  <title>Go Tutorial - programming in senquence | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/05/19/Go-Tutorial-programming-in-senquence/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Go Tutorial - programming in senquence</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-19T10:40:45Z">
+                2018-05-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Go-Tutorial/" itemprop="url" rel="index">
+                    <span itemprop="name">Go Tutorial</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Why-use-Go"><a href="#Why-use-Go" class="headerlink" title="Why use Go"></a>Why use Go</h1><p>Before I was a Java developer in application of web , sometimes had tried Scala and kotlin but not like them as Go .</p>
+<p>Recent day I had join the <strong>Meituan-Dianping</strong> cloud computing department , and in the next time I will do something intresting in System Programming , so will use more C and Golang may be will use some Rust to complete the development in my works.</p>
+<a id="more"></a>
+<h2 id="Annoying-Garbage-Collection"><a href="#Annoying-Garbage-Collection" class="headerlink" title="Annoying Garbage Collection"></a>Annoying Garbage Collection</h2><p>Before I was working with C/C++ in my student life at HEBNU , what the fuck when I use the malloc or free and also in new delete , more and more in the programming forget the free the memory then will let the program run out .</p>
+<h2 id="Concurrency-difficult-in-Java"><a href="#Concurrency-difficult-in-Java" class="headerlink" title="Concurrency difficult in Java"></a>Concurrency difficult in Java</h2><p>Although the Java concurrency model is really useful in enterprise development in some action ,the package java.util.concurrency is not easy for developer to catch the key in design the system .</p>
+<p>Not only the above , but also this , the java.util.nio epoll bug is not fix up as soon, but use the cpp boost and ACE frame is not easy to do some thing effective and then I want choose a program language not only contain the base abstraction but also own the effective ability in concurrency and socket programming .</p>
+<p>let’s Go !!!!! </p>
+<h1 id="Go-base-process"><a href="#Go-base-process" class="headerlink" title="Go base process"></a>Go base process</h1><h2 id="Base-Grammer"><a href="#Base-Grammer" class="headerlink" title="Base Grammer"></a>Base Grammer</h2><ul>
+<li>package </li>
+</ul>
+<p>the go pragram will in time run in the main package and the package is the base to manage the library like python and java</p>
+<ul>
+<li>import </li>
+</ul>
+<p>use this keyword will let us to use more effictive library from other developers </p>
+<ul>
+<li>func </li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    fmt.Printf(<span class="string">"Hello word"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>like this statement will use the function in action and there are more details in the next chapter </p>
+<ul>
+<li>standar library </li>
+</ul>
+<p>Go standar library is very good in practice and I will introduce them in the next articles</p>
+<h2 id="Compile-Enviroment"><a href="#Compile-Enviroment" class="headerlink" title="Compile Enviroment"></a>Compile Enviroment</h2><ul>
+<li>go run ***.go</li>
+</ul>
+<p>use this run command will tell the go to compile and link and then run the go program</p>
+<h2 id="Variable-and-Constant"><a href="#Variable-and-Constant" class="headerlink" title="Variable and Constant"></a>Variable and Constant</h2><h3 id="Variable"><a href="#Variable" class="headerlink" title="Variable"></a>Variable</h3><p>In every lanaguage the most important thing is define the variable in use , not only the static but the automatic variable and then will use in many way to sign the variable and other.</p>
+<p>Here are some Demo</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> intVal <span class="keyword">int</span></span><br><span class="line"><span class="keyword">var</span> strVal <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> arrVal1 [<span class="number">10</span>]<span class="keyword">int</span></span><br><span class="line"><span class="keyword">var</span> arrVal2 [<span class="number">10</span>]<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> arrSlice []<span class="keyword">int</span> </span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> maoVal <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> funcVal <span class="function"><span class="keyword">func</span><span class="params">(par <span class="keyword">int</span>)</span> <span class="title">int</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">var</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">    defVal1 <span class="keyword">int</span> </span></span></span><br><span class="line"><span class="function"><span class="params">    defVal2 <span class="keyword">int</span> </span></span></span><br><span class="line"><span class="function"><span class="params">)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">inferVal1</span> := 10</span></span><br><span class="line"><span class="function"><span class="title">inferVal2</span> := "<span class="title">string</span>"</span></span><br></pre></td></tr></table></figure>
+<p>This above code display a base method to define the variable in action .</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getName</span><span class="params">()</span> <span class="params">(firstName,midName,lastName <span class="keyword">string</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">"leemaster"</span>,<span class="string">"lee"</span>,<span class="string">"XiaoYu"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_,_,lastName = getName()</span><br><span class="line"></span><br><span class="line">fmt.Printf(lastName)</span><br></pre></td></tr></table></figure>
+<p>anonymity variable like above and then will use <strong>_</strong> to receive then will let the last to get the variable we really need</p>
+<p>And then we want know the base variable type such as <strong>int、uint、int32、 int64、float32、float64、complex64、complex128</strong></p>
+<h3 id="Constant"><a href="#Constant" class="headerlink" title="Constant"></a>Constant</h3><p>Constant may be same as the constant in java or other program language</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Pi <span class="keyword">float64</span> = <span class="number">3.1415926</span></span><br></pre></td></tr></table></figure>
+<p>It’s easy to use the constant in programming and we can’t use the infer in go to get the dynamic type for the constant . like thie below </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> PI := <span class="number">3.1415926</span></span><br></pre></td></tr></table></figure>
+<p>And Go had set some defined constants such as <strong>true false iota</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    c0 = <span class="literal">iota</span></span><br><span class="line">    c1 = <span class="literal">iota</span> </span><br><span class="line">    c2 = <span class="literal">iota</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    c0 = <span class="literal">iota</span></span><br><span class="line">    c1 </span><br><span class="line">    c2</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>When the compiler find one time iota raised then will let the iota value to be added one and then set the value to the left value(which is the address used to be modified in C defined)</p>
+<p>So use the <strong>const</strong> keyword may can be used in the in enumeration to define some constant will be used in the next program </p>
+<pre><code class="GO"><span class="keyword">const</span> (
+    Sunday = <span class="literal">iota</span>
+    Monday
+    Tuesday
+    Wednesday
+    Thursday
+    Friday
+    Saturday
+    numberOfDay  <span class="comment">// this constant can't be use in the other packages </span>
+)
+</code></pre>
+<p>No enum keyword and then also can define the enumeration and then use in the package or other package , because the First capital character word can be expose to other packages.</p>
+<h2 id="Type-System"><a href="#Type-System" class="headerlink" title="Type System"></a>Type System</h2><p>Type in Go is real useful , be more easier to use in action .</p>
+<h2 id="Control-Flow"><a href="#Control-Flow" class="headerlink" title="Control Flow"></a>Control Flow</h2><h2 id="Function-Usage"><a href="#Function-Usage" class="headerlink" title="Function Usage"></a>Function Usage</h2><h1 id="Project-Management"><a href="#Project-Management" class="headerlink" title="Project Management"></a>Project Management</h1><h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><h2 id="GO-cli"><a href="#GO-cli" class="headerlink" title="GO cli"></a>GO cli</h2>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Go/" rel="tag"># Go</a>
+          
+            <a href="/tags/tutorial/" rel="tag"># tutorial</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/16/Compiler-Theory-NFA-and-DFA/" rel="next" title="Compiler Theory -  NFA and DFA">
+                <i class="fa fa-chevron-left"></i> Compiler Theory -  NFA and DFA
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Why-use-Go"><span class="nav-number">1.</span> <span class="nav-text">Why use Go</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Annoying-Garbage-Collection"><span class="nav-number">1.1.</span> <span class="nav-text">Annoying Garbage Collection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Concurrency-difficult-in-Java"><span class="nav-number">1.2.</span> <span class="nav-text">Concurrency difficult in Java</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go-base-process"><span class="nav-number">2.</span> <span class="nav-text">Go base process</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Base-Grammer"><span class="nav-number">2.1.</span> <span class="nav-text">Base Grammer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Compile-Enviroment"><span class="nav-number">2.2.</span> <span class="nav-text">Compile Enviroment</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Variable-and-Constant"><span class="nav-number">2.3.</span> <span class="nav-text">Variable and Constant</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Variable"><span class="nav-number">2.3.1.</span> <span class="nav-text">Variable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Constant"><span class="nav-number">2.3.2.</span> <span class="nav-text">Constant</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type-System"><span class="nav-number">2.4.</span> <span class="nav-text">Type System</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Control-Flow"><span class="nav-number">2.5.</span> <span class="nav-text">Control Flow</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Function-Usage"><span class="nav-number">2.6.</span> <span class="nav-text">Function Usage</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Project-Management"><span class="nav-number">3.</span> <span class="nav-text">Project Management</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GOPATH"><span class="nav-number">3.1.</span> <span class="nav-text">GOPATH</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GO-cli"><span class="nav-number">3.2.</span> <span class="nav-text">GO cli</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

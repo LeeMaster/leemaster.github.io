@@ -88,7 +88,7 @@
 <meta property="og:description" content="Compiler PrincipleIn the recent days,I was learning the JVM and how to use Golang implement a JVM for simple use , but also learning the unix kernel the process will run in ELF which is a file format">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/0079qc5ply1fre6u3cjx1j30n20aut8o.jpg">
-<meta property="og:updated_time" content="2018-05-18T08:18:54.271Z">
+<meta property="og:updated_time" content="2018-05-19T02:37:53.560Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Compiler Theory -  NFA and DFA">
 <meta name="twitter:description" content="Compiler PrincipleIn the recent days,I was learning the JVM and how to use Golang implement a JVM for simple use , but also learning the unix kernel the process will run in ELF which is a file format">
@@ -395,6 +395,9 @@
 <h2 id="FA-Demo"><a href="#FA-Demo" class="headerlink" title="FA Demo"></a>FA Demo</h2><p>For next chapter I will use a simple example text match algorithm method to describe the FA</p>
 <p>We need know some concepts , character table that will contain the all characters will be used in erery term contains </p>
 <p>And which is the soul of the <strong>matching</strong> I think is that we want find a state a P(use to find) T(use to be finded), which P prefix is the T suffix , when the prefix equal suffix then we belive that the P is contain in the T and the length decide more condition.</p>
+<p>Different or same as the KMP the FA will do in the O(n) time complex to solve the problem.</p>
+<p>Now we define the set is {a,b,c} and all the P and T will construct in these characters so let we write a program to do this thing.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> int bool</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> char * string</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> 0 false</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> 1 true</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> _<span class="title">state_</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> size ;</span><br><span class="line">    <span class="keyword">int</span> * trans;</span><br><span class="line">&#125; * state;</span><br><span class="line"></span><br><span class="line"><span class="function">state * <span class="title">get_state_arr</span><span class="params">(<span class="built_in">string</span> p,<span class="keyword">char</span> * tab)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">do_match</span><span class="params">(<span class="built_in">string</span> p,<span class="built_in">string</span> t,<span class="keyword">char</span> * tab)</span></span>;</span><br></pre></td></tr></table></figure>
 <p><img src="http://ww1.sinaimg.cn/large/0079qc5ply1fre6u3cjx1j30n20aut8o.jpg" alt="From Re to NFA"></p>
 <h2 id="NFA-and-DFA-Start"><a href="#NFA-and-DFA-Start" class="headerlink" title="NFA and DFA Start"></a>NFA and DFA Start</h2><h2 id="RegExp-To-NFA"><a href="#RegExp-To-NFA" class="headerlink" title="RegExp To NFA"></a>RegExp To NFA</h2><h2 id="NFA-TO-DFA"><a href="#NFA-TO-DFA" class="headerlink" title="NFA TO DFA"></a>NFA TO DFA</h2><h2 id="Lex-Usage"><a href="#Lex-Usage" class="headerlink" title="Lex Usage"></a>Lex Usage</h2>
       
@@ -437,6 +440,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/19/Go-Tutorial-programming-in-senquence/" rel="prev" title="Go Tutorial - programming in senquence">
+                Go Tutorial - programming in senquence <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -513,7 +520,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -524,7 +531,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -535,7 +542,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
