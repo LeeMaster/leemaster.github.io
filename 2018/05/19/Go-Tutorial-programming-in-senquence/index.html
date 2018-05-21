@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
 <meta property="og:description" content="Why use GoBefore I was a Java developer in application of web , sometimes had tried Scala and kotlin but not like them as Go . Recent day I had join the Meituan-Dianping cloud computing department , a">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-05-20T06:10:33.400Z">
+<meta property="og:updated_time" content="2018-05-21T04:23:58.166Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Go Tutorial - programming in senquence">
 <meta name="twitter:description" content="Why use GoBefore I was a Java developer in application of web , sometimes had tried Scala and kotlin but not like them as Go . Recent day I had join the Meituan-Dianping cloud computing department , a">
@@ -469,6 +469,10 @@
 <p>after the file open then we need to close the hanlder of this file so we need defer to close the handler </p>
 <h3 id="panic-and-recover"><a href="#panic-and-recover" class="headerlink" title="panic and recover"></a>panic and recover</h3><p><strong>panic</strong> is not same as the <strong>os.Exit()</strong> panic will print the wrong string and then jump to the defer register handlers and use the LIFO order to handle . panic confirm that the same goruntinue defer will trigger in the LIFO order , but don’t do in the other goruntinue.</p>
 <p>The panic will stop the process in one goruntinue and then will call the defer handler , the defer must register a function and then will get the error type and then chose the handler function which we defined in the same file.</p>
+<p>When a type or struct inner function implements the interface function then we say the type is satisfies the interface that is differnet from the Java or other .</p>
+<p>There are some examples :</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">deferFunc</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> err := <span class="built_in">recover</span>();err != <span class="literal">nil</span>&#123;</span><br><span class="line">            fmt.Println(err)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;()</span><br><span class="line">    <span class="built_in">panic</span>(<span class="string">"Panic start"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    deferFunc()</span><br><span class="line">    fmt.Println(<span class="string">"Next Trick"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>as this code the panic will use and in the main process the panic will throw the exception and then will let the wrong or error to the defer and then will do the same in the next trick</p>
 <h1 id="Project-Management"><a href="#Project-Management" class="headerlink" title="Project Management"></a>Project Management</h1><h2 id="Project-Structure"><a href="#Project-Structure" class="headerlink" title="Project Structure"></a>Project Structure</h2><h2 id="Project-Unit-Test"><a href="#Project-Unit-Test" class="headerlink" title="Project Unit Test"></a>Project Unit Test</h2><h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><h2 id="GO-Cli"><a href="#GO-Cli" class="headerlink" title="GO Cli"></a>GO Cli</h2>
       
     </div>
@@ -510,6 +514,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/22/Virtual-Box-multi-network-card-configuration/" rel="prev" title="Virtual Box multi-network card configuration">
+                Virtual Box multi-network card configuration <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -586,7 +594,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -597,7 +605,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -608,7 +616,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>

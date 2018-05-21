@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Experiment,Configuration," />
 
 
 
@@ -79,17 +79,25 @@
 
 
 
-<meta name="description" content="LeeMaster&apos;s Blog">
-<meta name="keywords" content="LeeMaster">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LeeMaster&#39;s Blog">
-<meta property="og:url" content="http://leemaster.cn/index.html">
+<meta name="description" content="Setup Virtual MachineI use the virtual box to contribute the enviroment to do some experiment for distribute system like do some hadoop and spark , rabbitmq redis cluster … Set the network bridgeThe a">
+<meta name="keywords" content="Experiment,Configuration">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Virtual Box multi-network card configuration">
+<meta property="og:url" content="http://leemaster.cn/2018/05/22/Virtual-Box-multi-network-card-configuration/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="LeeMaster&apos;s Blog">
+<meta property="og:description" content="Setup Virtual MachineI use the virtual box to contribute the enviroment to do some experiment for distribute system like do some hadoop and spark , rabbitmq redis cluster … Set the network bridgeThe a">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4df0jj6j30uk0kitb7.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4ghmmvij31680vudsg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4fyzgz4j311c0r2gpe.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4i8plw5j30o00ff0wh.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4nviphpj30o10fgju2.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4qet39ej30o10bytgu.jpg">
+<meta property="og:updated_time" content="2018-05-21T10:20:19.666Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeeMaster&#39;s Blog">
-<meta name="twitter:description" content="LeeMaster&apos;s Blog">
+<meta name="twitter:title" content="Virtual Box multi-network card configuration">
+<meta name="twitter:description" content="Setup Virtual MachineI use the virtual box to contribute the enviroment to do some experiment for distribute system like do some hadoop and spark , rabbitmq redis cluster … Set the network bridgeThe a">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4df0jj6j30uk0kitb7.jpg">
 
 
 
@@ -119,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://leemaster.cn/"/>
+  <link rel="canonical" href="http://leemaster.cn/2018/05/22/Virtual-Box-multi-network-card-configuration/"/>
 
 
 
 
 
-  <title>LeeMaster's Blog</title>
+  <title>Virtual Box multi-network card configuration | LeeMaster's Blog</title>
   
 
 
@@ -144,8 +152,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,9 +255,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -280,9 +287,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/22/Virtual-Box-multi-network-card-configuration/" itemprop="url">Virtual Box multi-network card configuration</a></h1>
+          <h1 class="post-title" itemprop="name headline">Virtual Box multi-network card configuration</h1>
         
 
         <div class="post-meta">
@@ -354,9 +359,7 @@
       
 
       
-        
-          
-            <h1 id="Setup-Virtual-Machine"><a href="#Setup-Virtual-Machine" class="headerlink" title="Setup Virtual Machine"></a>Setup Virtual Machine</h1><p>I use the virtual box to contribute the enviroment to do some experiment for distribute system like do some hadoop and spark , rabbitmq redis cluster …</p>
+        <h1 id="Setup-Virtual-Machine"><a href="#Setup-Virtual-Machine" class="headerlink" title="Setup Virtual Machine"></a>Setup Virtual Machine</h1><p>I use the virtual box to contribute the enviroment to do some experiment for distribute system like do some hadoop and spark , rabbitmq redis cluster …</p>
 <h1 id="Set-the-network-bridge"><a href="#Set-the-network-bridge" class="headerlink" title="Set the network bridge"></a>Set the network bridge</h1><p>The all machine will work in virtual isolation and then will simulatie a phycial machine to use then contribute the many cluster enviroment.</p>
 <p>But the network configuration is an importent thing to do ,we need config a network to do the IPC on network so we need a bridge to handle the all data transform .</p>
 <p>It’s simple to do .</p>
@@ -381,8 +384,6 @@
 <p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4qet39ej30o10bytgu.jpg" alt="STEP THREE"></p>
 <p>And the last thing we just use the command service network start or systmctl start network.service</p>
 
-          
-        
       
     </div>
     
@@ -397,310 +398,38 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/05/19/Go-Tutorial-programming-in-senquence/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LeeMaster">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LeeMaster's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/19/Go-Tutorial-programming-in-senquence/" itemprop="url">Go Tutorial - programming in senquence</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-19T10:40:45Z">
-                2018-05-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Go-Tutorial/" itemprop="url" rel="index">
-                    <span itemprop="name">Go Tutorial</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/Experiment/" rel="tag"># Experiment</a>
           
-
+            <a href="/tags/Configuration/" rel="tag"># Configuration</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          <h1 id="Why-use-Go"><a href="#Why-use-Go" class="headerlink" title="Why use Go"></a>Why use Go</h1><p>Before I was a Java developer in application of web , sometimes had tried Scala and kotlin but not like them as Go .</p>
-<p>Recent day I had join the <strong>Meituan-Dianping</strong> cloud computing department , and in the next time I will do something intresting in System Programming , so will use more C and Golang may be will use some Rust to complete the development in my works.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/19/Go-Tutorial-programming-in-senquence/#more" rel="contents">
-              Read more &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/19/Go-Tutorial-programming-in-senquence/" rel="next" title="Go Tutorial - programming in senquence">
+                <i class="fa fa-chevron-left"></i> Go Tutorial - programming in senquence
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
 
-    
+          <span class="post-nav-divider"></span>
 
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/05/16/Compiler-Theory-NFA-and-DFA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LeeMaster">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LeeMaster's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/16/Compiler-Theory-NFA-and-DFA/" itemprop="url">Compiler Theory -  NFA and DFA</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-16T00:51:38Z">
-                2018-05-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Compiler/" itemprop="url" rel="index">
-                    <span itemprop="name">Compiler</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <h1 id="Compiler-Principle"><a href="#Compiler-Principle" class="headerlink" title="Compiler Principle"></a>Compiler Principle</h1><p>In the recent days,I was learning the JVM and how to use Golang implement a JVM for simple use , but also learning the unix kernel the process will run in ELF which is a file format of the execute file.</p>
-<p>So I buied the <strong><em>Moden Compiler implemention</em></strong> book to learn the compiler theroy in action</p>
-<p>As we know that not only the progrmming language need a grammer but also the common language that be used in the daily life for our commuication such as English Chinese or more.</p>
-<p>But how to describe a language in a logical method is a very problem for me to know,and the compiler need what wo implement itself and how the GNU gcc work , It’s a realy intresting thing in the way learning CS in my school life.</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/16/Compiler-Theory-NFA-and-DFA/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -710,157 +439,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/05/15/Algorithms-Design-Recursion-and-Divide-conquer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="LeeMaster">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="LeeMaster's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/05/15/Algorithms-Design-Recursion-and-Divide-conquer/" itemprop="url">Algorithms Design Recursion and Divide conquer</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-15T09:04:37Z">
-                2018-05-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Algorithms/" itemprop="url" rel="index">
-                    <span itemprop="name">Algorithms</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Description-of-Recursion-and-Divide"><a href="#Description-of-Recursion-and-Divide" class="headerlink" title="Description of Recursion and Divide"></a>Description of Recursion and Divide</h1><p>Maybe in every CS student will learn the problem of Hanoi tower as the first step to learn the <strong>Recursion</strong>  and <strong>Divide</strong></p>
-<p>But this problem is seem difficult and abstract in our brain . So in a easy I will summarize the common characters in our actural life</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/05/15/Algorithms-Design-Recursion-and-Divide-conquer/#more" rel="contents">
-              Read more &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -868,6 +451,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -888,8 +475,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -965,6 +561,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Setup-Virtual-Machine"><span class="nav-number">1.</span> <span class="nav-text">Setup Virtual Machine</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Set-the-network-bridge"><span class="nav-number">2.</span> <span class="nav-text">Set the network bridge</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Set-the-configuration-in-centos"><span class="nav-number">3.</span> <span class="nav-text">Set the configuration in centos</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Virtual-Machine-config-network-card"><span class="nav-number">3.1.</span> <span class="nav-text">Virtual Machine config network card</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#In-CentOS-to-config"><span class="nav-number">3.2.</span> <span class="nav-text">In CentOS to config</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1098,6 +710,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
