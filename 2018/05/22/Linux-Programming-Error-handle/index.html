@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Linux Programming Error">
+<meta name="description" content="C Error handlerNot same as Java like , C don’t have the try-catch block to catch the exception in runtime ,so sometime we should keep the promise that we will input a pointer to point the error variab">
 <meta name="keywords" content="system call">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux Programming Error handle">
 <meta property="og:url" content="http://leemaster.cn/2018/05/22/Linux-Programming-Error-handle/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="Linux Programming Error">
+<meta property="og:description" content="C Error handlerNot same as Java like , C don’t have the try-catch block to catch the exception in runtime ,so sometime we should keep the promise that we will input a pointer to point the error variab">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-05-21T13:51:22.546Z">
+<meta property="og:updated_time" content="2018-05-22T02:40:28.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux Programming Error handle">
-<meta name="twitter:description" content="Linux Programming Error">
+<meta name="twitter:description" content="C Error handlerNot same as Java like , C don’t have the try-catch block to catch the exception in runtime ,so sometime we should keep the promise that we will input a pointer to point the error variab">
 
 
 
@@ -352,7 +352,23 @@
       
 
       
-        <h1 id="Linux-Programming-Error"><a href="#Linux-Programming-Error" class="headerlink" title="Linux Programming Error"></a>Linux Programming Error</h1>
+        <h1 id="C-Error-handler"><a href="#C-Error-handler" class="headerlink" title="C Error handler"></a>C Error handler</h1><p>Not same as Java like , C don’t have the try-catch block to catch the exception in runtime ,so sometime we should keep the promise that we will input a pointer to point the error variables in use .</p>
+<a id="more"></a>
+<p>For example </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_err</span><span class="params">(<span class="keyword">int</span> param,<span class="keyword">int</span> * err)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(param &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        err = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        err = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>This function we define to charge if the param is gratter than the zero , if it’s letter than the zero we throw a exception in the way assign a 0 to err variable pointer.</p>
+<p>In call </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> err = <span class="number">0</span>;</span><br><span class="line">    get_err(<span class="number">-1</span>,&amp;err);</span><br><span class="line">    <span class="keyword">if</span>(err)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"less than zero"</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"gratter than zero"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Use this promise we can define the function to get an exception .</p>
+<h1 id="Linux-Error"><a href="#Linux-Error" class="headerlink" title="Linux Error"></a>Linux Error</h1><p>But somethime we need know the reason of the exception why the error raise intime ,so we need a global variables to save the error reason or code to get more details .</p>
+<p>As we know the global variables can save in the global scope ,so the errno variables can be use in anywhere of the program and we can use the extern keyword to extern and use the variable and then the system call can set the errno to identify the details of an exception.</p>
+<p>But now I don’t find the location where decalre the errno variable and I can do a fearless assumption that when the system create a process then will declare a int errno in the data segment and then we can use the segment by extern keyword to get the reference of this variable to use in our business code .</p>
+<p>And we can use the system call <strong>strerror()</strong> to get more detail information of the error.</p>
+<p>For example </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">extern</span> <span class="keyword">int</span> errno;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> fd ;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>((fd = open(<span class="string">"path"</span>,O_WRONLY)) == <span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d -- %s \n"</span>,errno,strrror(errno));</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"open successfully\n"</span>);</span><br><span class="line">        close(fd);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The errno will be seted in a int type to define the error type , and then use the strerror can get some details in a brefy way.</p>
+<h1 id="In-Practice"><a href="#In-Practice" class="headerlink" title="In Practice"></a>In Practice</h1><p>In system programming we can use this method to get the details of an error , and we can decide which we next to do by the errno type , and then we don’t need keep a promise that we decalre a function in the way we define before .</p>
+
       
     </div>
     
@@ -542,7 +558,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-Programming-Error"><span class="nav-number">1.</span> <span class="nav-text">Linux Programming Error</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#C-Error-handler"><span class="nav-number">1.</span> <span class="nav-text">C Error handler</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-Error"><span class="nav-number">2.</span> <span class="nav-text">Linux Error</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#In-Practice"><span class="nav-number">3.</span> <span class="nav-text">In Practice</span></a></li></ol></div>
             
 
           </div>
