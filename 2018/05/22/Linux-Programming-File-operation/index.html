@@ -88,7 +88,7 @@
 <meta property="og:description" content="Linux Programming File OperationFile this concept in the linux system is very common , and then we can use the file to describe everything in the linux system . The processes will record in a director">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frkz09q41xj31ww1cr0xj.jpg">
-<meta property="og:updated_time" content="2018-05-23T00:47:17.065Z">
+<meta property="og:updated_time" content="2018-05-23T01:05:02.111Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux Programming File operation">
 <meta name="twitter:description" content="Linux Programming File OperationFile this concept in the linux system is very common , and then we can use the file to describe everything in the linux system . The processes will record in a director">
@@ -367,16 +367,21 @@
 <h2 id="Base-I-O"><a href="#Base-I-O" class="headerlink" title="Base I/O"></a>Base I/O</h2><p>Linux/Unix have the same abstraction in file system , so they have already provide some effective and common functions for us to do the base file I/O . We can use these file operation functions to operate any file descriptor , well , the all files are represent by the file descriptor .</p>
 <p>We can use the function to get a file descriptor and read or write ,after the all operation achive to the ending , we just need the close to close the file ,and release the all resorces.</p>
 <ul>
-<li><p>open file </p>
-</li>
-<li><p>read file </p>
-</li>
-<li><p>write file </p>
-</li>
-<li><p>close file  </p>
-</li>
+<li>open file </li>
 </ul>
-<h2 id="fcntl-and-ioctl"><a href="#fcntl-and-ioctl" class="headerlink" title="fcntl and ioctl"></a>fcntl and ioctl</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> fd = open(<span class="string">"path"</span>,<span class="keyword">int</span> flags ,... )</span><br></pre></td></tr></table></figure>
+<p>this system call can open a new file descriptor and use the flags to define the open mode , write only read only and wronly ,and so on .</p>
+<ul>
+<li>read file </li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> buff[<span class="number">1024</span>];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">read</span><span class="params">(fd,buff,<span class="number">1024</span>)</span></span></span><br></pre></td></tr></table></figure>
+<p>this system call can read data into buffer and then return the read counts . If don’t read enough this function can reaturn the count in actual.</p>
+<ul>
+<li>write file</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">write</span><span class="params">(fd,buffer,size)</span></span></span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">It's same as the read but <span class="keyword">this</span> function is write behavior , so we can use the same describtion to describe the write system call .</span><br><span class="line"></span><br><span class="line">* close file  </span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">close(fd)</span><br></pre></td></tr></table></figure>
+<p>close a file descriptor .</p>
+<h2 id="fcntl"><a href="#fcntl" class="headerlink" title="fcntl"></a>fcntl</h2>
       
     </div>
     
@@ -495,7 +500,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -566,7 +571,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-Programming-File-Operation"><span class="nav-number">1.</span> <span class="nav-text">Linux Programming File Operation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-Design-Philosophy"><span class="nav-number">2.</span> <span class="nav-text">Linux Design Philosophy</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#I-O-system"><span class="nav-number">3.</span> <span class="nav-text">I/O system</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Base-I-O"><span class="nav-number">3.1.</span> <span class="nav-text">Base I/O</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fcntl-and-ioctl"><span class="nav-number">3.2.</span> <span class="nav-text">fcntl and ioctl</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-Programming-File-Operation"><span class="nav-number">1.</span> <span class="nav-text">Linux Programming File Operation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Linux-Design-Philosophy"><span class="nav-number">2.</span> <span class="nav-text">Linux Design Philosophy</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#I-O-system"><span class="nav-number">3.</span> <span class="nav-text">I/O system</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Base-I-O"><span class="nav-number">3.1.</span> <span class="nav-text">Base I/O</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fcntl"><span class="nav-number">3.2.</span> <span class="nav-text">fcntl</span></a></li></ol></li></ol></div>
             
 
           </div>
