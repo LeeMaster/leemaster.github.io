@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
 <meta property="og:description" content="What the fuck programming in OCRecent day , my friend ask me to help him create an IOS app to make his electronic shop to be more effective . And then I choose the Objective-C , because I think this l">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-05-25T03:18:25.163Z">
+<meta property="og:updated_time" content="2018-05-26T12:02:40.241Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Objective C Tutorial - I&#39;m dieing">
 <meta name="twitter:description" content="What the fuck programming in OCRecent day , my friend ask me to help him create an IOS app to make his electronic shop to be more effective . And then I choose the Objective-C , because I think this l">
@@ -397,7 +397,8 @@
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SampleClass</span>:<span class="title">NSObject</span>&lt;<span class="title">PrintProtocolDelegate</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)startAction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SampleClass</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)startAction&#123;</span><br><span class="line">    PrintClass *printClass = [[PrintClass alloc]init];</span><br><span class="line">    [printClass setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    [printClass printDetails];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)processCompleted&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Printing Process Completed"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSAutoreleasePool</span> * pool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init];</span><br><span class="line">    SampleClass *sampleClass = [[SampleClass alloc]init];</span><br><span class="line">    [sampleClass startAction];</span><br><span class="line">    [pool drain];</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>The origin class can do some thing base , and then call delegate to do next thing , then we can use this pattern to create some program to do in Ios develop.</p>
-<h2 id="property-synthesize"><a href="#property-synthesize" class="headerlink" title="@property @synthesize"></a>@property @synthesize</h2><h3 id="property-attribute"><a href="#property-attribute" class="headerlink" title="@property attribute"></a>@property attribute</h3><h3 id="Usage-Setter-and-Getter"><a href="#Usage-Setter-and-Getter" class="headerlink" title="Usage Setter and Getter"></a>Usage Setter and Getter</h3><h1 id="Message-delivery"><a href="#Message-delivery" class="headerlink" title="Message delivery"></a>Message delivery</h1><p>Now this character is the more puzzle thing in the all programming in OC , I dont’t know anything in the OOP in the real world , but in a deep thinking then I suddenly understand the method calling function .</p>
+<h2 id="property-synthesize"><a href="#property-synthesize" class="headerlink" title="@property @synthesize"></a>@property @synthesize</h2><h3 id="property-attribute"><a href="#property-attribute" class="headerlink" title="@property attribute"></a>@property attribute</h3><h3 id="Usage-Setter-and-Getter"><a href="#Usage-Setter-and-Getter" class="headerlink" title="Usage Setter and Getter"></a>Usage Setter and Getter</h3><p>Like java  setter/getter rule ,the oc have the same rule to use ,and we can do the same thing </p>
+<h1 id="Message-delivery"><a href="#Message-delivery" class="headerlink" title="Message delivery"></a>Message delivery</h1><p>Now this character is the more puzzle thing in the all programming in OC , I dont’t know anything in the OOP in the real world , but in a deep thinking then I suddenly understand the method calling function .</p>
 <p>For example , we have a mathmatic teacher and a english teacher , we aussume that the mathmatic teacher don’t know how to teach english and the english teacher don’t know how to teach the math , so we can write this code .</p>
 <figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MathTeacher</span> : <span class="title">NSObject</span></span></span><br><span class="line">- (<span class="keyword">void</span>) teachMath;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MathTeacher</span></span></span><br><span class="line">- (<span class="keyword">void</span>) teachMath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">"TEACH MATH"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 <pre><code class="objc"><span class="class"><span class="keyword">@interface</span> <span class="title">EnglishTeacher</span> : <span class="title">NSObject</span></span>
@@ -456,6 +457,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/27/Authority-Control-RBAC-0/" rel="prev" title="Authority Control - RBAC 0">
+                Authority Control - RBAC 0 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -532,7 +537,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -543,7 +548,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -554,7 +559,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
