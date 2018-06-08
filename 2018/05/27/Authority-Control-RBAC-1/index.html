@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="The next model to optimize $RBAC_0$We call the next model $RBAC_1$,">
+<meta name="description" content="The next model to optimize $RBAC_0$We call the next model $RBAC_1$,in this model we can let the roles in our system to inherit from the upward hierarchy , and use this model we can let a system’s role">
 <meta name="keywords" content="RBAC">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Authority Control RBAC 1">
 <meta property="og:url" content="http://leemaster.cn/2018/05/27/Authority-Control-RBAC-1/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="The next model to optimize $RBAC_0$We call the next model $RBAC_1$,">
+<meta property="og:description" content="The next model to optimize $RBAC_0$We call the next model $RBAC_1$,in this model we can let the roles in our system to inherit from the upward hierarchy , and use this model we can let a system’s role">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frp4k2c3bpj31ao0zmaep.jpg">
-<meta property="og:updated_time" content="2018-05-27T14:54:27.762Z">
+<meta property="og:updated_time" content="2018-06-08T08:36:44.566Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Authority Control RBAC 1">
-<meta name="twitter:description" content="The next model to optimize $RBAC_0$We call the next model $RBAC_1$,">
+<meta name="twitter:description" content="The next model to optimize $RBAC_0$We call the next model $RBAC_1$,in this model we can let the roles in our system to inherit from the upward hierarchy , and use this model we can let a system’s role">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frp4k2c3bpj31ao0zmaep.jpg">
 
 
@@ -354,8 +354,18 @@
       
 
       
-        <h1 id="The-next-model-to-optimize-RBAC-0"><a href="#The-next-model-to-optimize-RBAC-0" class="headerlink" title="The next model to optimize $RBAC_0$"></a>The next model to optimize $RBAC_0$</h1><p>We call the next model $RBAC_1$,</p>
+        <h1 id="The-next-model-to-optimize-RBAC-0"><a href="#The-next-model-to-optimize-RBAC-0" class="headerlink" title="The next model to optimize $RBAC_0$"></a>The next model to optimize $RBAC_0$</h1><p>We call the next model $RBAC_1$,in this model we can let the roles in our system to inherit from the upward hierarchy , and use this model we can let a system’s role to be orginazed in a hierarchy method and then we can design the base role with the base permission in the lowest hierarchy and the super manager in the high hierarchy.</p>
+<p>And a role can have more than one permission and then we can use the tree model to describe the model in the all system starting and then , we can also use the same method to do so ,with redis or other cache tools. In the algorithms we use the base DFS to find a role which will be assigned a identifier in the system application.</p>
+<a id="more"></a> 
+<h1 id="Components"><a href="#Components" class="headerlink" title="Components"></a>Components</h1><h2 id="Mathmatic-model"><a href="#Mathmatic-model" class="headerlink" title="Mathmatic model"></a>Mathmatic model</h2><ul>
+<li><p>$U S P S PA UA$ and $user$ are unchange from the $RBAC_0$</p>
+</li>
+<li><p>$RH \in R \times R$ is a partial order in $R$ called the hierarchy or role dominance relation also writern in &gt;= in nifix notion</p>
+</li>
+<li></li>
+</ul>
 <p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1frp4k2c3bpj31ao0zmaep.jpg" alt="RBAC1 DEMO"></p>
+<p>We can use the Graph to construct the model in action , when the system starting , the all informations can be readed from the database and then trismit to the cache system , we can in memeory to contribute the all model and all their releartionships about the line in a graph .</p>
 
       
     </div>
@@ -395,6 +405,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/01/GO-Tutorial-programming-OOP/" rel="prev" title="GO Tutorial programming OOP">
+                GO Tutorial programming OOP <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -471,7 +485,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -542,7 +556,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#The-next-model-to-optimize-RBAC-0"><span class="nav-number">1.</span> <span class="nav-text">The next model to optimize $RBAC_0$</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#The-next-model-to-optimize-RBAC-0"><span class="nav-number">1.</span> <span class="nav-text">The next model to optimize $RBAC_0$</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Components"><span class="nav-number">2.</span> <span class="nav-text">Components</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mathmatic-model"><span class="nav-number">2.1.</span> <span class="nav-text">Mathmatic model</span></a></li></ol></li></ol></div>
             
 
           </div>
