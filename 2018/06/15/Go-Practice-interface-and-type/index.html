@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Go," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Go InterfaceIn many language to communicate to the computer , we have the interface structure to construct the rule between the people and the computer data structure . What is the interface ? In some">
+<meta name="keywords" content="Go">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go-Practice-interface and type">
+<meta property="og:url" content="http://leemaster.cn/2018/06/15/Go-Practice-interface-and-type/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="Go InterfaceIn many language to communicate to the computer , we have the interface structure to construct the rule between the people and the computer data structure . What is the interface ? In some">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1fsawh4tqkcj312m0hqk17.jpg">
+<meta property="og:updated_time" content="2018-06-14T10:55:26.024Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Go-Practice-interface and type">
+<meta name="twitter:description" content="Go InterfaceIn many language to communicate to the computer , we have the interface structure to construct the rule between the people and the computer data structure . What is the interface ? In some">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1fsawh4tqkcj312m0hqk17.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2018/06/15/Go-Practice-interface-and-type/"/>
+
+
+
+
+
+  <title>Go-Practice-interface and type | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/06/15/Go-Practice-interface-and-type/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Go-Practice-interface and type</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-14T17:09:48Z">
+                2018-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Practice/" itemprop="url" rel="index">
+                    <span itemprop="name">Practice</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Go-Interface"><a href="#Go-Interface" class="headerlink" title="Go Interface"></a>Go Interface</h1><p>In many language to communicate to the computer , we have the interface structure to construct the rule between the people and the computer data structure . What is the interface ? In some time I have do this thinking that the interface is the rule for the all class which implement this interface and then will act as a same role </p>
+<a id="more"></a>
+<p>For a sample example in real world . we could know that the student is a role in school not only the perimary school middle schoold and the high school even in university . The student must do their duty to do in school , so we can call them be student role . right ?</p>
+<p>And the the all structure programming language had , we should know that the design method we could let the same behaviors to an interface and let the class to implement the interface and we also need some variables to define the base attribute of this class so the easy method let we know how to implement a real world into computer system .</p>
+<h2 id="In-Go"><a href="#In-Go" class="headerlink" title="In Go"></a>In Go</h2><p>In Go we get this reality like java the interface{} is the Any type like Java Object type. But what is the type or what is the type information ? I think that the interface is a type absolution in action .</p>
+<p>The type in programming language just do this work to allocate the memory space and originaze the all pointer . But anything exculd the flow the system don’t do like this .</p>
+<p>Define an interface in go is really easy </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> SomeInterface <span class="keyword">interface</span>&#123;</span><br><span class="line">    SomeMethod()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We can use this grammer to create an interface and then we just let the struct called class to implement the all methods .</p>
+<p>We don’t need to do the implementation explicitly like in java use the implement key word , the compiler consider that a class override all method in an interface then it can belive the class is an instance for this interface .</p>
+<p>Like in Go standard library the File implement the io.Reader and io.Writer then we can use the file to write and read , and the io.Reader and io.Writer just have method like the interface Read and Write , but don’t have any implemention and File will implement the all method to read and write , but how to write the File type don’t need to know .</p>
+<p>And interface in Go can inherite from other interfaces like </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Reader <span class="keyword">interface</span>&#123;</span><br><span class="line">    Read()([]<span class="keyword">byte</span>,error)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span>&#123;</span><br><span class="line">    write(b []<span class="keyword">byte</span>)(<span class="keyword">int</span>,error)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> ReadWriter <span class="keyword">interface</span>&#123;</span><br><span class="line">    Reader</span><br><span class="line">    Writer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We can know that the ReadWriter must have two methods and then we have aggregating the two interface we defined before I call this as MixIn character in go .</p>
+<p>and the all examples display the method to define a interface and inherite to contruct a new interface .</p>
+<h2 id="polymorphism"><a href="#polymorphism" class="headerlink" title="polymorphism"></a>polymorphism</h2><p>The interface instance will be initlize to be nil and nil , and the OOP model in Go most like the OOP in Objective-C , called communication model , the class called as reciver and the methods called selector and the call process called message delivery .</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> buf *bytes.Buffer</span><br><span class="line">    buf.read()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>When define the buf variable then the buf will be nil and nil also be the interface as Reader and then when call , the buf will be nil so the message can be failure .</p>
+<p>How polymorphism do in Go I think like java we just assgin a class which implement the interface we mention before , then we can create many class like the class , and then we just use the interface type pointer to point the class then we can use the method in polymorphism</p>
+<h3 id="Interface-assignment"><a href="#Interface-assignment" class="headerlink" title="Interface assignment"></a>Interface assignment</h3><p>The memory model like many language , the class construct with pointer and constraint pool like java , we can define the const not only const but also the literal value and these variables can be saved in the meemory area in the .css segment and the method can be saved in the memory segment , and different type struct implement the only interface define in the all program will be in many memory segment .</p>
+<p>And when the method call then the runtime can find the real address of the method which call in the process . </p>
+<p>T and T* is the different type in Golang like this </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> SomeInterface <span class="keyword">interface</span>&#123;</span><br><span class="line">    Call() (<span class="keyword">string</span>,error)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> SomeStruct <span class="keyword">struct</span>&#123;</span><br><span class="line">    Name <span class="keyword">string</span></span><br><span class="line">    Age <span class="keyword">int32</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self * SomeStruct)</span><span class="title">Call</span><span class="params">(<span class="keyword">string</span>,error)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> self.Name ,<span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> s SomeStruct = SomeStruct&#123;<span class="string">"leemaster"</span>,<span class="number">22</span>&#125;</span><br><span class="line">    <span class="keyword">var</span> i SomeInterface</span><br><span class="line"></span><br><span class="line">    i = s <span class="comment">// wrong</span></span><br><span class="line">    i = &amp;s </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The wrong sign do what let this statement to be wrong , T and T <em> is two different type , when we use the s to assign to i then we assign the type T to a interface but the T don’t implement the method in the interface but the T</em> implement the methods ,but why ,because the Go hava carried the truth of the OOP to us which save the self or this pointer to the struct then we can get or set the number but we also can let self as the T type but as we know the Go call a function/method just copy the arguments to the list of argument we modify the arguments struct don’t do any effect .</p>
+<h1 id="Some-example"><a href="#Some-example" class="headerlink" title="Some example"></a>Some example</h1><h1 id="standard-library-flag"><a href="#standard-library-flag" class="headerlink" title="standard-library flag"></a>standard-library flag</h1><p>the flag package which use to handle the commind line arguments </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> tempconv</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span>(</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">	<span class="string">"flag"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Celsius <span class="keyword">float64</span></span><br><span class="line"><span class="keyword">type</span> Fahrenheit <span class="keyword">float64</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> celsiusFlag <span class="keyword">struct</span>&#123;Celsius&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span>(</span><br><span class="line">	AbsoluteZeroC Celsius = <span class="number">-273.15</span></span><br><span class="line">	FreezingC Celsius = <span class="number">0</span></span><br><span class="line">	BoolingC Celsius = <span class="number">0</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CToF</span><span class="params">(c Celsius)</span> <span class="title">Fahrenheit</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> Fahrenheit(c * <span class="number">9</span>/<span class="number">5</span> + <span class="number">32</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">FToC</span><span class="params">(f Fahrenheit)</span> <span class="title">Celsius</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> Celsius((f - <span class="number">32</span>)*<span class="number">5</span>/<span class="number">9</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f *celsiusFlag)</span> <span class="title">Set</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">error</span></span>&#123;</span><br><span class="line">	<span class="keyword">var</span> unit <span class="keyword">string</span></span><br><span class="line">	<span class="keyword">var</span> value <span class="keyword">float64</span></span><br><span class="line">	fmt.Sscanf(s,<span class="string">"%f%s"</span>,&amp;value,&amp;unit)</span><br><span class="line">	<span class="keyword">switch</span> unit&#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">"C"</span>:</span><br><span class="line">		f.Celsius = Celsius(value)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">	<span class="keyword">case</span> <span class="string">"F"</span>:</span><br><span class="line">		f.Celsius = FToC(Fahrenheit(value))</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> fmt.Errorf(<span class="string">"invalid temperature %q"</span>,s)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(f * celsiusFlag)</span> <span class="title">String</span><span class="params">()</span> <span class="title">string</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> fmt.Sprintf(<span class="string">"%f"</span>,f.Celsius)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CelsiusFlag</span><span class="params">(name <span class="keyword">string</span>,value Celsius,usage <span class="keyword">string</span>)</span> * <span class="title">Celsius</span></span>&#123;</span><br><span class="line">	f := celsiusFlag&#123;value&#125;</span><br><span class="line">	flag.CommandLine.Var(&amp;f,name,usage)</span><br><span class="line">	<span class="keyword">return</span> &amp;f.Celsius</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>after we create the type and method and function we should use go install command to install the libray in computer .</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"leemaster.cn/flag/tempconv"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"flag"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> temp = tempconv.CelsiusFlag(<span class="string">"temp"</span>,<span class="number">20.0</span>,<span class="string">"the temperature"</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	flag.Parse()</span><br><span class="line"></span><br><span class="line">	fmt.Println(*temp)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Go-Package-management"><a href="#Go-Package-management" class="headerlink" title="Go Package management"></a>Go Package management</h1><p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1fsawh4tqkcj312m0hqk17.jpg" alt="go-init-process"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Go/" rel="tag"># Go</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/01/GO-Tutorial-programming-OOP/" rel="next" title="GO Tutorial programming OOP">
+                <i class="fa fa-chevron-left"></i> GO Tutorial programming OOP
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Go-Interface"><span class="nav-number">1.</span> <span class="nav-text">Go Interface</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#In-Go"><span class="nav-number">1.1.</span> <span class="nav-text">In Go</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#polymorphism"><span class="nav-number">1.2.</span> <span class="nav-text">polymorphism</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Interface-assignment"><span class="nav-number">1.2.1.</span> <span class="nav-text">Interface assignment</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Some-example"><span class="nav-number">2.</span> <span class="nav-text">Some example</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#standard-library-flag"><span class="nav-number">3.</span> <span class="nav-text">standard-library flag</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Go-Package-management"><span class="nav-number">4.</span> <span class="nav-text">Go Package management</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
