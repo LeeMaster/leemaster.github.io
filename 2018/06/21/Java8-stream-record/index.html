@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="system call," />
+  <meta name="keywords" content="Java,Concurrency," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="AutotoolsWe know the GNU— “GNU not unix” foundation is support the open source software and the autotools is the tool in GNU to create Makefile automatically . The tool package have file children tool">
-<meta name="keywords" content="system call">
+<meta name="description" content="Java Stream ApiJava8 support the lambda and the stream , and what is the stream conputing method in Java ?We can do this thinking in the java stream api , or , do the same in this way why use the stre">
+<meta name="keywords" content="Java,Concurrency">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux Programming Autotools ">
-<meta property="og:url" content="http://leemaster.cn/2018/05/23/Linux-Programming-Autotools/index.html">
+<meta property="og:title" content="Java8-stream-record">
+<meta property="og:url" content="http://leemaster.cn/2018/06/21/Java8-stream-record/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="AutotoolsWe know the GNU— “GNU not unix” foundation is support the open source software and the autotools is the tool in GNU to create Makefile automatically . The tool package have file children tool">
+<meta property="og:description" content="Java Stream ApiJava8 support the lambda and the stream , and what is the stream conputing method in Java ?We can do this thinking in the java stream api , or , do the same in this way why use the stre">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-05-22T15:36:16.626Z">
+<meta property="og:updated_time" content="2018-06-22T14:35:52.779Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux Programming Autotools ">
-<meta name="twitter:description" content="AutotoolsWe know the GNU— “GNU not unix” foundation is support the open source software and the autotools is the tool in GNU to create Makefile automatically . The tool package have file children tool">
+<meta name="twitter:title" content="Java8-stream-record">
+<meta name="twitter:description" content="Java Stream ApiJava8 support the lambda and the stream , and what is the stream conputing method in Java ?We can do this thinking in the java stream api , or , do the same in this way why use the stre">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://leemaster.cn/2018/05/23/Linux-Programming-Autotools/"/>
+  <link rel="canonical" href="http://leemaster.cn/2018/06/21/Java8-stream-record/"/>
 
 
 
 
 
-  <title>Linux Programming Autotools  | LeeMaster's Blog</title>
+  <title>Java8-stream-record | LeeMaster's Blog</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/05/23/Linux-Programming-Autotools/">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/06/21/Java8-stream-record/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="LeeMaster">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Linux Programming Autotools </h1>
+          <h1 class="post-title" itemprop="name headline">Java8-stream-record</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-23T07:26:00+08:00">
-                2018-05-22
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-21T07:13:43+08:00">
+                2018-06-20
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Linux-Programming/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux Programming</span>
+                  <a href="/categories/Practice/" itemprop="url" rel="index">
+                    <span itemprop="name">Practice</span>
                   </a>
                 </span>
 
@@ -352,15 +352,41 @@
       
 
       
-        <h1 id="Autotools"><a href="#Autotools" class="headerlink" title="Autotools"></a>Autotools</h1><p>We know the GNU— “GNU not unix” foundation is support the open source software and the autotools is the tool in GNU to create Makefile automatically . The tool package have file children tools , aclocal,autoscan,autoheader,autoconf,automake, they consits the autotools ,and we can use them to contribute a open source code software in C/CPP .</p>
-<p>Don’t need write makefile any more , until you want to do more effective thing to do .</p>
+        <h1 id="Java-Stream-Api"><a href="#Java-Stream-Api" class="headerlink" title="Java Stream Api"></a>Java Stream Api</h1><p>Java8 support the lambda and the stream , and what is the stream conputing method in Java ?<br>We can do this thinking in the java stream api , or , do the same in this way why use the stream to iterate the elements in the container in java not use the tranditional collection Iteratable or Interator interfaces ?</p>
 <a id="more"></a>
-<h1 id="Project-Management"><a href="#Project-Management" class="headerlink" title="Project Management"></a>Project Management</h1><p>I have used the Maven to manage the Java project and the project directory tree like this </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">project</span><br><span class="line">    |---src</span><br><span class="line">    |   |---main</span><br><span class="line">    |   |   |---java</span><br><span class="line">    |   |   |---resources</span><br><span class="line">    |   |---test</span><br><span class="line">    |---pom.xml</span><br></pre></td></tr></table></figure>
-<p>Also we can belive the C/C++ project also have a directory tree in common.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">project</span><br><span class="line">    |---lib</span><br><span class="line">    |---include</span><br><span class="line">    |---src</span><br></pre></td></tr></table></figure>
-<p>the lib will contain the static library or dynamic library and the include contains the header file , src as you can see contains the source files .</p>
-
+<p>The many time we complete the workflow in a pipeline and then we will get a final result like map/reduce , so in the new api in java we can also do thing . And the interation in java why we use the stream not the original collections api to operate the elements , because of the less using memeory.</p>
+<p>This Api based on the Jav7 Fork/Join framework , the design for the java8 stream is this , we see the collections as a data source and then we assign some middle oeprations in the way to the final result , like DFA the original collection be the initlize state and there is also a terminal state for the end .</p>
+<p>So we can use the api to do many thing in java8 to handle the collection and then will releax our development in daily life .</p>
+<h1 id="Stream-concept"><a href="#Stream-concept" class="headerlink" title="Stream concept"></a>Stream concept</h1><p>I think the first time I use the stream is use the java I/O api to read/write file or socket and I also belive the stream is a pattern in the computer . What is stream ? stream is a data delivery pattern let the data from one location to other location , and the data will be spilit to the smallest unit to transport . And then the reciver also receive the data use the same method unit by unit in string the unit is byte which allocate 8 bits to contain the data.</p>
+<p>So if we use this concept in the collection operation we can belive the data can be infinity,we just use the stream api to get and handle , but in the tranditional method we should allocate a space to save the collections total , but in stream we just need use a very samll memeoy to contain the data. because the stream use the pattern lazy-compute , when we use an object the api will product an object .</p>
+<p>And like the workers in factory the function will be orginazed to one or more pipeline to handle the data .</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">java7MapOperation</span><span class="params">()</span></span>&#123;</span><br><span class="line">    List&lt;String&gt; list = Array.asList(&#123;<span class="comment">//add some elements&#125;)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(String key : list)&#123;</span><br><span class="line">        key = key + <span class="string">"string"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>use this long style code to handle the data in map will be more stupid , but in java8 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">java7MapOperation</span><span class="params">()</span></span>&#123;</span><br><span class="line">   List&lt;String&gt; list = Array.asList(&#123;<span class="comment">//add some elements&#125;)</span></span><br><span class="line"></span><br><span class="line">   list = list.stream().map(e -&gt; e + <span class="string">"string"</span>).collect(Collectors.toList());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>we do this will let the handler to a pipeline part and then will handle the list in a very easy way to handle .</p>
+<h1 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h1><ul>
+<li><p>get a stream </p>
+</li>
+<li><p>write some Intermediate</p>
+<ul>
+<li>map (mapToInt, flatMap)、 filter、 distinct、 sorted、 peek、 limit、 skip、 parallel、 sequential、 unordered</li>
+</ul>
+</li>
+<li><p>write some Terminal</p>
+<ul>
+<li>forEach、 forEachOrdered、 toArray、 reduce、 collect、 min、 max、 count、 anyMatch、 allMatch、 noneMatch、 findFirst、 findAny、 iterator</li>
+</ul>
+</li>
+<li><p>write Short-circuiting</p>
+<ul>
+<li>anyMatch、 allMatch、 noneMatch、 findFirst、 findAny、 limit</li>
+</ul>
+</li>
+</ul>
+<h2 id="Get-a-stream"><a href="#Get-a-stream" class="headerlink" title="Get a stream"></a>Get a stream</h2><p>Now we should get stream from a list collection as the datasource we should use in the next time . This operation will be a source for the next step to use .</p>
+<p>There are many method to get a stream , I don’t list them , we just know the one truth , we have a stream and then will handle them just in any liner collections </p>
+<h2 id="Write-the-pipeline-function"><a href="#Write-the-pipeline-function" class="headerlink" title="Write the pipeline function"></a>Write the pipeline function</h2><p>some example will write down there .</p>
+<h2 id="Use-as-lambda"><a href="#Use-as-lambda" class="headerlink" title="Use as lambda"></a>Use as lambda</h2><h2 id="Inner-iteration"><a href="#Inner-iteration" class="headerlink" title="Inner iteration"></a>Inner iteration</h2>
       
     </div>
     
@@ -377,7 +403,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/system-call/" rel="tag"># system call</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/Concurrency/" rel="tag"># Concurrency</a>
           
         </div>
       
@@ -390,8 +418,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/05/22/C-Note-extern-keyword/" rel="next" title="C Note extern keyword">
-                <i class="fa fa-chevron-left"></i> C Note extern keyword
+              <a href="/2018/06/17/Disruptor-Practice-Source-Code-and-Pattern/" rel="next" title="Disruptor Practice Source Code and Pattern">
+                <i class="fa fa-chevron-left"></i> Disruptor Practice Source Code and Pattern
               </a>
             
           </div>
@@ -399,10 +427,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/25/Objective-C-Tutorial-I-m-dieing/" rel="prev" title="Objective C Tutorial - I'm dieing">
-                Objective C Tutorial - I'm dieing <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -550,7 +574,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Autotools"><span class="nav-number">1.</span> <span class="nav-text">Autotools</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Project-Management"><span class="nav-number">2.</span> <span class="nav-text">Project Management</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Java-Stream-Api"><span class="nav-number">1.</span> <span class="nav-text">Java Stream Api</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stream-concept"><span class="nav-number">2.</span> <span class="nav-text">Stream concept</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Usage"><span class="nav-number">3.</span> <span class="nav-text">Usage</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Get-a-stream"><span class="nav-number">3.1.</span> <span class="nav-text">Get a stream</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Write-the-pipeline-function"><span class="nav-number">3.2.</span> <span class="nav-text">Write the pipeline function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Use-as-lambda"><span class="nav-number">3.3.</span> <span class="nav-text">Use as lambda</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inner-iteration"><span class="nav-number">3.4.</span> <span class="nav-text">Inner iteration</span></a></li></ol></li></ol></div>
             
 
           </div>
