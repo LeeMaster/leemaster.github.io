@@ -98,3 +98,42 @@ The base absolusion do thin thing to use then we can record the common string in
 In this example we can see the DP and the string puzzle essence is that we should handle the prefix and the suffix and handle the state , we can belive the string is construct by suffix and prefix then we can use this characte to construct a DP view to handle this program .
 
 # examples 
+
+## LPS longest palindromic substring
+
+**Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.**
+
+> Input: "babad"
+> Output: "bab"
+> Note: "aba" is also a valid answer.
+
+In this problem then we can see the character of a palindromic string in use ,we can belive that a palindromic is like this we assume that the $S$ is a string , but how do we judge wether the string is a palindromic string . It may do as this thing , we can see the $S$ length is $n$  and we could know that when the $S$ is a palindromic then we can find the truth that the $S_1$ equals the $S_n$ then we can use the concquer to solve this problem , as the basement of $S_1$ euals $S_n$  if the $S_2$ equals $S_{n-1}$ then we can belive the string is a palindromic when the string length is 4 . right  we can summarize  a recurrence relation to describe this puzzle 
+
+if $S_i$ equals $S_j$ then we should judge the $S_{i+1}$ equals $S_{j-1}$ and we can know the origin problem is depended on the subproblem so we can get the relations:
+
+> $S_{(i...n)}$ = $S_{(i+1...n-1)}$ $if$ $S_{i-1} = S_{n-1}$ 
+
+And if not equalment then we can know that the max palindromic will in the $S_{i+1 ... n-1}$ right ?
+
+```java
+class Solution {
+    public String longestPalindrome(String s) {
+      int n = s.length();
+      String res = null;
+
+      boolean[][] dp = new boolean[n][n];
+
+      for (int i = n - 1; i >= 0; i--) {
+        for (int j = i; j < n; j++) {
+          dp[i][j] = s.charAt(i) == s.charAt(j) && (j - i < 3 || dp[i + 1][j - 1]);
+
+          if (dp[i][j] && (res == null || j - i + 1 > res.length())) {
+            res = s.substring(i, j + 1);
+          }
+        }
+      }
+
+      return res;
+    }
+}
+```
