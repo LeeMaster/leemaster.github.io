@@ -115,6 +115,8 @@ if $S_i$ equals $S_j$ then we should judge the $S_{i+1}$ equals $S_{j-1}$ and we
 
 And if not equalment then we can know that the max palindromic will in the $S_{i+1 ... n-1}$ right ?
 
+the essence is that when we judge a string is a palindromic or not by the truth a suffix of a string is equals the prefix or not .
+
 ```java
 class Solution {
     public String longestPalindrome(String s) {
