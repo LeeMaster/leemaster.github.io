@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Context the stage of a Bean">
+<meta name="description" content="Context the stage of a BeanWe can know this thing that the bean will be defined in the context obeject in spring and then will let the bean in their own lifecycle to do something in action . In my opn">
 <meta name="keywords" content="Java,Spring">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring in action - Bean and Context">
 <meta property="og:url" content="http://leemaster.cn/2018/06/23/Spring-in-action-Bean-and-Context/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="Context the stage of a Bean">
+<meta property="og:description" content="Context the stage of a BeanWe can know this thing that the bean will be defined in the context obeject in spring and then will let the bean in their own lifecycle to do something in action . In my opn">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-06-23T20:13:12.224Z">
+<meta property="og:updated_time" content="2018-06-27T14:27:10.560Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring in action - Bean and Context">
-<meta name="twitter:description" content="Context the stage of a Bean">
+<meta name="twitter:description" content="Context the stage of a BeanWe can know this thing that the bean will be defined in the context obeject in spring and then will let the bean in their own lifecycle to do something in action . In my opn">
 
 
 
@@ -352,7 +352,15 @@
       
 
       
-        <h1 id="Context-the-stage-of-a-Bean"><a href="#Context-the-stage-of-a-Bean" class="headerlink" title="Context the stage of a Bean"></a>Context the stage of a Bean</h1>
+        <h1 id="Context-the-stage-of-a-Bean"><a href="#Context-the-stage-of-a-Bean" class="headerlink" title="Context the stage of a Bean"></a>Context the stage of a Bean</h1><p>We can know this thing that the bean will be defined in the context obeject in spring and then will let the bean in their own lifecycle to do something in action . In my opnion that the all framework will have a context when we develeop an application there will save many information we need .</p>
+<a id="more"></a>
+<h2 id="What-is-the-context"><a href="#What-is-the-context" class="headerlink" title="What is the context"></a>What is the context</h2><p>When firstly heard this concept ,we could be puzzled in this thing, and we can ask ourselves what is the context in spring? As many people I had be puzzled in this concept and I don’t know how to extend my application for example I will make an implementation of the RBAC model in the enterpresie application，maybe I will want to load some authorities in the initiation of the application , but there are another feature that I will expose the module to a jar and then will use this jar anywhere need the authority . But the spring just support the POJOs which are just the model in programming in a software to contain the data to use like search from a database .</p>
+<p>But we could need the mybatis to do as the data access layer framework to use , then there will be trouble when I use the @Resource annotation to aware the module in another to use ,there will have an error NullPointerException in the runtime .</p>
+<p>So for solving this problem for the enterprise integration of a module then we should expose the module to the all application to solve the problem of NullPointerException .</p>
+<p>Okey we can see the context as waht ? I think this object in singlton pattern in Spring will like a warehouse we can get anything we may attention to , and the all runtime informations will be saved in this location .</p>
+<p>So there is a method to construct a large or huge project in develop , we call the micro kernel driven pattern , which let we should make an implementation firstly is the context , when we have a context then we can do many thing , include get set modify and update , so in Spring framework we can modify many thing by ourselves .</p>
+<p>And we call the point for use to inject the objects in java as the mout point . I never think the POJOs like the bean , I think the bean is the java objects which will hold some duties in the all lifecycle in Spring , and POJOs are the sample object like DTO object .</p>
+<h2 id="What-is-the-session-context"><a href="#What-is-the-session-context" class="headerlink" title="What is the session context"></a>What is the session context</h2><h2 id="what-is-the-global-context"><a href="#what-is-the-global-context" class="headerlink" title="what is the global context"></a>what is the global context</h2><h1 id="Lifecycle-in-Spring-to-extend"><a href="#Lifecycle-in-Spring-to-extend" class="headerlink" title="Lifecycle in Spring to extend"></a>Lifecycle in Spring to extend</h1>
       
     </div>
     
@@ -540,7 +548,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Context-the-stage-of-a-Bean"><span class="nav-number">1.</span> <span class="nav-text">Context the stage of a Bean</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Context-the-stage-of-a-Bean"><span class="nav-number">1.</span> <span class="nav-text">Context the stage of a Bean</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-the-context"><span class="nav-number">1.1.</span> <span class="nav-text">What is the context</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#What-is-the-session-context"><span class="nav-number">1.2.</span> <span class="nav-text">What is the session context</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#what-is-the-global-context"><span class="nav-number">1.3.</span> <span class="nav-text">what is the global context</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lifecycle-in-Spring-to-extend"><span class="nav-number">2.</span> <span class="nav-text">Lifecycle in Spring to extend</span></a></li></ol></div>
             
 
           </div>
