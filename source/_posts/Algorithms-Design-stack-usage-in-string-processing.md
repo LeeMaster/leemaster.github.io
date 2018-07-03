@@ -34,7 +34,7 @@ As we know that the string will be queued in a senquence order , and when the ti
 
 > Note:
 > * Only the space character ' ' is considered as whitespace character.
-> * Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: [$−2^31$,  $2^31$ − 1]. If the numerical value is out of the range of representable values, INT_MAX ($2^31$ − 1) or INT_MIN ($-2^31$) is returned.
+> * Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: [$−2^{31}$,  $2^{31}$ − 1]. If the numerical value is out of the range of representable values, INT_MAX ($2^{31}$ − 1) or INT_MIN ($-2^{31}$) is returned.
 
 ```java
 public static int myAtoi(String str) {
@@ -66,4 +66,40 @@ public static int myAtoi(String str) {
 ```
 
 We don't use the stack struct instance to handle this problem but the thought of stack will be use in this solution code , we can infer that the string will start with - or non zero character will be legal and we just neeed the segment before the first withespace and then we could find the base solution as a stack we can use the stack to handle the every character and then will pop them in orider and then use a interation to increse the  cardinal number to add them to one integer .
+
+## Rotate Function
+
+> Given an array of integers A and let n to be its length.
+
+> Assume Bk to be an array obtained by rotating the array A k positions clock-wise, we define a "rotation function" F on A as follow:
+
+> F(k) = 0 * Bk[0] + 1 * Bk[1] + ... + (n-1) * Bk[n-1].
+
+> Calculate the maximum value of F(0), F(1), ..., F(n-1).
+
+formula handle method 
+
+first get this problem I missed because of the clock-wise and after then I watch the clock then I find the solution , we can see the Bk arrary as the ring like the ring and the elemtns will be rotate in the clock-wise and then calculate the max use the function 
+
+for example the first is **f(0) = 0 * Bk[0] + 1 * Bk[1] + ... + (n-1) * Bk[n-1].** and the next **f(1) = 0 * Bk[n-1] + 1 * Bk[1] + ... + (n-1) * Bk[n-2]** it is that the first element will be push to the next and the final element will be push to the first position and then use the function to calculate the result .
+
+I can find the f(1) - f(0) as the f(k) - f(k-1) like this , $({n-1}) \times Bk \lbrack {n-1} \rbrack - \sum_{i=0}^{n-2} {Bk \lbrack {i} \rbrack}$ that will be $({n}) \times Bk \lbrack {n-1} \rbrack - \sum_{i=0}^{n-1} {Bk \lbrack {i} \rbrack}$
+
+and then I can do as this firstly calculate the sum of the all senquence fo this array and then use the max value to record the max then to do so .
+
+```java
+int allSum = 0;
+int len = A.length;
+int F = 0;
+for (int i = 0; i < len; i++) {
+    F += i * A[i];
+    allSum += A[i];
+}
+int max = F;
+for (int i = len - 1; i >= 1; i--) {
+    F = F + allSum - len * A[i];
+    max = Math.max(F, max);
+}
+return max; 
+```
 
