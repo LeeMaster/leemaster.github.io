@@ -127,6 +127,7 @@ class Solution {
 
       for (int i = n - 1; i >= 0; i--) {
         for (int j = i; j < n; j++) {
+            // j == i or j - i == 2 then will be palindromic 
           dp[i][j] = s.charAt(i) == s.charAt(j) && (j - i < 3 || dp[i + 1][j - 1]);
 
           if (dp[i][j] && (res == null || j - i + 1 > res.length())) {
