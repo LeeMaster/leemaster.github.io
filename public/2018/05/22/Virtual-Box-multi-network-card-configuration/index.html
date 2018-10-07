@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Experiment,Configuration," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Setup Virtual MachineI use the virtual box to contribute the enviroment to do some experiment for distributed system like do some hadoop and spark , rabbitmq redis cluster … Set the network bridgeThe">
+<meta name="keywords" content="Experiment,Configuration">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Virtual Box multi-network card configuration">
+<meta property="og:url" content="http://leemaster.cn/2018/05/22/Virtual-Box-multi-network-card-configuration/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="Setup Virtual MachineI use the virtual box to contribute the enviroment to do some experiment for distributed system like do some hadoop and spark , rabbitmq redis cluster … Set the network bridgeThe">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4df0jj6j30uk0kitb7.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4ghmmvij31680vudsg.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4fyzgz4j311c0r2gpe.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4i8plw5j30o00ff0wh.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4nviphpj30o10fgju2.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4qet39ej30o10bytgu.jpg">
+<meta property="og:updated_time" content="2018-10-07T12:16:31.648Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Virtual Box multi-network card configuration">
+<meta name="twitter:description" content="Setup Virtual MachineI use the virtual box to contribute the enviroment to do some experiment for distributed system like do some hadoop and spark , rabbitmq redis cluster … Set the network bridgeThe">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4df0jj6j30uk0kitb7.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2018/05/22/Virtual-Box-multi-network-card-configuration/"/>
+
+
+
+
+
+  <title>Virtual Box multi-network card configuration | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/05/22/Virtual-Box-multi-network-card-configuration/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Virtual Box multi-network card configuration</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-22T01:57:58+08:00">
+                2018-05-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Virtual-Machine/" itemprop="url" rel="index">
+                    <span itemprop="name">Virtual Machine</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Setup-Virtual-Machine"><a href="#Setup-Virtual-Machine" class="headerlink" title="Setup Virtual Machine"></a>Setup Virtual Machine</h1><p>I use the virtual box to contribute the enviroment to do some experiment for distributed system like do some hadoop and spark , rabbitmq redis cluster …</p>
+<h1 id="Set-the-network-bridge"><a href="#Set-the-network-bridge" class="headerlink" title="Set the network bridge"></a>Set the network bridge</h1><p>The all machine will work in virtual isolation and then will simulatie a phycial machine to use then contribute the many cluster enviroment.</p>
+<p>But the network configuration is an importent thing to do ,we need config a network to do the IPC on network so we need a bridge to handle the all data transform .</p>
+<p>It’s simple to do .</p>
+<a id="more"></a>
+<p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4df0jj6j30uk0kitb7.jpg" alt="BRIDGE CONFIG"></p>
+<p>click the right button which is a plus sign on the icon then we can create a new bridge to use .</p>
+<h1 id="Set-the-configuration-in-centos"><a href="#Set-the-configuration-in-centos" class="headerlink" title="Set the configuration in centos"></a>Set the configuration in centos</h1><p>I assume that you had setuped the centos or other linux edition .</p>
+<h2 id="Virtual-Machine-config-network-card"><a href="#Virtual-Machine-config-network-card" class="headerlink" title="Virtual Machine config network card"></a>Virtual Machine config network card</h2><p>open the settings for a virtual machine and select the setting button</p>
+<p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4ghmmvij31680vudsg.jpg" alt="OPEN CARD"></p>
+<p>when we choose the network setting we can add a network card to add a new card and then we should generate a new mac address for use </p>
+<p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4fyzgz4j311c0r2gpe.jpg" alt="ADD CARD"></p>
+<h2 id="In-CentOS-to-config"><a href="#In-CentOS-to-config" class="headerlink" title="In CentOS to config"></a>In CentOS to config</h2><p>Because I choose the CentOS 7 minimum edition so the network is not open after the setup,we need open the network service .</p>
+<p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4i8plw5j30o00ff0wh.jpg" alt="STEP ONE"></p>
+<p>Under the directory /etc/sysconfig/network-scripts/ is the all network config and which contain the <strong>ifcfg-</strong> prefix file is the network card config .</p>
+<p>we can see the first is the ensp03 is the first card for us to work in the NAT pattern .<br>And then set some configuration .</p>
+<ul>
+<li>ONBOOT=yes</li>
+<li>BOOTPROTO=dhcp<br>Use the dhcp pattern we can get a ip address automatic . </li>
+</ul>
+<p>Another we should set it work in the static pattern , it’s that this card will work use the static ip address and then we set by ourselves .</p>
+<p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4nviphpj30o10fgju2.jpg" alt="STEP TWO"></p>
+<p>As we can see we should set the <strong>DEVICE</strong> to define the card name . and then we can use ifconfig or ip addr to find if we set them success .</p>
+<p><img src="http://ww1.sinaimg.cn/mw690/0079qc5ply1frj4qet39ej30o10bytgu.jpg" alt="STEP THREE"></p>
+<p>And the last thing we just use the command service network start or systmctl start network.service</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Experiment/" rel="tag"># Experiment</a>
+          
+            <a href="/tags/Configuration/" rel="tag"># Configuration</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/19/Go-Tutorial-programming-in-senquence/" rel="next" title="Go Tutorial - programming in senquence">
+                <i class="fa fa-chevron-left"></i> Go Tutorial - programming in senquence
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/22/Linux-Programming-Socket/" rel="prev" title="Linux Programming Socket">
+                Linux Programming Socket <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Setup-Virtual-Machine"><span class="nav-number">1.</span> <span class="nav-text">Setup Virtual Machine</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Set-the-network-bridge"><span class="nav-number">2.</span> <span class="nav-text">Set the network bridge</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Set-the-configuration-in-centos"><span class="nav-number">3.</span> <span class="nav-text">Set the configuration in centos</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Virtual-Machine-config-network-card"><span class="nav-number">3.1.</span> <span class="nav-text">Virtual Machine config network card</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#In-CentOS-to-config"><span class="nav-number">3.2.</span> <span class="nav-text">In CentOS to config</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

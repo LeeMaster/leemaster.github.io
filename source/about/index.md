@@ -71,4 +71,6 @@ Want do some actions in DevOps
 
 * Mail : leemast3r@outlook.com
 * Phone : 17710529596
+* QQ 627459763
+* Wechat 17710529596
 
