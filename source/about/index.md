@@ -1,73 +1,69 @@
 ---
-title: About Me
+title: 关于我？
 date: 2018-05-13 18:20:44
 mathjax: true
 ---
 
-***The uglily code as crime***
+***我们需要一个合适的机会去一起观察未来是什么样的！！！***
 
-# Base Information 
+# 基本信息
 
 * **Name** Xiaoyu Lee
 * **Birth** 1995 11 19
 * **Location** BeiJing
 * **Github** github.com/leemaster
-* **Want to do** Container Engineer / Java Back-End Engineer 
-
-Now I am working in [Meituan-Dianping(BeiJing)](https://www.meituan.com) as a cloud developer 
-
-All in English writing and All in the cloud&distribute development because I really hate the mac input change method so that I have to write the english blog funny? 
-
-In the next years I will do more thinking and programming use Golang and C/CPP.
+* **Want to do** Rust 工程师 / Golang 工程师 / Faas 容器方向
 
 
+目前我正在 [MTDP(BeiJing)](https://www.meituan.com) 工作，目前的主要参与美团点评私有云建设（MWS）。主要负责：
 
-# Skill 
-
-## Program language
-
-* Java 
-    * Java SE good concurrency programming 
-    * Java EE Servlet programming
-    * Spring which I had readed it's source code 
-    * Spring Boot more experience in develop
-    * Shiro and JWT web safe programming
-    * ZooKeeper and other distributed tools
-* Golang
-    * In learning to develop the net programe 
-    * Concurrency in action 
-* C/C++
-    * Be familer to the Linux System Kernel programming
-    * Makefile and Shell Skill in use 
-    * STL and Boost 
-
-## Document Skill
-
-Write all document in my blog use English and good in $LaTex$ . I want to describe more details about my code ,so that we can contribute a good project to be better, and then we do more for our compony . I think the most important thing in coding is beautiful code in any language !
-
-## System development 
-
-* work on my own kernel 
-
-## Web development
-
-* In developing a RPC frame
-* In developing a CMS frame 
-* do some research in disturitubed system 
-* Good in MySQL
-* Good in Redis and EhCache
+* MWS 平台能力建设
+* MWS 消息中心建设
+* MWS 管理平台建设
 
 
-# In action 
+# 技能
 
-Want to explore more challenging things in any develop project
+## 语言栈
 
-Want to do more working in the cloud computing 
+* Java
+    * JAVA Stream API 熟练使用
+    * Spring 全家桶
+    * JVM，目前正在写一个Rust版本的玩具JVM [GearFactory](https://github.com/gearfactory/GFJvm)
 
-Want do some actions in DevOps
+* Golang 
+    * 熟练使用 Golang ，熟悉Channel 和 Golang的内存模型（CSP）
+
+* Rust 
+    * 熟练使用Rust
+
+## 框架/工具栈
+
+* Netty 
+* Spring 
+* Redis 
+* RabbitMQ 
+* MySQL 
+* Tokio 
+* Gin 
+* Docker / K8S
+
+## 文档技能
+
+能编写高质量的开发文档，熟悉敏捷开发流程，无障碍的英文文献阅读能力。
+
+## 开源和社区
+
+RCTT（Rust China Translate Team） 成员，负责Rust标准库的翻译。
+
+### 开源项目
+
+* inkfish 一个沙箱环境 [GearFactory](https://github.com/gearfactory/inkfish)
 
 
-# Connect 
+
+
+# 联系我 
 
 * Mail : leemast3r@outlook.com
 * Phone : 17710529596
