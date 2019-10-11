@@ -77,6 +77,8 @@ public:
 
 ## C++ 优化空间后的答案
 
+优化思路，将第四个条件放入循环中进行判断？ TODO
+
 ```cpp
 #include<string>
 #include<vector>
