@@ -54,6 +54,7 @@ class Trie {
   	TrieNode * root;
 };
 #endif
+
 //// trie.cpp 
 #include "trie.hpp"
 
@@ -124,10 +125,30 @@ void* Trie::seek(const std::string & key) const{
 }
 ```
 
-## 一些算法题
+## OJ 问题
 
-[CSDN](https://blog.csdn.net/weixin_41162823/article/details/101801789)
+[Trie字典树题集](https://blog.csdn.net/weixin_41162823/article/details/101801789)
 
 # Radix Tree
 
+基数树
+
+## Trie 的问题
+
+Trie的实现，可以很清楚地看出，每一条路径被字符串集合（有可能是二进制集合）中的某个字符串中的一个元素标记，那么当字符串长度过长的时候，整体的搜索效率，可以直接退化成了链表比对了，很显然整个有点慢哦。
+
+## Radix Tree 的原理
+
+和Trie一样，标记路径，实现线索化搜索。不过标记的单位变成了字符串。正如之前说的一样，RadixTree在Linux内核内用来管理内存。
+
+
 # Suffix Tree
+
+# 一些小思考
+
+
+
+# Reference
+
+[某讲义](http://www.cse.chalmers.se/edu/year/2018/course/DAT037/slides/12-tries.pdf)
+[Gin 路由实现](https://michaelyou.github.io/2018/02/10/%E8%B7%AF%E7%94%B1%E6%9F%A5%E6%89%BE%E4%B9%8BRadix-Tree/)
