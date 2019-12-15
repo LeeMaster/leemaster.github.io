@@ -6,9 +6,7 @@ tags:
 - Data Structure
 ---
 
-跳跃表论文学习和Golang实现。
-
-[Skip Lists: A Probabilistic Alternative to Balanced Trees](https://epaperpress.com/sortsearch/download/skiplist.pdf).
+跳跃表论文学习笔记。
 
 <!--more-->
 
@@ -28,7 +26,35 @@ tags:
 
 ## 跳跃表查询
 
-## 跳跃表插入和删除
+首先根据跳跃表的结构，查询和二分查找思想差不多：先查询最上一层，如果查询出现某个Key大于查找的Key，那么向下查询。
+
+伪代码：
+
+```cpp
+Node * Search(int key){
+  Node ** head = list -> head;
+  // 下面的步骤工作是  head -> key < key <= head -> forward[i] - key;
+  for i = list -> height downto 0{
+    while(head -> key < key) head = head -> forward[i];
+  } 
+  head = head -> forward[0];
+  if head -> key == key return true;
+  return false;
+} 
+```
+
+## 跳跃表插入
 
 
-# 跳跃表实现
+## 跳跃表删除
+
+
+## 跳跃表实现
+
+## 跳跃表算法分析
+
+
+
+## 参考
+
+[Skip Lists: A Probabilistic Alternative to Balanced Trees](https://epaperpress.com/sortsearch/download/skiplist.pdf).
