@@ -1,55 +1,44 @@
 ---
-title: 非著名系统工程师
+title: About
 date: 2018-05-13 18:20:44
 ---
 
-# 嗯！我在看机会了
+# 关于我
 
-关注成都的数据库内核研发机会
+一个擦边95后，目前在美团基础研发平台搞云计算平台建设，喜欢在代码中蛇皮走位。
 
-# 日常 
+# 关于机会
 
-工作用的语言（Java，Golang，Python）
+数据库内核研发工程师，成都的Office哦，当然要不给我一个Remote的机会！
 
-## 开源项目
+# 关于技术
 
-目前正在写自己的存储引擎（DoriaKV）https://github.com/LeeMaster/DoriaKV 
+* Language
+  * Java 
+  * Golang
+  * C++
+  * Rust
 
-## 在读的书 
+* Paper 
+  * Raft 
+  * Paxos
+  * SkipList
+  * LSM Tree
+  * GFS 
+  * Bigtable
+  * Mapruduce
+  * Dynomo
+  * Linearizability: A Correctness Condition for Concurrent Objects
 
-* UNP （Unix 网络编程）
-* APUE （Uinx高级环境编程）
-* C++ Primer Plus 
-* C++ 语言的设计与演进
-* STL 源码剖析
-* 深度探索C++ 对象模型
-* 数据库索引设计与优化
-* 分布式系统概念与设计
-* 数据库系统概念
-* 事务处理：概念与技术
-* 计算机程序设计艺术（卷三） 
-* 托马斯微积分
-* 普林斯顿微积分读本
-* 矩阵分析
-* 离散数学及其应用
+* Software
+  * TiKV
+  * LevelDB
+  * RocksDB
+  * BladeKV(Meituan Dis DB)
 
-## 在读的论文
+* Project
+  * DoriaDB
 
-* Google MapReduce BigTable GFS
-* Raft 
-* Paxos 系列论文
-* 数据库可能用到的数据结构论文
-  * SkipList 
-  * BTree
-  * LSM Tree 
-
-## 在读的源码
-
-* STL
-* LevelDB 
-* Redis 
-* Nginx 
-
-## 联系方式
-
-* 微信/电话 17710529596
+* Others
+  * Lock-free 
+  * Transaction
