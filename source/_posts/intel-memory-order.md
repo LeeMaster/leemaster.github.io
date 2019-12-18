@@ -1,5 +1,5 @@
 ---
-title: Intel memory order 
+title: X86 内存顺序
 date: 2019-12-08 22:43:11
 tags:
 - CPU
