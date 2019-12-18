@@ -50,3 +50,9 @@ struct RecordMeta{
 
 ## 关于存储
 
+不管是SSD还是传统的HDD，根据局部性原理，基本上我们从磁盘抽出来的数据都是冗余的，尽管我们可能只需要按照某个where条件抽出一条数据（当然有Cache系统，这个事情就好一点）。
+
+Bigtable中数据的组织形式是使用SSTable来组织的，一个SSTable和Blocks的对应关系是一个典型的一对多，一个SSTable中包含了很多的Blocks，每一个Blocks中存储的就是数据啦。
+
+关于这个SSTable的实现可以直接看一下LevelDB的源码。
+
