@@ -145,6 +145,68 @@ class SCOPED_LOCKABLE MutexLock {
 };
 ```
 
+## LevelDB 写
+
+### 随机写转顺序写
+
+```cpp
+Status Append(const Slice& data) override {
+  size_t write_size = data.size();
+  const char* write_data = data.data();
+
+  // 填充写缓存
+  size_t copy_size = std::min(write_size, kWritableFileBufferSize - pos_);
+  std::memcpy(buf_ + pos_, write_data, copy_size);
+  write_data += copy_size;
+  write_size -= copy_size;
+  pos_ += copy_size;
+
+  // 当前的块还没有填充满
+  if (write_size == 0) {
+    return Status::OK();
+  }
+
+  // 已经填充满了，刷新缓存
+  Status status = FlushBuffer();
+  if (!status.ok()) {
+    return status;
+  }
+
+  // 写剩下的部分
+  if (write_size < kWritableFileBufferSize) {
+    std::memcpy(buf_, write_data, write_size);
+    pos_ = write_size;
+    return Status::OK();
+  }
+
+  return WriteUnbuffered(write_data, write_size);
+}
+
+// 刷入内存写缓存
+Status FlushBuffer() {
+  Status status = WriteUnbuffered(buf_, pos_);
+  pos_ = 0;
+  return status;
+}
+
+Status WriteUnbuffered(const char* data, size_t size) {
+  // write 写函数直接写磁盘块
+  while (size > 0) {
+    ssize_t write_result = ::write(fd_, data, size);
+    if (write_result < 0) {
+      if (errno == EINTR) {
+        continue;  // Retry
+      }
+      return PosixError(filename_, errno);
+    }
+    data += write_result;
+    size -= write_result;
+  }
+  return Status::OK();
+}
+
+```
+
 ## 总结
 
 LevelDB是一个非常值得读一读的项目，虽然RocksDB出来后，提供了很多新的Feature，LevelDB也没有用很多c++中的骚操作，但是在一个系统设计上有很多值得思考的点的。
