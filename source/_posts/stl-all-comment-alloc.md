@@ -297,6 +297,4 @@ public:
 ```
 
 
-## class debug_alloc 
-
 

@@ -74,33 +74,3 @@ public:
     }
 };
 ```
-
-## Golang 答案
-
-```golang
-func minDistance(word1 string, word2 string) int {
-    len1 := len(word1)
-    len2 := len(word2)
-
-    if len1 == 0 {
-      return len2
-    }
-
-    if len2 == 0 {
-      return len1
-    }
-
-    dp := [len1][len2]int
-
-}
-```
-
-## Rust 答案
-
-```rust
-impl Solution {
-    pub fn min_distance(word1: String, word2: String) -> i32 {
-        
-    }
-}
-```
