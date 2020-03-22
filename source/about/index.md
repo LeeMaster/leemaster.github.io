@@ -1,44 +1,20 @@
 ---
-title: About
+title: 关于
 date: 2018-05-13 18:20:44
 ---
 
-# 关于我
+一个在开水团写java的非典型程序员。
 
-一个擦边95后，目前在美团基础研发平台搞云计算平台建设，喜欢在代码中蛇皮走位。
+### VPN优惠连接
 
-# 关于机会
+https://bywave.pro/aff.php?aff=860
 
-数据库内核研发工程师，成都的Office哦，当然要不给我一个Remote的机会！
+### 联系我
 
-# 关于技术
+leemast3r@gmail.com
 
-* Language
-  * Java 
-  * Golang
-  * C++
-  * Rust
+### 简介
 
-* Paper 
-  * Raft 
-  * Paxos
-  * SkipList
-  * LSM Tree
-  * GFS 
-  * Bigtable
-  * Mapruduce
-  * Dynomo
-  * Linearizability: A Correctness Condition for Concurrent Objects
+上班写Java和Golang，下班写Rust，爱好分布式系统。
 
-* Software
-  * TiKV
-  * LevelDB
-  * RocksDB
-  * BladeKV(Meituan Dis DB)
 
-* Project
-  * DoriaDB
-
-* Others
-  * Lock-free 
-  * Transaction

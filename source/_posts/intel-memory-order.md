@@ -1,8 +1,8 @@
 ---
 title: X86 内存顺序
 date: 2019-12-08 22:43:11
-tags:
-- CPU
+categories: [CS]
+tags: [X86]
 ---
 
 Intel Memory Order 白皮书阅读笔记

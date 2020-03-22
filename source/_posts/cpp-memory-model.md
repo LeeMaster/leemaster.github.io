@@ -1,7 +1,7 @@
 ---
-title: C++ 内存模型
+title: C++ 存储类型（搬运了一波）
 date: 2019-11-09 20:46:35
-tags:
+categories:
 - C++
 ---
 

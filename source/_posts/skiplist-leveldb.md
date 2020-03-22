@@ -1,19 +1,19 @@
 ---
 title: LevelDB 源码分析 —— Skiplist
 date: 2019-10-12 09:58:55
-tags:
-- leveldb
+categories: [LevelDB]
+tags: [LevelDB, 源码分析]
 ---
 
-leveldb中SkipList源码分析学习。
+一字一句地读完leveldb中的SkipList头文件。
 
 <!--more-->
 
 # SkipList
 
-见上一篇文章，关于SkipList的实现介绍。
+SkipList 也是抽象数据结构 Map的一种实现，实现基本的KV操作。
 
-[SkipList](/2019/10/12/skiplist-design/)
+SkipList依然还是List，只不过从一维的List上升到了一个二维的数据结构中，从而在二维的数据结构实现了一种类似BST的二分查找。
 
 ## 直接分析源码
 

@@ -2,12 +2,13 @@
 title: leetcode 46题
 date: 2019-12-16 00:39:51
 mathjax: true
+categories:
+- Algorithm
 tags:
 - leetcode
-- Batracking
 ---
 
-关于回溯的思考
+一道可以把backtrack搞清楚的leetcode题目
 
 <!--more-->
 
@@ -46,10 +47,17 @@ public:
             for(;j<vec.size();j++)
                 if(nums[i]==vec[j]) break; 
             if(j!=vec.size()) continue; 
+            // 添加状态
             vec.emplace_back(nums[i]);
+            // 带着状态进行下一步搜索
             backtrack(res,vec,nums,level+1);
+            // 移除状态，从而形成回溯
             vec.pop_back();
         }
     }
 };
 ```
+
+## 关于回溯的思考
+
+首先回溯是搜索的一种特殊状态，很容易想到搜索，包括DFS和BFS，这两种搜索方式是根据上一步的状态，暴力地搜索下面的状态，而回溯是这两种搜索的扩展，因为有的问题需要带着每一步的状态直到最后的状态，所以搜索一个分支完成后，需要把这个分支搜索得到的状态删除了，才能进行另外一条分支的搜索。

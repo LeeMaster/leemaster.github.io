@@ -1,11 +1,11 @@
 ---
 title: Bigtable 论文
 date: 2019-12-07 20:05:53
-tags:
-- Google
+categories: [论文]
+tags: [BigTable, Google]
 ---
 
-分析一下Bigtable论文。
+没事读论文系列——BigTable 
 
 <!--more-->
 

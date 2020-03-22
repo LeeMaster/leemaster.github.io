@@ -1,7 +1,9 @@
 ---
-title: Trie、Radix、Suffix 三颗树
+title: Trie 这个东西
 date: 2019-11-06 00:50:49
+categories: [Datasruct]
 tags:
+- ds
 ---
 
 在美团的工作中，稳定性建设一直是我毕业到现在整个业务组的主旋律，很荣幸，我负责整个系统的稳定性建设，最近出现了一个新的需求，希望可以提供用户可配置的方式来实现接口级别的熔断，路由匹配大多数都是改造Radix树，正好复习一下这三棵树。
@@ -86,6 +88,7 @@ TrieNode* Trie::_remove(TrieNode * root,const std::string & key,int depth){
   }
 
   auto index = key[depth];
+  // 递归地删除一波
   root -> edges[index] = _remove(root -> edges[index],key,depth + 1);
 
   if (isEmpty(root)){
@@ -129,26 +132,3 @@ void* Trie::seek(const std::string & key) const{
 
 [Trie字典树题集](https://blog.csdn.net/weixin_41162823/article/details/101801789)
 
-# Radix Tree
-
-基数树
-
-## Trie 的问题
-
-Trie的实现，可以很清楚地看出，每一条路径被字符串集合（有可能是二进制集合）中的某个字符串中的一个元素标记，那么当字符串长度过长的时候，整体的搜索效率，可以直接退化成了链表比对了，很显然整个有点慢哦。
-
-## Radix Tree 的原理
-
-和Trie一样，标记路径，实现线索化搜索。不过标记的单位变成了字符串。正如之前说的一样，RadixTree在Linux内核内用来管理内存。
-
-
-# Suffix Tree
-
-# 一些小思考
-
-
-
-# Reference
-
-[某讲义](http://www.cse.chalmers.se/edu/year/2018/course/DAT037/slides/12-tries.pdf)
-[Gin 路由实现](https://michaelyou.github.io/2018/02/10/%E8%B7%AF%E7%94%B1%E6%9F%A5%E6%89%BE%E4%B9%8BRadix-Tree/)

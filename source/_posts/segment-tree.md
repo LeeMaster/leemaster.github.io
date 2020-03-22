@@ -2,6 +2,8 @@
 title: 关于线段树
 date: 2019-12-07 16:05:55
 mathjax: true
+categories:
+- Datastruct
 tags:
 - Datastruct
 ---
