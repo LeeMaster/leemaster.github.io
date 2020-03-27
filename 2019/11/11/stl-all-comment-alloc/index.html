@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Source,STL," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SIG STL V3.3 版本的 Allocator的完全注释">
+<meta name="keywords" content="Source,STL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="STL 源码完全注释——Allocator">
+<meta property="og:url" content="http://leemaster.cn/2019/11/11/stl-all-comment-alloc/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="SIG STL V3.3 版本的 Allocator的完全注释">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-03-13T17:33:20.956Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="STL 源码完全注释——Allocator">
+<meta name="twitter:description" content="SIG STL V3.3 版本的 Allocator的完全注释">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2019/11/11/stl-all-comment-alloc/"/>
+
+
+
+
+
+  <title>STL 源码完全注释——Allocator | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2019/11/11/stl-all-comment-alloc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">STL 源码完全注释——Allocator</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-11T07:24:30+08:00">
+                2019-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SIG STL V3.3 版本的 Allocator的完全注释</p>
+<a id="more"></a>
+<p>Allocator 分为三部分，分别是 </p>
+<ul>
+<li>stl_construct.h  构造销毁（主要是逻辑级别的，构造函数和析构函数）</li>
+<li>stl_alloc.h 具体的分配逻辑 （物理级别的空间管理）</li>
+<li>stl_uninitialized.h 全局填充函数</li>
+</ul>
+<h1 id="stl-construct-h"><a href="#stl-construct-h" class="headerlink" title="stl_construct.h"></a>stl_construct.h</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __SGI_STL_INTERNAL_CONSTRUCT_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __SGI_STL_INTERNAL_CONSTRUCT_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;new.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">__STL_BEGIN_NAMESPACE <span class="comment">// namespace std&#123;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 拷贝构造</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">T1</span>, <span class="title">class</span> _<span class="title">T2</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> _<span class="title">Construct</span>(_<span class="title">T1</span>* __<span class="title">p</span>, <span class="title">const</span> _<span class="title">T2</span>&amp; __<span class="title">value</span>) &#123;</span></span><br><span class="line">  <span class="keyword">new</span> ((<span class="keyword">void</span>*) __p) _T1(__value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 默认初始化构造</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">T1</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> _<span class="title">Construct</span>(_<span class="title">T1</span>* __<span class="title">p</span>) &#123;</span></span><br><span class="line">  <span class="keyword">new</span> ((<span class="keyword">void</span>*) __p) _T1();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 销毁</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Tp</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> _<span class="title">Destroy</span>(_<span class="title">Tp</span>* __<span class="title">pointer</span>) &#123;</span></span><br><span class="line">  __pointer-&gt;~_Tp();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//内部迭代器销毁逻辑 具有 non-trivial 的析构函数</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">ForwardIterator</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">void</span></span></span><br><span class="line"><span class="class">__<span class="title">destroy_aux</span>(_<span class="title">ForwardIterator</span> __<span class="title">first</span>, _<span class="title">ForwardIterator</span> __<span class="title">last</span>, __<span class="title">false_type</span>)</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">for</span> ( ; __first != __last; ++__first)</span><br><span class="line">    destroy(&amp;*__first);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 内部迭代器销毁 具有traivial析构函数 比如基础类型，这个函数可以加速销毁，不必要调用析构函数</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">ForwardIterator</span>&gt; </span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> __<span class="title">destroy_aux</span>(_<span class="title">ForwardIterator</span>, _<span class="title">ForwardIterator</span>, __<span class="title">true_type</span>) &#123;</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 迭代器销毁函数</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">ForwardIterator</span>, <span class="title">class</span> _<span class="title">Tp</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> </span></span><br><span class="line"><span class="class">__<span class="title">destroy</span>(_<span class="title">ForwardIterator</span> __<span class="title">first</span>, _<span class="title">ForwardIterator</span> __<span class="title">last</span>, _<span class="title">Tp</span>*)</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">typename</span> __type_traits&lt;_Tp&gt;::has_trivial_destructor _Trivial_destructor; <span class="comment">// 判断是否有 non-trivial 析构函数</span></span><br><span class="line">  __destroy_aux(__first, __last, _Trivial_destructor()); <span class="comment">// 调用内部的销毁逻辑 __destroy_aux</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用于适配 STL标准</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">ForwardIterator</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> _<span class="title">Destroy</span>(_<span class="title">ForwardIterator</span> __<span class="title">first</span>, _<span class="title">ForwardIterator</span> __<span class="title">last</span>) &#123;</span></span><br><span class="line">  __destroy(__first, __last, __VALUE_TYPE(__first));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 内置类型的销毁（非迭代器类型）</span></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> _Destroy(<span class="keyword">char</span>*, <span class="keyword">char</span>*) &#123;&#125;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> _Destroy(<span class="keyword">int</span>*, <span class="keyword">int</span>*) &#123;&#125;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> _Destroy(<span class="keyword">long</span>*, <span class="keyword">long</span>*) &#123;&#125;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> _Destroy(<span class="keyword">float</span>*, <span class="keyword">float</span>*) &#123;&#125;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> _Destroy(<span class="keyword">double</span>*, <span class="keyword">double</span>*) &#123;&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __STL_HAS_WCHAR_T</span></span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> _Destroy(<span class="keyword">wchar_t</span>*, <span class="keyword">wchar_t</span>*) &#123;&#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* __STL_HAS_WCHAR_T */</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 下面是用来支援 HP 标准的STL函数</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">T1</span>, <span class="title">class</span> _<span class="title">T2</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> <span class="title">construct</span>(_<span class="title">T1</span>* __<span class="title">p</span>, <span class="title">const</span> _<span class="title">T2</span>&amp; __<span class="title">value</span>) &#123;</span></span><br><span class="line">  _Construct(__p, __value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">T1</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> <span class="title">construct</span>(_<span class="title">T1</span>* __<span class="title">p</span>) &#123;</span></span><br><span class="line">  _Construct(__p);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">Tp</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> <span class="title">destroy</span>(_<span class="title">Tp</span>* __<span class="title">pointer</span>) &#123;</span></span><br><span class="line">  _Destroy(__pointer);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> _<span class="title">ForwardIterator</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> <span class="title">destroy</span>(_<span class="title">ForwardIterator</span> __<span class="title">first</span>, _<span class="title">ForwardIterator</span> __<span class="title">last</span>) &#123;</span></span><br><span class="line">  _Destroy(__first, __last);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">__STL_END_NAMESPACE <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* __SGI_STL_INTERNAL_CONSTRUCT_H */</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="stl-alloc-h"><a href="#stl-alloc-h" class="headerlink" title="stl_alloc.h"></a>stl_alloc.h</h1><p>这个头文件有点麻烦了哦，实际代码估计有六百行左右，首先明确分析的方向。</p>
+<p>C++已经支持了多线程，那么有可能会在多线程中进行内存申请释放，所以的话，自然会有一堆多线程的feature来支持。</p>
+<p>对于对象的分配，为了避免内存碎片，目测会有一些内存池优化的技巧，而且会超过一个阀值就会触发内存池分配。</p>
+<p>所以分成三个部分来思考这个头文件</p>
+<h2 id="一些条件编译"><a href="#一些条件编译" class="headerlink" title="一些条件编译"></a>一些条件编译</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __SUNPRO_CC <span class="comment">// sunpro c++ 编译器 </span></span></span><br><span class="line"><span class="meta">#  <span class="meta-keyword">define</span> __PRIVATE public</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="meta">#  <span class="meta-keyword">define</span> __PRIVATE private</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __STL_STATIC_TEMPLATE_MEMBER_BUG <span class="comment">// 不支持静态成员变量，使用malloc ，这个feature基本对于服务端编程来说没啥用了</span></span></span><br><span class="line"><span class="meta">#  <span class="meta-keyword">define</span> __USE_MALLOC</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __THROW_BAD_ALLOC <span class="comment">// 错误是否会抛出异常，</span></span></span><br><span class="line"><span class="meta">#  <span class="meta-keyword">if</span> defined(__STL_NO_BAD_ALLOC) || !defined(__STL_USE_EXCEPTIONS)</span></span><br><span class="line"><span class="meta">#    <span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#    <span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#    <span class="meta-keyword">define</span> __THROW_BAD_ALLOC fprintf(stderr, <span class="meta-string">"out of memory\n"</span>); exit(1) <span class="comment">// 不支持直接打印异常流</span></span></span><br><span class="line"><span class="meta">#  <span class="meta-keyword">else</span> </span></span><br><span class="line"><span class="meta">#    <span class="meta-keyword">include</span> <span class="meta-string">&lt;new&gt;</span></span></span><br><span class="line"><span class="meta">#    <span class="meta-keyword">define</span> __THROW_BAD_ALLOC throw std::bad_alloc() <span class="comment">// 引入C++ 标准的错误异常</span></span></span><br><span class="line"><span class="meta">#  <span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stddef.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __RESTRICT</span></span><br><span class="line"><span class="meta">#  <span class="meta-keyword">define</span> __RESTRICT</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __STL_THREADS</span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;stl_threads.h&gt;</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">define</span> __NODE_ALLOCATOR_THREADS true <span class="comment">// 开启线程内存分配的feature</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">ifdef</span> __STL_SGI_THREADS</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line">      <span class="keyword">extern</span> <span class="keyword">int</span> __us_rsthread_malloc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> __NODE_ALLOCATOR_LOCK <span class="meta-keyword">if</span> (threads &amp;&amp; __us_rsthread_malloc) \</span></span><br><span class="line">                &#123; _S_node_allocator_lock._M_acquire_lock(); &#125;</span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> __NODE_ALLOCATOR_UNLOCK <span class="meta-keyword">if</span> (threads &amp;&amp; __us_rsthread_malloc) \</span></span><br><span class="line">                &#123; _S_node_allocator_lock._M_release_lock(); &#125;</span><br><span class="line"><span class="meta"># <span class="meta-keyword">else</span> </span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> __NODE_ALLOCATOR_LOCK \</span></span><br><span class="line">        &#123; <span class="keyword">if</span> (threads) _S_node_allocator_lock._M_acquire_lock(); &#125;</span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> __NODE_ALLOCATOR_UNLOCK \</span></span><br><span class="line">        &#123; <span class="keyword">if</span> (threads) _S_node_allocator_lock._M_release_lock(); &#125;</span><br><span class="line"><span class="meta"># <span class="meta-keyword">endif</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="comment">// 不支持线程，那就天生线程安全，不用引入线程处理的 feature了</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> __NODE_ALLOCATOR_LOCK</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> __NODE_ALLOCATOR_UNLOCK</span></span><br><span class="line"><span class="meta">#   <span class="meta-keyword">define</span> __NODE_ALLOCATOR_THREADS false</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="class-malloc-alloc-template"><a href="#class-malloc-alloc-template" class="headerlink" title="class __malloc_alloc_template"></a>class __malloc_alloc_template</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> __inst&gt; </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 类型标记，如何使用类型标记呢？</span></span><br><span class="line"><span class="comment"> * 可以在 debug模式设置为0 release 模式设置为1 </span></span><br><span class="line"><span class="comment"> * 这样，类的具体化行为是一致的，但是可以根据不同的版本来实现不同的逻辑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> __<span class="title">malloc_alloc_template</span> &#123;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">void</span>* _S_oom_malloc(<span class="keyword">size_t</span>); <span class="comment">// oom 情况下的分配函数</span></span><br><span class="line">  <span class="keyword">static</span> <span class="keyword">void</span>* _S_oom_realloc(<span class="keyword">void</span>*, <span class="keyword">size_t</span>); <span class="comment">// oom 情况下的 realloc分配逻辑</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __STL_STATIC_TEMPLATE_MEMBER_BUG</span></span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="title">void</span> <span class="params">(* __malloc_alloc_oom_handler)</span><span class="params">()</span></span>; <span class="comment">// 来代替全局函数的</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">  <span class="comment">// malloc 分配失败 oom分配开始</span></span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="title">allocate</span><span class="params">(<span class="keyword">size_t</span> __n)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">void</span>* __result = <span class="built_in">malloc</span>(__n);</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == __result) __result = _S_oom_malloc(__n);</span><br><span class="line">    <span class="keyword">return</span> __result;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 直接调用 free</span></span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deallocate</span><span class="params">(<span class="keyword">void</span>* __p, <span class="keyword">size_t</span> <span class="comment">/* __n */</span>)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="built_in">free</span>(__p);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 同 malloc 解释</span></span><br><span class="line">  <span class="function"><span class="keyword">static</span> <span class="keyword">void</span>* <span class="title">reallocate</span><span class="params">(<span class="keyword">void</span>* __p, <span class="keyword">size_t</span> <span class="comment">/* old_sz */</span>, <span class="keyword">size_t</span> __new_sz)</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">void</span>* __result = <span class="built_in">realloc</span>(__p, __new_sz);</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == __result) __result = _S_oom_realloc(__p, __new_sz);</span><br><span class="line">    <span class="keyword">return</span> __result;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置用户自定义的oom分配处理逻辑</span></span><br><span class="line">  static void (* __set_malloc_handler(void (*__f)()))()</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">void</span> (* __old)() = __malloc_alloc_oom_handler;</span><br><span class="line">    __malloc_alloc_oom_handler = __f;</span><br><span class="line">    <span class="keyword">return</span>(__old);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// malloc_alloc out-of-memory handling</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __STL_STATIC_TEMPLATE_MEMBER_BUG</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> __inst&gt;</span><br><span class="line"><span class="keyword">void</span> (* __malloc_alloc_template&lt;__inst&gt;::__malloc_alloc_oom_handler)() = <span class="number">0</span>; <span class="comment">// 默认实现为空，这样默认的情况下直接抛异常了要</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> __inst&gt;</span><br><span class="line"><span class="keyword">void</span>*</span><br><span class="line">__malloc_alloc_template&lt;__inst&gt;::_S_oom_malloc(<span class="keyword">size_t</span> __n)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> (* __my_malloc_handler)();</span><br><span class="line">    <span class="keyword">void</span>* __result;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        __my_malloc_handler = __malloc_alloc_oom_handler;</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span> == __my_malloc_handler) &#123; __THROW_BAD_ALLOC; &#125; <span class="comment">// 未定义抛异常</span></span><br><span class="line">        (*__my_malloc_handler)(); <span class="comment">// 处理oom的逻辑，可能这个函数用来做系统内存的 swap-mark 之类的工作，清理内存</span></span><br><span class="line">        __result = <span class="built_in">malloc</span>(__n);</span><br><span class="line">        <span class="keyword">if</span> (__result) <span class="keyword">return</span>(__result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> __inst&gt;</span><br><span class="line"><span class="keyword">void</span>* __malloc_alloc_template&lt;__inst&gt;::_S_oom_realloc(<span class="keyword">void</span>* __p, <span class="keyword">size_t</span> __n)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> (* __my_malloc_handler)();</span><br><span class="line">    <span class="keyword">void</span>* __result;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">        __my_malloc_handler = __malloc_alloc_oom_handler;</span><br><span class="line">        <span class="keyword">if</span> (<span class="number">0</span> == __my_malloc_handler) &#123; __THROW_BAD_ALLOC; &#125;</span><br><span class="line">        (*__my_malloc_handler)();</span><br><span class="line">        __result = <span class="built_in">realloc</span>(__p, __n);</span><br><span class="line">        <span class="keyword">if</span> (__result) <span class="keyword">return</span>(__result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> __malloc_alloc_template&lt;<span class="number">0</span>&gt; malloc_alloc; <span class="comment">// 这里就是 _inst 的作用，直接定义一个relase版本的malloc_alloc 版本</span></span><br></pre></td></tr></table></figure>
+<h2 id="class-simple-alloc"><a href="#class-simple-alloc" class="headerlink" title="class simple_alloc"></a>class simple_alloc</h2><p>没啥好说的，直接看源码就好了！</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> _<span class="title">Tp</span>, <span class="title">class</span> _<span class="title">Alloc</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">simple_alloc</span> &#123;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">static</span> _<span class="function">Tp* <span class="title">allocate</span><span class="params">(<span class="keyword">size_t</span> __n)</span></span></span><br><span class="line"><span class="function">      </span>&#123; <span class="keyword">return</span> <span class="number">0</span> == __n ? <span class="number">0</span> : (_Tp*) _Alloc::allocate(__n * <span class="keyword">sizeof</span> (_Tp)); &#125;</span><br><span class="line">    <span class="keyword">static</span> _<span class="function">Tp* <span class="title">allocate</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function">      </span>&#123; <span class="keyword">return</span> (_Tp*) _Alloc::allocate(<span class="keyword">sizeof</span> (_Tp)); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deallocate</span><span class="params">(_Tp* __p, <span class="keyword">size_t</span> __n)</span></span></span><br><span class="line"><span class="function">      </span>&#123; <span class="keyword">if</span> (<span class="number">0</span> != __n) _Alloc::deallocate(__p, __n * <span class="keyword">sizeof</span> (_Tp)); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deallocate</span><span class="params">(_Tp* __p)</span></span></span><br><span class="line"><span class="function">      </span>&#123; _Alloc::deallocate(__p, <span class="keyword">sizeof</span> (_Tp)); &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Source/" rel="tag"># Source</a>
+          
+            <a href="/tags/STL/" rel="tag"># STL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/10/cpp-memory-model/" rel="next" title="C++ 内存模型">
+                <i class="fa fa-chevron-left"></i> C++ 内存模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/07/memory-barrier/" rel="prev" title="内存屏障">
+                内存屏障 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#stl-construct-h"><span class="nav-number">1.</span> <span class="nav-text">stl_construct.h</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#stl-alloc-h"><span class="nav-number">2.</span> <span class="nav-text">stl_alloc.h</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一些条件编译"><span class="nav-number">2.1.</span> <span class="nav-text">一些条件编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class-malloc-alloc-template"><span class="nav-number">2.2.</span> <span class="nav-text">class __malloc_alloc_template</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#class-simple-alloc"><span class="nav-number">2.3.</span> <span class="nav-text">class simple_alloc</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

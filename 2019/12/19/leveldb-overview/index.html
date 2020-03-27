@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Source," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="关于LevelDB源码的一些设计技巧">
+<meta name="keywords" content="Source">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LevelDB 源码中的设计思路">
+<meta property="og:url" content="http://leemaster.cn/2019/12/19/leveldb-overview/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="关于LevelDB源码的一些设计技巧">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-03-07T16:01:37.642Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LevelDB 源码中的设计思路">
+<meta name="twitter:description" content="关于LevelDB源码的一些设计技巧">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2019/12/19/leveldb-overview/"/>
+
+
+
+
+
+  <title>LevelDB 源码中的设计思路 | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2019/12/19/leveldb-overview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LevelDB 源码中的设计思路</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-19T08:32:08+08:00">
+                2019-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LevelDB/" itemprop="url" rel="index">
+                    <span itemprop="name">LevelDB</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于LevelDB源码的一些设计技巧</p>
+<a id="more"></a>
+<h1 id="LevelDB-概览"><a href="#LevelDB-概览" class="headerlink" title="LevelDB 概览"></a>LevelDB 概览</h1><blockquote>
+<p>先忘记LevelDB是一个存储引擎，我们想象他就是一个KV存储结构好了，如果是KV存储结构，那么必然少不了数据结构关于<code>MAP</code>抽象数据结构的描述，当然为了更快一点，让这个<code>MAP</code>有序好了，那么参考数据结构上<code>MAP</code>和<code>HEAP</code>的两个抽象数据结构的接口。</p>
+<p>为了存储大量的数据，我们需要让我们的这个结构可以和磁盘打交道，打交道的方式也比较简单，能读写文件就行了。</p>
+<p>LevelDB将随即写转换为了顺序写，这个操作其实就是LSM算法的思想，<code>Log Structed Merged</code> 仔细的品，我们随即写不直接戳磁盘去，直接戳内存，然后呢，在向磁盘归并的时候找到文件中重叠的部分，然后归并掉，很显然这个是一个写放大的过程，因为要读，读完了再归并，LevelDB没有优化，但是TiKV/Titan作为一个RocksDB插件正在优化这个问题，思想来自<code>Wisckey</code>。</p>
+</blockquote>
+<h2 id="LevelDB-架构"><a href="#LevelDB-架构" class="headerlink" title="LevelDB 架构"></a>LevelDB 架构</h2><p>我们先大概看一下LevelDB的数据结构</p>
+<ul>
+<li>Memtable ImmutableMemtable </li>
+<li>Level0 </li>
+<li>Level1 - LevelN</li>
+</ul>
+<p>主要的就这三个东西了，当然TableCache和Bloomfiter还没有出现，无非是用空间换时间，从而提升查询效率。</p>
+<p>那么既然要戳磁盘去，如何组织文件呢？</p>
+<ul>
+<li>SSTable 文件 有多个，用来存储数据的</li>
+<li>MANIFEST 文件 有多个，用来实现快照隔离的，可以利用这个东西实现数据库的Repeated Read</li>
+<li>CURRENT 文件 存的是当前MANIFEST文件，也就是最新版本的数据</li>
+<li>log 文件 WAL日志文件，用来恢复的，可以认为是一个redo undo 日志合体</li>
+</ul>
+<p>LevelDB写数据的操作流动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Memtable -&gt; Level0 SSTable -&gt; LevelN SSTables</span><br></pre></td></tr></table></figure>
+<p>LevelDB读数据的的流动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Memetable -&gt; SSTables</span><br></pre></td></tr></table></figure>
+<h2 id="Iterator-模式"><a href="#Iterator-模式" class="headerlink" title="Iterator 模式"></a>Iterator 模式</h2><p>在之前提到过，我们直接将LevelDB堪称一个 <code>MAP</code> + <code>HEAP</code> 的组合抽象数据结构，那么既然是数据结构就是要存储数据的，为了从数据结构中拿出数据，需要定义抽象的读接口，Iterator正是不二之选，直接将所有的读操作统统安排进去作为接口。</p>
+<p>其中精华的部分，可以用这样一个抽象的问题来解释，给定N个数组，查找其中某个Key的值。</p>
+<p>摘取LevelDB中的代码进行分析</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//merger.cc </span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MergingIterator</span> :</span> <span class="keyword">public</span> Iterator &#123;</span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  MergingIterator(<span class="keyword">const</span> Comparator* comparator, Iterator** children, <span class="keyword">int</span> n)</span><br><span class="line">      : comparator_(comparator),</span><br><span class="line">        children_(<span class="keyword">new</span> IteratorWrapper[n]),</span><br><span class="line">        n_(n),</span><br><span class="line">        current_(<span class="literal">nullptr</span>),</span><br><span class="line">        direction_(kForward) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">      children_[i].Set(children[i]); <span class="comment">// 依次初始化子迭代器数数组</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">Seek</span><span class="params">(<span class="keyword">const</span> Slice&amp; target)</span> override </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n_; i++) &#123;</span><br><span class="line">      children_[i].Seek(target); <span class="comment">// 在子迭代器中依次寻找</span></span><br><span class="line">    &#125;</span><br><span class="line">    FindSmallest(); <span class="comment">// 因为 Iterator实现了迭代器的取值Traits 因此可以直接拿出值来</span></span><br><span class="line">    direction_ = kForward;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Iterator* <span class="title">NewMergingIterator</span><span class="params">(<span class="keyword">const</span> Comparator* comparator, Iterator** children,</span></span></span><br><span class="line"><span class="function"><span class="params">                             <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  assert(n &gt;= <span class="number">0</span>);</span><br><span class="line">  <span class="keyword">if</span> (n == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> NewEmptyIterator();</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (n == <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> children[<span class="number">0</span>];</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> MergingIterator(comparator, children, n);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>剩下的代码在LevelDB中比较完整了，可以自己看一下</p>
+<ul>
+<li>include/iterator.h</li>
+<li>table/intertor_wrapper.h</li>
+<li>table/merger.h </li>
+<li>table/merger.cc</li>
+</ul>
+<p>LevelDB中的迭代器的功能主要如下：</p>
+<ul>
+<li>Vaild() 迭代器是否已经迭代到结束了</li>
+<li>Next() 正向迭代</li>
+<li>Prev() 反向迭代</li>
+<li>Seek() 查找固定值</li>
+<li>key() 返回当前的Key </li>
+<li>value() 返回当前的Value </li>
+<li>SeekToLast() 回到尾部</li>
+<li>SeekToFirst() 回到头部</li>
+</ul>
+<p>这个设计的思路很明显，我们可以认为一个存储引擎是一个超级大的KV存储，既然是一个KV存储并且有序，那么可以在上面做的事情就不少了，比如可以在上面实现聚合，统计某个Key范围下的所有的值的和类似的这种聚合操作，当然还有数据库常用的火山模型其实就是迭代器的来回包装搞定的。</p>
+<p>LevelDB如何保证Key是有序的呢？是通过Comparetor接口实现的。这个完全可以交给用户实现，如果交给用户实现，那么参考TiDB和TiKV之间的通信协议，完全可以在这个KV存储上构建具有表空间的关系型数据库了，这里就不展开了。</p>
+<h2 id="读写抽象"><a href="#读写抽象" class="headerlink" title="读写抽象"></a>读写抽象</h2><p>LevelDB既然是一个存储引擎，那么重要的工作就是对文件的操作了，这里LevelDB对文件操作做了三个抽象</p>
+<ul>
+<li>SequentialFile</li>
+<li>RandomAccessFile</li>
+<li>WritableFile </li>
+</ul>
+<p>也就把读写抽象的完完整整了，因为LevelDB是专门转换随机写到顺序写的，所以自然不存在随即写的抽象，那么顺序读和随机读两种抽象足够完成我们的需求了，写文件自然是Append就够了。</p>
+<p>这一点是非常值得学习的，自己封装一堆读写操作utils来说是非常简单的。</p>
+<h2 id="RAII-应用"><a href="#RAII-应用" class="headerlink" title="RAII 应用"></a>RAII 应用</h2><p>直接贴代码吧，在使用锁这里，完全靠作用域的变量管理来搞定。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SCOPED_LOCKABLE</span> <span class="title">MutexLock</span> &#123;</span></span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">  explicit MutexLock(port::Mutex* mu) EXCLUSIVE_LOCK_FUNCTION(mu) : mu_(mu) &#123;</span><br><span class="line">    <span class="keyword">this</span>-&gt;mu_-&gt;Lock();</span><br><span class="line">  &#125;</span><br><span class="line">  ~MutexLock() UNLOCK_FUNCTION() &#123; <span class="keyword">this</span>-&gt;mu_-&gt;Unlock(); &#125;</span><br><span class="line"></span><br><span class="line">  MutexLock(<span class="keyword">const</span> MutexLock&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">  MutexLock&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> MutexLock&amp;) = <span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">  port::Mutex* <span class="keyword">const</span> mu_;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="LevelDB-写"><a href="#LevelDB-写" class="headerlink" title="LevelDB 写"></a>LevelDB 写</h2><h3 id="随机写转顺序写"><a href="#随机写转顺序写" class="headerlink" title="随机写转顺序写"></a>随机写转顺序写</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Status <span class="title">Append</span><span class="params">(<span class="keyword">const</span> Slice&amp; data)</span> override </span>&#123;</span><br><span class="line">  <span class="keyword">size_t</span> write_size = data.size();</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">char</span>* write_data = data.data();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 填充写缓存</span></span><br><span class="line">  <span class="keyword">size_t</span> copy_size = <span class="built_in">std</span>::min(write_size, kWritableFileBufferSize - pos_);</span><br><span class="line">  <span class="built_in">std</span>::<span class="built_in">memcpy</span>(buf_ + pos_, write_data, copy_size);</span><br><span class="line">  write_data += copy_size;</span><br><span class="line">  write_size -= copy_size;</span><br><span class="line">  pos_ += copy_size;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 当前的块还没有填充满</span></span><br><span class="line">  <span class="keyword">if</span> (write_size == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> Status::OK();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 已经填充满了，刷新缓存</span></span><br><span class="line">  Status status = FlushBuffer();</span><br><span class="line">  <span class="keyword">if</span> (!status.ok()) &#123;</span><br><span class="line">    <span class="keyword">return</span> status;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 写剩下的部分</span></span><br><span class="line">  <span class="keyword">if</span> (write_size &lt; kWritableFileBufferSize) &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">memcpy</span>(buf_, write_data, write_size);</span><br><span class="line">    pos_ = write_size;</span><br><span class="line">    <span class="keyword">return</span> Status::OK();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> WriteUnbuffered(write_data, write_size);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 刷入内存写缓存</span></span><br><span class="line"><span class="function">Status <span class="title">FlushBuffer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  Status status = WriteUnbuffered(buf_, pos_);</span><br><span class="line">  pos_ = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">return</span> status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">Status <span class="title">WriteUnbuffered</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* data, <span class="keyword">size_t</span> size)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// write 写函数直接写磁盘块</span></span><br><span class="line">  <span class="keyword">while</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">ssize_t</span> write_result = ::write(fd_, data, size);</span><br><span class="line">    <span class="keyword">if</span> (write_result &lt; <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (errno == EINTR) &#123;</span><br><span class="line">        <span class="keyword">continue</span>;  <span class="comment">// Retry</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> PosixError(filename_, errno);</span><br><span class="line">    &#125;</span><br><span class="line">    data += write_result;</span><br><span class="line">    size -= write_result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> Status::OK();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>LevelDB是一个非常值得读一读的项目，虽然RocksDB出来后，提供了很多新的Feature，LevelDB也没有用很多c++中的骚操作，但是在一个系统设计上有很多值得思考的点的。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Source/" rel="tag"># Source</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/16/leetcode-46/" rel="next" title="leetcode 46题">
+                <i class="fa fa-chevron-left"></i> leetcode 46题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/19/asm-learn-with-linux/" rel="prev" title="回忆一下汇编的世界">
+                回忆一下汇编的世界 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LevelDB-概览"><span class="nav-number">1.</span> <span class="nav-text">LevelDB 概览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LevelDB-架构"><span class="nav-number">1.1.</span> <span class="nav-text">LevelDB 架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Iterator-模式"><span class="nav-number">1.2.</span> <span class="nav-text">Iterator 模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#读写抽象"><span class="nav-number">1.3.</span> <span class="nav-text">读写抽象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAII-应用"><span class="nav-number">1.4.</span> <span class="nav-text">RAII 应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LevelDB-写"><span class="nav-number">1.5.</span> <span class="nav-text">LevelDB 写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#随机写转顺序写"><span class="nav-number">1.5.1.</span> <span class="nav-text">随机写转顺序写</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

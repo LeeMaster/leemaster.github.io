@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="System-Design," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="设计模式是个好东西，但是设计模式也不是一个特别好的东西，每个系统都有每个系统的划分，每个划分都有不同的组装和行为。">
+<meta name="keywords" content="System-Design">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回顾设计模式(一个消息中心系统设计回顾)">
+<meta property="og:url" content="http://leemaster.cn/2020/03/28/review-design-pattern/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="设计模式是个好东西，但是设计模式也不是一个特别好的东西，每个系统都有每个系统的划分，每个划分都有不同的组装和行为。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-03-27T20:36:33.871Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="回顾设计模式(一个消息中心系统设计回顾)">
+<meta name="twitter:description" content="设计模式是个好东西，但是设计模式也不是一个特别好的东西，每个系统都有每个系统的划分，每个划分都有不同的组装和行为。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2020/03/28/review-design-pattern/"/>
+
+
+
+
+
+  <title>回顾设计模式(一个消息中心系统设计回顾) | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2020/03/28/review-design-pattern/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">回顾设计模式(一个消息中心系统设计回顾)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-27T23:49:32Z">
+                2020-03-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Misc/" itemprop="url" rel="index">
+                    <span itemprop="name">Misc</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>设计模式是个好东西，但是设计模式也不是一个特别好的东西，每个系统都有每个系统的划分，每个划分都有不同的组装和行为。 </p>
+<a id="more"></a>
+<h1 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h1><blockquote>
+<p>写在前面：最近可能到了一个新的bottleneck了，感谢写了很多的代码，然后也做了不少的事情，但是突然感觉自己写的代码已经没有办法看了和维护下去了，这个时候我觉得是一个非常好的时机，拿起设计模式重新读一读了，思考一下面向对象行为的系统设计思路。毕竟每个系统无论web还是底层的中间件又或者是OS、DB这种底层的东西，其实都是在描述某种东西，web在描述业务，中间件在描述计算机的某个元件的网络版本，OS和DB好像又在描述硬件和一些其他的抽象。</p>
+</blockquote>
+<p>就拿最近的一个项目来说吧，最近在重构整个平台的消息中心，简单来说一下业务吧。我们希望通过构建一个统一的消息中心入口，统一地将websocket消息，网站内站内信，邮件等多种消息推送方式，收敛到一起，为用户提供统一的消息推送接口，并支持多个消息同时推送到多个目的地去，当然也要具有一定的消息接受和处理能力。</p>
+<h2 id="分析需求"><a href="#分析需求" class="headerlink" title="分析需求"></a>分析需求</h2><p>首先消息中心的定位是一个中心化的消息中转中心，我们的用户一定是希望我们能有下面的这些能力：</p>
+<ul>
+<li>统一的消息推送接入方式</li>
+<li>消息流动过程的可查找能力</li>
+<li>一定的消息推送运营数据</li>
+<li>消息上行回调的能力</li>
+</ul>
+<p>我们发现四个主要能力都在提<code>消息</code>二字，而对于一条消息来说呢，不一定每一条都会进入我们的DB，还有一部分不需要长期追踪，短时间可以追踪就可以，比如websocket推送的通知，就不是很需要长时间的保存，首先对我们的DB容量是一个浪费，第二用户真的不会没事干查一年前推送了什么通知，但是三四天之内的某条消息一定能通过某个ID查询出来。这一步我认为就是一个系统设计比较重要的点了<code>找到主体对象</code>，在整个消息中心系统中，核心的思考点就在<code>消息</code>二字。</p>
+<h3 id="寻找主体对象"><a href="#寻找主体对象" class="headerlink" title="寻找主体对象"></a>寻找主体对象</h3><p>可以说，不同的系统都有不同系统中的主体对象，这个主体对象会贯穿整个系统设计的过程中，我们的系统设计需要对这个主体对象做下面五个方面的思考：</p>
+<ul>
+<li>主体对象参与了什么业务（主体业务，辅助业务）</li>
+<li>主体对象的生成过程（主体对象在业务的参与方式）</li>
+<li>主体业务的监控点（主流程监控）</li>
+<li>主体业务的异常如何监控报警（异常流程的报警）</li>
+<li>主体业务和主体对象的衡量指标 （数据和报表）</li>
+</ul>
+<p>目前就我短暂的系统设计和架构经验来看，根据这五个问题对自己提问，对自己的PM提问，基本能确定这个系统主要设计方向，同时还需要按照下面两个方向来思考未来的扩展能力：</p>
+<ul>
+<li>主体对象的子对象是否可能有多种（在消息中心中，消息作为主体对象，而邮件啦，站内信啦就都是主体对象消息的子对象，那现在公司有多少种消息呢？）</li>
+<li>主体业务的参与方式是否有多种 （在消息中心中，推送作为我们的主要业务，一期建设只做HTTP接口，那么未来是否需要支持RPC接口呢？）</li>
+</ul>
+<p>那么上面这两个部分我分别叫做<code>基于需求的系统设计</code>和<code>面向未来的架构设计</code>，基于需求我们可以快速地分析出我们要做什么，要用什么轮子做什么事情，而面向未来可以帮助我们合理运用设计模式和系统设计范式找到一个合适的软件架构保障未来一段时间的架构弹性。</p>
+<h3 id="讨论主体业务"><a href="#讨论主体业务" class="headerlink" title="讨论主体业务"></a>讨论主体业务</h3><p>在开水团的工作中，leader一直琢磨让我用一句话说明白这个事情为什么要这么做，那么对于消息中心，我觉得一句话确实可以说清楚主体业务，消息中心的主体业务：帮助用户将消息推送到消息应该去的地方。举个例子，用户想发邮件，调用消息中心我们就能将邮件推送到这份邮件应该去的那个邮箱。</p>
+<p>既然我们的主体业务是推送消息，那么我们的辅助业务呢？我觉得我们的辅助业务是建立在我们主体业务之后的能力上的，我们既然能将消息推送到下游，当然我们也能作为一个下游接受消息，将消息返回给相应的接入方系统中去。这样梳理以后我们消息中心一段时间的业务就确定了。</p>
+<ul>
+<li>消息推送业务</li>
+<li>消息接收业务</li>
+</ul>
+<p>再简单说一点，我们就是要做一个目前我们平台的电子版的收发室老大爷。</p>
+<h3 id="主体对象如何参与业务"><a href="#主体对象如何参与业务" class="headerlink" title="主体对象如何参与业务"></a>主体对象如何参与业务</h3><p>上文已经说到了，我们的主体对象是我们的消息，我们的消息参与到两个业务的方式就是让我们的主体对象在我们消息中心的信道上流动。</p>
+<ul>
+<li>消息可以在下行信道流动（推送）</li>
+<li>消息也可以在上行信道流动 （接收）</li>
+</ul>
+<p>我认为这一步是将业务拆解到已经具有技术架构的模样了，这个时候可以顺势地思考一下软件架构应该怎么做了。</p>
+<p>首先我们的消息中心并不自己维护信道，因为已经有团队在帮我们维护信道了，所以我们并不需要自己建设一套什么websocket信道，或者邮件信道了，我们只需要将用户消息转换成为下游信道可以接收的方式，基本就完成了我们的主体业务，<code>消息推送</code>。那么消息又可以被分为多种消息，不同的消息推送的信道不同，当然持久化的方式也不同。</p>
+<ul>
+<li>站内信消息</li>
+<li>websocket通知消息</li>
+<li>邮件消息</li>
+<li>公众号消息</li>
+</ul>
+<p>消息的分类有了，那么推送业务另外一个重要的东西是什么？我们有了消息以后，只要有路由我们就可以将消息推送出去。那么路由又可以分为两类：</p>
+<ul>
+<li>单播消息（点对点投递，常见的公众号消息）</li>
+<li>多播消息（一对多投递，常见的公告）</li>
+</ul>
+<p>到这里我们就找到了主体核心的两个对象<code>消息</code>和<code>路由</code>，有了这两个主体对象，只要和主体业务中的推送信道一结合，我们的主体业务就完成了，那么现在分出了这么多种消息和两个信道，在软件中如何把他们合理的管理呢？这里就引出了设计模式的思考了，如何用设计模式来实现业务，并提升软件架构弹性。</p>
+<h4 id="主流程的抽象"><a href="#主流程的抽象" class="headerlink" title="主流程的抽象"></a>主流程的抽象</h4><blockquote>
+<p>对业务的理解是将业务通过伪代码的形式写到纸上，用大家都能看懂的方式。</p>
+</blockquote>
+<p>多种消息如何统一描述呢？我们根据对主体业务和主体对象的分析，一个用户推送请求包含两部分<code>消息</code>和<code>路由</code>，那么一个请求一定会被拆解为：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Message</span></span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rule</span></span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样两个类，这两个类只要能通过我们的信道服务：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Channel</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(Message, Rule)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么不同的信道就可以推送不同的消息到不同的地方，举个例子，websocket消息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WebsocketChannel</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">push</span><span class="params">(Message, Rule)</span></span>&#123;</span><br><span class="line">    WS.push(Message, Rule);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就可以将消息完成推送，当然在推送之前我们来聊一聊主体业务中的辅助工作，消息存储。</p>
+<p>上文说到，不同的消息存储的方式是不一样的，站内信业务，是必须长期可追踪的，而websocket通知短期可追踪，长期丢失业务可接受，那么这里我们可以抽象地将存储服务做成接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">MessageStorage</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">persistence</span><span class="params">(Message)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于我们的站内信还有我们的邮件，我们需要用DB持久化，长期可追溯，那么对于这种类型的消息呢，我们通过数据库存储实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DBMessageStorage</span> <span class="keyword">implements</span> <span class="title">MessageStorage</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">persistence</span><span class="params">(Message)</span></span>&#123;</span><br><span class="line">    <span class="function">INSERT INTO <span class="title">MESSAGE</span><span class="params">(Message)</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然现在存储这么多，那么对于websocket通知这类的消息呢，不仅量大而且长期存储有点浪费，那么直接存到ES里面去呗：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ESMessageStorage</span> <span class="keyword">implements</span> <span class="title">MessageStorage</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">persistence</span><span class="params">(Message)</span></span>&#123;</span><br><span class="line">    Es.push(Message);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们就将不同类型的消息存储到了不同的存储服务里面去，那么通过一个统一的入口来组装业务：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MessageService</span></span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">hanlde</span><span class="params">(Message, Rule)</span></span>&#123;</span><br><span class="line">    MessageStorage.persistence(Message);</span><br><span class="line">    Channel.push(Message, Rule);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="讨论消息的创建"><a href="#讨论消息的创建" class="headerlink" title="讨论消息的创建"></a>讨论消息的创建</h4><blockquote>
+<p>合理地运用设计模式真的能帮助我们写出弹性更高的代码</p>
+</blockquote>
+<p>上面我们已经看到了我们的消息又多种类型，但是我们的消息入口只有一个，如何按照入口中的某个参数来创建消息呢？这里就用到了设计模式中的<code>抽象工厂模式</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">MessageFacotry</span></span>&#123;</span><br><span class="line">  <span class="keyword">abstract</span> Message, <span class="function">Rule <span class="title">build</span><span class="params">(MessageRequest)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对着这个抽象工厂，创建一堆子类，然后统一地聚合到入口位置，就可以完成我们创建不同消息的工作了:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MessagePushController</span></span>&#123;</span><br><span class="line">  </span><br><span class="line">  WebsocketMessageFactory websocketFactory;</span><br><span class="line"></span><br><span class="line">  MailMessageFactory mailFactory;</span><br><span class="line"></span><br><span class="line">  <span class="function">Response <span class="title">request</span><span class="params">(MessageRequest)</span></span>&#123;</span><br><span class="line">    <span class="keyword">switch</span>(MessageRequest.type)&#123;</span><br><span class="line">      <span class="keyword">case</span> websocket:</span><br><span class="line">        Messsage, Rule &lt;- websocketFactory.build(MessageRequest);</span><br><span class="line">        MessageService.push(Message, Rule);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然啦，对于<code>MessageService</code>我们完全可以用Spring的<code>BeanDefinitionPostProcessor</code>来实现一个策略模式，实现不同类型的Message推送到不同的信道。</p>
+<p>到这里基本我们的业务也就分析的差不多了，后面的业务就不多说了，下面我写点关于弹性的系统相关的东西。</p>
+<h1 id="弹性的软件系统"><a href="#弹性的软件系统" class="headerlink" title="弹性的软件系统"></a>弹性的软件系统</h1><blockquote>
+<p>我们永远没有办法阻止熵增，但是我们有办法来减少熵增。</p>
+</blockquote>
+<p>在开水团的工作是从维护公有云系统开始的，虽然天天带着游标卡尺吧，但是也算见识到了，软件的熵增是一件非常可怕的事情，我们都喜欢加入一些有的没的的东西让我们的设计看起来非常厉害，但是呢，这样会让整个系统失去维护的活性和必要的弹性。</p>
+<h2 id="几个例子"><a href="#几个例子" class="headerlink" title="几个例子"></a>几个例子</h2><p>几个还算有用的减少熵增的小技巧</p>
+<h3 id="状态设计"><a href="#状态设计" class="headerlink" title="状态设计"></a>状态设计</h3><p>关于状态的数据库表示，我们的在设计状态的时候，经常会用一些连续的数字表达状态值，其实这样是非常不好的，因为没准哪天有点什么新的东西就突然加入进来了，然后这个事就麻烦了。</p>
+<p>这里我经常使用位表示法来表示状态，举个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> State&#123;</span><br><span class="line">  ALL(<span class="number">0</span>),</span><br><span class="line">  STATE_ONE(<span class="number">1</span> &lt;&lt; <span class="number">2</span>),</span><br><span class="line">  STATE_TWO(<span class="number">1</span> &lt;&lt; <span class="number">3</span>)</span><br><span class="line">  ...;</span><br><span class="line">  <span class="keyword">public</span> Integer code;</span><br><span class="line">  State(Integer code)&#123;</span><br><span class="line">    <span class="keyword">this</span>.code = code;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 找到一个状态</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> State <span class="title">match</span><span class="params">(Integer code)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (State state : State.values())&#123;</span><br><span class="line">      <span class="keyword">if</span> (state.code &amp; code == state.code) <span class="keyword">return</span> state;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里会发现，我会在末尾留上一位，主要是web的业务经常多变，为了快速上线某个业务，可能需要暂时用现在的某个字段来表示一个状态，这样我们虽然只有一位，但是我们的短时间弹性也是足够的，未来架构扩张的时候，可以直接通过最后一位计算出来进行字段扩张，非常的快。</p>
+<h3 id="微服务中的事件"><a href="#微服务中的事件" class="headerlink" title="微服务中的事件"></a>微服务中的事件</h3><p>这里可以参考一下设计模式中的一个模式<code>命令模式</code>，这种设计呢，是通过对不同的命令抽象一个对象，从而出发不同的操作，在微服务中，我们很有可能从一个系统调用到另外一个系统，如果我们没有这个事件的思考的话，那么我们的设计很有可能就是RPC方法的无限扩张，比如</p>
+<figure class="highlight thrift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">service someServive&#123;</span><br><span class="line">  response oneMethod(1:string param);</span><br><span class="line"></span><br><span class="line">  response twoMethod(1:i32 param);</span><br><span class="line"></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后这个事情又变得比较脑壳疼了，我们只要一增加一个功能，我们就需要在我们的RPC服务内实现一个新的方法，最后那个类，可以思考一下，会变得无限膨胀，最后又得重构了，虽然满足了KPI的要求，但是呢，免不了被人背后骂娘。</p>
+<p>那么完全可以利用epoll的思想，直接用事件消息作为微服务之间的通信数据载体，通过一个合理的事件定义，不用修改接口，只需要扩展一个新的事件接收后的事件处理器就可以了，比如在RPC中我们的定义</p>
+<figure class="highlight thrift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service someServive&#123;</span><br><span class="line">  response emit(1:Event event);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们在实现方法内：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">EventHandler</span></span>&#123;</span><br><span class="line">  <span class="function">Response <span class="title">emit</span><span class="params">(Event event)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EventService</span></span>&#123;</span><br><span class="line">  <span class="function">Response <span class="title">emit</span><span class="params">(Event event)</span></span>&#123;</span><br><span class="line">    EventHandlers.get(event.type).handle(event);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们基本可以解决很多内部微服务互相调用时候的脑壳疼的事情——方法膨胀。</p>
+<h3 id="Builder和实体的转换"><a href="#Builder和实体的转换" class="headerlink" title="Builder和实体的转换"></a>Builder和实体的转换</h3><p><code>构造器模式</code>这个就是一个避免自己脑壳疼的事情，因为我写了这么长时间代码，发现了一个好玩的事情，就是过了这么长时间，我发现我自己也看不懂我自己写的代码了，所以语义化编程很重要：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Data</span></span>&#123;</span><br><span class="line">  <span class="comment">// getter setter </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data = <span class="keyword">new</span> Data();</span><br><span class="line">data.setXXX();</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>上面这种代码一旦碰到一个非常大的数据库实体，直接笑嘻嘻二十投就可以了，代码会非常臃肿。但是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DataBuilder</span></span>&#123;</span><br><span class="line">  <span class="function">DataBuilder <span class="title">withAttr</span><span class="params">(Value)</span></span>;</span><br><span class="line">  ....</span><br><span class="line">  <span class="function">Data <span class="title">build</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data = DataBuilder.withAttr().withAttr().build();</span><br></pre></td></tr></table></figure>
+<p>看起来就舒服很多了，我们把构造的细节直接隐藏到了实体对象里面，然后我们同样的需要为这个builder实现从实体转换过来的算法，基本就可以搞定很多自己看不懂自己写的代码的情况。</p>
+<h3 id="JSON也可以当作DSL用"><a href="#JSON也可以当作DSL用" class="headerlink" title="JSON也可以当作DSL用"></a>JSON也可以当作DSL用</h3><p>其实这个事情看起来有点抽象，其实还蛮简单的，考虑一个普通的计算表达式<code>1 + 2 * 3 + 4</code>,如果我们写成后缀表达式<code>123*+4+</code>，这样的一个后缀表达式完全可以通过一个栈来完成计算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">eval</span><span class="params">(express)</span>:</span></span><br><span class="line">  rpn = to_rpn(express)</span><br><span class="line">  operators = stack()</span><br><span class="line">  opreands = stack()</span><br><span class="line">  <span class="keyword">for</span> ch <span class="keyword">in</span> rpn:</span><br><span class="line">    <span class="keyword">if</span> ch <span class="keyword">in</span> (<span class="number">1.</span><span class="number">.9</span>):</span><br><span class="line">      operators.push(int(ch))</span><br><span class="line">    <span class="keyword">if</span> ch <span class="keyword">in</span> (<span class="string">'+'</span>,<span class="string">'-'</span>,<span class="string">'*'</span>,<span class="string">'/'</span>):</span><br><span class="line">      operators.push(</span><br><span class="line">        to_fun(ch)(</span><br><span class="line">          operators.pop(),</span><br><span class="line">          operators.pop()</span><br><span class="line">        )</span><br><span class="line">      )</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">to_fun</span><span class="params">(ch)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> ch == <span class="string">'+'</span>:</span><br><span class="line">      <span class="keyword">return</span> (<span class="keyword">lambda</span> (x, y) x + y)</span><br></pre></td></tr></table></figure>
+<p>那么既然用到栈了，我用json把这个计算过程描述出来</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"value"</span>: <span class="number">4</span>,</span><br><span class="line">  <span class="attr">"operator"</span>: <span class="string">"+"</span>,</span><br><span class="line">  <span class="attr">"expression"</span>: &#123;</span><br><span class="line">    <span class="attr">"value"</span>: <span class="number">1</span>,</span><br><span class="line">    <span class="attr">"operator"</span>: <span class="string">"+"</span>,</span><br><span class="line">    <span class="attr">"expression"</span>: &#123;</span><br><span class="line">      <span class="attr">"value"</span>: <span class="number">3</span>,</span><br><span class="line">      <span class="attr">"operator"</span>: <span class="string">"*"</span>,</span><br><span class="line">      <span class="attr">"expression"</span>: &#123;</span><br><span class="line">        <span class="attr">"value"</span>: <span class="number">2</span>,</span><br><span class="line">        <span class="attr">"operator"</span>: <span class="literal">null</span>,</span><br><span class="line">        <span class="attr">"expression"</span>: &#123;&#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>嗯哼，只要稍微研究一下，就会发现这个东西是一个表达式树俗称<code>AST</code>，那么问题再抽象一点，树是一种<code>DAG</code>，如果我们的某种业务搞起来就很像一个<code>DAG</code>的话，那么把基础算子抽出来，就完全可以搞成一颗树，并使用JSON这类的结构化定义语言来描述，然后只要搞个什么递归函数啥的，就可以自动处理了。</p>
+<p>这就是设计模式中的<code>解释器模式</code>和<code>访问者模式</code>的组合使用。</p>
+<h1 id="弹性的服务系统"><a href="#弹性的服务系统" class="headerlink" title="弹性的服务系统"></a>弹性的服务系统</h1><blockquote>
+<p>服务器多了，RD们就开始搞一些骚操作了。</p>
+</blockquote>
+<p>软件代码膨胀，可以通过一些设计模式和设计思路来解决，但是服务也会膨胀的，然后我们的微服务拆得越来越多，服务间调用越来越多，一定会出现问题的。这里就几个我的经验和原则吧。</p>
+<ul>
+<li>别做有状态的系统，比如跑到服务器上自己搭个redis搞本地缓存</li>
+<li>少用分布式锁，能靠消息传递的事情用不到锁</li>
+<li>分布式事务能自己靠业务容忍实现，就不要搞分布式事务管理器来做</li>
+<li>计算类的服务早晚会sharding的，不如早点去做partition</li>
+<li>服务拆的差不多了能合并就合并几个，要不脑壳又得疼了</li>
+<li>写代码的时候埋点监控，能帮你快速地发现问题解决问题</li>
+</ul>
+<h1 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h1><p>从加入开水团到现在已经很长时间了，大大小小写了七八个系统，维护了三四十个系统，感觉写代码不是很重要的事情，重要的是写代码之前的成本衡量和考虑，当然最重要的是设计，还有就是多写文档，把一些沟通的成本直接降低到很小很小，能不OA逼逼就别OA逼逼。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/System-Design/" rel="tag"># System-Design</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/26/rust-traits-sized/" rel="next" title="rust-traits-sized">
+                <i class="fa fa-chevron-left"></i> rust-traits-sized
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#系统设计"><span class="nav-number">1.</span> <span class="nav-text">系统设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#分析需求"><span class="nav-number">1.1.</span> <span class="nav-text">分析需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#寻找主体对象"><span class="nav-number">1.1.1.</span> <span class="nav-text">寻找主体对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#讨论主体业务"><span class="nav-number">1.1.2.</span> <span class="nav-text">讨论主体业务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主体对象如何参与业务"><span class="nav-number">1.1.3.</span> <span class="nav-text">主体对象如何参与业务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主流程的抽象"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">主流程的抽象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#讨论消息的创建"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">讨论消息的创建</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#弹性的软件系统"><span class="nav-number">2.</span> <span class="nav-text">弹性的软件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#几个例子"><span class="nav-number">2.1.</span> <span class="nav-text">几个例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#状态设计"><span class="nav-number">2.1.1.</span> <span class="nav-text">状态设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微服务中的事件"><span class="nav-number">2.1.2.</span> <span class="nav-text">微服务中的事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Builder和实体的转换"><span class="nav-number">2.1.3.</span> <span class="nav-text">Builder和实体的转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSON也可以当作DSL用"><span class="nav-number">2.1.4.</span> <span class="nav-text">JSON也可以当作DSL用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#弹性的服务系统"><span class="nav-number">3.</span> <span class="nav-text">弹性的服务系统</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#写在最后"><span class="nav-number">4.</span> <span class="nav-text">写在最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

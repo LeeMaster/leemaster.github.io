@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ToString,FromStr," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今天用Rust写了几个leetcode上的回文串问题，发现所有的基础类型看起来可以转换为String，因为工作在写Java，所以习惯了toString，那么在Rust中如何把一个类型转换为String又如何从一个String转换为类型呢？">
+<meta name="keywords" content="ToString,FromStr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rust 类型和字符串转换那点事">
+<meta property="og:url" content="http://leemaster.cn/2020/03/08/rust-traits-FromStr/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="今天用Rust写了几个leetcode上的回文串问题，发现所有的基础类型看起来可以转换为String，因为工作在写Java，所以习惯了toString，那么在Rust中如何把一个类型转换为String又如何从一个String转换为类型呢？">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-03-13T18:08:36.168Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rust 类型和字符串转换那点事">
+<meta name="twitter:description" content="今天用Rust写了几个leetcode上的回文串问题，发现所有的基础类型看起来可以转换为String，因为工作在写Java，所以习惯了toString，那么在Rust中如何把一个类型转换为String又如何从一个String转换为类型呢？">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2020/03/08/rust-traits-FromStr/"/>
+
+
+
+
+
+  <title>Rust 类型和字符串转换那点事 | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2020/03/08/rust-traits-FromStr/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Rust 类型和字符串转换那点事</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-08T06:59:04+08:00">
+                2020-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Rust/" itemprop="url" rel="index">
+                    <span itemprop="name">Rust</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天用Rust写了几个leetcode上的回文串问题，发现所有的基础类型看起来可以转换为String，因为工作在写Java，所以习惯了toString，那么在Rust中如何把一个类型转换为String又如何从一个String转换为类型呢？</p>
+<a id="more"></a>
+<h1 id="ToString-Trait"><a href="#ToString-Trait" class="headerlink" title="ToString Trait"></a>ToString Trait</h1><p>首先看一下实现了这个trait就可以把类型转换为String的Trait。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="class"><span class="keyword">trait</span> <span class="title">ToString</span></span> &#123;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">to_string</span></span>(&amp;<span class="keyword">self</span>) -&gt; <span class="built_in">String</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个Trait内部只有一个<em>to_string</em>方法，只要我们的类型实现了这个Trait就可以完成从类型到String的转换，举个例子。</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Point</span></span> &#123;</span><br><span class="line">  x: <span class="built_in">i32</span>,</span><br><span class="line">  y: <span class="built_in">i32</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> <span class="built_in">ToString</span> <span class="keyword">for</span> Point&#123;</span><br><span class="line">  <span class="function"><span class="keyword">fn</span> <span class="title">to_string</span></span>(&amp;<span class="keyword">self</span>) -&gt; <span class="built_in">String</span>&#123;</span><br><span class="line">    <span class="built_in">format!</span>(<span class="string">"(&#123;&#125;,&#123;&#125;)"</span>, <span class="keyword">self</span>.x, <span class="keyword">self</span>.y)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的话就可以把一个<em>Point</em>类型实例转换为一个字符串<em>(x,y)</em>，那么所有的基本类型是怎么进行转换的呢？源码如下</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span>&lt;T: fmt::Display + ?<span class="built_in">Sized</span>&gt; <span class="built_in">ToString</span> <span class="keyword">for</span> T &#123;</span><br><span class="line">    <span class="meta">#[inline]</span></span><br><span class="line">    <span class="keyword">default</span> <span class="function"><span class="keyword">fn</span> <span class="title">to_string</span></span>(&amp;<span class="keyword">self</span>) -&gt; <span class="built_in">String</span> &#123;</span><br><span class="line">        <span class="keyword">use</span> fmt::Write;</span><br><span class="line">        <span class="keyword">let</span> <span class="keyword">mut</span> buf = <span class="built_in">String</span>::new();</span><br><span class="line">        buf.write_fmt(<span class="built_in">format_args!</span>(<span class="string">"&#123;&#125;"</span>, <span class="keyword">self</span>))</span><br><span class="line">           .expect(<span class="string">"a Display implementation returned an error unexpectedly"</span>);</span><br><span class="line">        buf.shrink_to_fit();</span><br><span class="line">        buf</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样一看就比较清楚了，如果一个类型在没有实现<em>ToString</em>的时候如果实现了<em>Display</em>那么直接利用<em>fmt</em>的能力，将类型转换为<em>String</em>，这个实现是一个默认的实现，泛化了转换算法。然后再看源码发现了这样一段：</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[stable(feature = <span class="meta-string">"cow_str_to_string_specialization"</span>, since = <span class="meta-string">"1.17.0"</span>)]</span></span><br><span class="line"><span class="keyword">impl</span> <span class="built_in">ToString</span> <span class="keyword">for</span> Cow&lt;<span class="symbol">'_</span>, <span class="built_in">str</span>&gt; &#123;</span><br><span class="line">    <span class="meta">#[inline]</span></span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">to_string</span></span>(&amp;<span class="keyword">self</span>) -&gt; <span class="built_in">String</span> &#123;</span><br><span class="line">        <span class="keyword">self</span>[..].to_owned()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#[stable(feature = <span class="meta-string">"string_to_string_specialization"</span>, since = <span class="meta-string">"1.17.0"</span>)]</span></span><br><span class="line"><span class="keyword">impl</span> <span class="built_in">ToString</span> <span class="keyword">for</span> <span class="built_in">String</span> &#123;</span><br><span class="line">    <span class="meta">#[inline]</span></span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">to_string</span></span>(&amp;<span class="keyword">self</span>) -&gt; <span class="built_in">String</span> &#123;</span><br><span class="line">        <span class="keyword">self</span>.to_owned()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用了<em>Cow</em>指针，用来在写入的时候进行可变转换，因为返回的是一个对象不是一个引用，所以呢，直接移动出去就好了。</p>
+<h1 id="FromStr-Trait"><a href="#FromStr-Trait" class="headerlink" title="FromStr Trait"></a>FromStr Trait</h1><p>刚才定义的类型<em>Point</em>如何把一个字符串转换为这个类型呢？</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> std::<span class="built_in">str</span>::FromStr;</span><br><span class="line"><span class="keyword">use</span> std::num::ParseIntError;</span><br><span class="line"></span><br><span class="line"><span class="keyword">impl</span> FromStr <span class="keyword">for</span> Point &#123;</span><br><span class="line">    <span class="class"><span class="keyword">type</span> <span class="title">Err</span></span> = ParseIntError;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">from_str</span></span>(s: &amp;<span class="built_in">str</span>) -&gt; <span class="built_in">Result</span>&lt;<span class="keyword">Self</span>, Self::<span class="literal">Err</span>&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> coords: <span class="built_in">Vec</span>&lt;&amp;<span class="built_in">str</span>&gt; = s.trim_matches(|p| p == <span class="string">'('</span> || p == <span class="string">')'</span> )</span><br><span class="line">                                 .split(<span class="string">','</span>)</span><br><span class="line">                                 .collect();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">let</span> x_fromstr = coords[<span class="number">0</span>].parse::&lt;<span class="built_in">i32</span>&gt;()?;</span><br><span class="line">        <span class="keyword">let</span> y_fromstr = coords[<span class="number">1</span>].parse::&lt;<span class="built_in">i32</span>&gt;()?;</span><br><span class="line"></span><br><span class="line">        <span class="literal">Ok</span>(Point &#123; x: x_fromstr, y: y_fromstr &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>利用上面的代码片段就可以将一个<em>(x,y)</em> 转换为 <em>Point</em>了，所以这个东西是怎么工作的呢？</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">pub</span> <span class="class"><span class="keyword">trait</span> <span class="title">FromStr</span></span>: <span class="built_in">Sized</span> &#123;</span><br><span class="line">    <span class="class"><span class="keyword">type</span> <span class="title">Err</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">from_str</span></span>(s: &amp;<span class="built_in">str</span>) -&gt; <span class="built_in">Result</span>&lt;<span class="keyword">Self</span>, Self::<span class="literal">Err</span>&gt;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在源码里面<em>FromStr</em>是这样被定义的，其中包含了<em>from_str</em>方法，可以将一个字符串转换为我们需要的类型。</p>
+<p>先看一个简单的转换，Rust转换字符串到bool的转换:</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> FromStr <span class="keyword">for</span> <span class="built_in">bool</span> &#123;</span><br><span class="line">    <span class="class"><span class="keyword">type</span> <span class="title">Err</span></span> = ParseBoolError;</span><br><span class="line">    <span class="meta">#[inline]</span></span><br><span class="line">    <span class="function"><span class="keyword">fn</span> <span class="title">from_str</span></span>(s: &amp;<span class="built_in">str</span>) -&gt; <span class="built_in">Result</span>&lt;<span class="built_in">bool</span>, ParseBoolError&gt; &#123;</span><br><span class="line">        <span class="keyword">match</span> s &#123;</span><br><span class="line">            <span class="string">"true"</span>  =&gt; <span class="literal">Ok</span>(<span class="literal">true</span>),</span><br><span class="line">            <span class="string">"false"</span> =&gt; <span class="literal">Ok</span>(<span class="literal">false</span>),</span><br><span class="line">            _       =&gt; <span class="literal">Err</span>(ParseBoolError &#123; _<span class="keyword">priv</span>: () &#125;),</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是这么简单，这样就开始好奇了，rust是如何把一个数字的字符串转换为数字类型呢？这里我就看了一下关于浮点数的转换</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from_str_float_impl!(<span class="built_in">f32</span>);</span><br><span class="line">from_str_float_impl!(<span class="built_in">f64</span>);</span><br></pre></td></tr></table></figure>
+<p>是的，浮点数的转换居然是通过宏实现的，那这个宏是怎么做的呢？</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">macro_rules!</span> from_str_float_impl &#123;</span><br><span class="line">    ($t:ty) =&gt; &#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">impl</span> FromStr <span class="keyword">for</span> $t &#123;</span><br><span class="line">            <span class="class"><span class="keyword">type</span> <span class="title">Err</span></span> = ParseFloatError;</span><br><span class="line">            <span class="meta">#[inline]</span></span><br><span class="line">            <span class="function"><span class="keyword">fn</span> <span class="title">from_str</span></span>(src: &amp;<span class="built_in">str</span>) -&gt; <span class="built_in">Result</span>&lt;<span class="keyword">Self</span>, ParseFloatError&gt; &#123;</span><br><span class="line">                dec2flt(src)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看起来这个宏没有啥特别的东西，直接交给了这<em>dec2flt</em>函数实现转换逻辑，那就看一下这个<em>dec2flt</em>函数吧</p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fn</span> <span class="title">dec2flt</span></span>&lt;T: RawFloat&gt;(s: &amp;<span class="built_in">str</span>) -&gt; <span class="built_in">Result</span>&lt;T, ParseFloatError&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> s.is_empty() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">Err</span>(pfe_empty());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">let</span> (sign, s) = extract_sign(s);</span><br><span class="line">    <span class="keyword">let</span> flt = <span class="keyword">match</span> parse_decimal(s) &#123;</span><br><span class="line">        ParseResult::Valid(decimal) =&gt; convert(decimal)?,</span><br><span class="line">        ParseResult::ShortcutToInf =&gt; T::INFINITY,</span><br><span class="line">        ParseResult::ShortcutToZero =&gt; T::ZERO,</span><br><span class="line">        ParseResult::Invalid =&gt; <span class="keyword">match</span> s &#123;</span><br><span class="line">            <span class="string">"inf"</span> =&gt; T::INFINITY,</span><br><span class="line">            <span class="string">"NaN"</span> =&gt; T::NAN,</span><br><span class="line">            _ =&gt; &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">Err</span>(pfe_invalid());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">match</span> sign &#123;</span><br><span class="line">        Sign::Positive =&gt; <span class="literal">Ok</span>(flt),</span><br><span class="line">        Sign::Negative =&gt; <span class="literal">Ok</span>(-flt),</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看起来主要的工作是在 <em>core::num::parse::parse_decimal</em>这个函数里面做的了，这里就不分析这个函数了，但是<em>EBNF</em>给出来自己也是可以写的哦。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Float  ::= Sign? ( &apos;inf&apos; | &apos;NaN&apos; | Number )</span><br><span class="line">Number ::= ( Digit+ |</span><br><span class="line">             Digit+ &apos;.&apos; Digit* |</span><br><span class="line">             Digit* &apos;.&apos; Digit+ ) Exp?</span><br><span class="line">Exp    ::= [eE] Sign? Digit+</span><br><span class="line">Sign   ::= [+-]</span><br><span class="line">Digit  ::= [0-9]</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ToString/" rel="tag"># ToString</a>
+          
+            <a href="/tags/FromStr/" rel="tag"># FromStr</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/04/time-wheel-intro/" rel="next" title="时间轮">
+                <i class="fa fa-chevron-left"></i> 时间轮
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/14/regex-parser-overriw/" rel="prev" title="RegExp Parser 的实现（1）">
+                RegExp Parser 的实现（1） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ToString-Trait"><span class="nav-number">1.</span> <span class="nav-text">ToString Trait</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#FromStr-Trait"><span class="nav-number">2.</span> <span class="nav-text">FromStr Trait</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

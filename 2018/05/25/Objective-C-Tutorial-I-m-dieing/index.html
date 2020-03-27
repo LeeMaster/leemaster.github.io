@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Objective c," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="What the fuck programming in OCRecent day , my friend ask me to help him create an IOS app to make his electronic shop to be more effective . And then I choose the Objective-C , because I think this l">
+<meta name="keywords" content="Objective c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective C Tutorial - I&#39;m dieing">
+<meta property="og:url" content="http://leemaster.cn/2018/05/25/Objective-C-Tutorial-I-m-dieing/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="What the fuck programming in OCRecent day , my friend ask me to help him create an IOS app to make his electronic shop to be more effective . And then I choose the Objective-C , because I think this l">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-10-07T12:16:31.647Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Objective C Tutorial - I&#39;m dieing">
+<meta name="twitter:description" content="What the fuck programming in OCRecent day , my friend ask me to help him create an IOS app to make his electronic shop to be more effective . And then I choose the Objective-C , because I think this l">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2018/05/25/Objective-C-Tutorial-I-m-dieing/"/>
+
+
+
+
+
+  <title>Objective C Tutorial - I'm dieing | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2018/05/25/Objective-C-Tutorial-I-m-dieing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Objective C Tutorial - I'm dieing</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-05-25T07:14:57+08:00">
+                2018-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tutorial/" itemprop="url" rel="index">
+                    <span itemprop="name">Tutorial</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="What-the-fuck-programming-in-OC"><a href="#What-the-fuck-programming-in-OC" class="headerlink" title="What the fuck programming in OC"></a>What the fuck programming in OC</h1><p>Recent day , my friend ask me to help him create an IOS app to make his electronic shop to be more effective . And then I choose the Objective-C , because I think this language will be more like C and Java or C++ , unfortunately this programming language is the worest language I work with.</p>
+<p>Message transformming ? What the fuck in action , and today after I learn this language 5 days , I just know how to create a Object and Class and how to think IOS development in OOD and use OOP to write the project in OC .</p>
+<p>I belive that I will not use this language anymore , but I have tracked in this enviroment ,I must create some notes and record the thinking in this language ! More fucking in OC ! </p>
+<a id="more"></a>
+<h1 id="Basic-Grammer"><a href="#Basic-Grammer" class="headerlink" title="Basic Grammer"></a>Basic Grammer</h1><p>variables define and the base control flow are same like C and I don’t want to waste time to talk about them .</p>
+<h2 id="Block"><a href="#Block" class="headerlink" title="Block"></a>Block</h2><p>This character can let we implement the pattern called observer and then will use this grammer to create some anonymous function to use .</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">void</span> (^CompletionBlock)();</span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SampleClass</span>:<span class="title">NSObject</span></span></span><br><span class="line">- (<span class="keyword">void</span>)performActionWithCompletion:(CompletionBlock)completionBlock;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SampleClass</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)performActionWithCompletion:(CompletionBlock)completionBlock&#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Action Performed"</span>);</span><br><span class="line">    completionBlock();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* my first program in Objective-C */</span></span><br><span class="line">    SampleClass *sampleClass = [[SampleClass alloc]init];</span><br><span class="line">    [sampleClass performActionWithCompletion:^&#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"Completion is called to intimate action is performed."</span>);</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Now I finally the common function define in OC , block in OC just delivery a function pointer waiting the next trick in the function who call him, and the real function is the message delivering .</p>
+<h2 id="Methods-or-Function"><a href="#Methods-or-Function" class="headerlink" title="Methods or Function"></a>Methods or Function</h2><p>Decalre and define a function in my mind are not easy to get in OC , the more details will write in <strong>Message delivery</strong> chacpter.</p>
+<p>We can define a function in this way </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (void) add :(int) a : (int) b</span><br><span class="line">&#123;</span><br><span class="line">    NSLog(@&quot;%d&quot;,a+b)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>I don’t know why do this design in this language , but I gradually understand the message model to describe the actual world , in the deep learning. and the next chapter I will do more description for this character.</p>
+<h2 id="Define-class"><a href="#Define-class" class="headerlink" title="Define class"></a>Define class</h2><p>We can define a class as below .</p>
+<p>Declare</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@public</span> <span class="built_in">NSString</span> * name;</span><br><span class="line">    <span class="keyword">@public</span> <span class="built_in">NSString</span> * address;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>) initWithName : (<span class="built_in">NSString</span> *) name andAddress : (<span class="built_in">NSString</span> *) address;</span><br><span class="line">- (<span class="keyword">void</span>) sayHello ;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>Implementation</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line">- (<span class="keyword">id</span>) initWithName : (<span class="built_in">NSString</span> *) name andAddress : (<span class="built_in">NSString</span> *) address</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init]</span><br><span class="line">    <span class="keyword">if</span>(<span class="keyword">self</span> != <span class="literal">nil</span>)&#123;</span><br><span class="line">        <span class="keyword">self</span>.name = name;</span><br><span class="line">        <span class="keyword">self</span>.address = address;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>; </span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>) sayHello </span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Hello my name is %@ I am live in %@"</span>,<span class="keyword">self</span>.name,<span class="keyword">self</span>.address);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>And Call in Main </p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span>&#123;</span><br><span class="line">        Person * person = [</span><br><span class="line">            [Person alloc] initWithName : <span class="string">@"LeeMaster"</span> : andAddress : <span class="string">@"SJZ"</span></span><br><span class="line">        ];</span><br><span class="line"></span><br><span class="line">        [person sayHello];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>We can define a class use the @interface keyword and implement the class and write the definetion use @implementation , and use + to define a static method and use - to define a dynamic method.</p>
+<p>Create an instance use the init* method , and if we have the no paramters constructor we can just use thei init which is defined by the OC compiler .</p>
+<p>The most funny thing is the message deliver grammer which make me headache these days !</p>
+<h2 id="Inheriting"><a href="#Inheriting" class="headerlink" title="Inheriting"></a>Inheriting</h2><p>The NSObject is the all class in OC world ancestor , so the class inherit from this class as Java class will inherit from the Object.</p>
+<p>Create a parent class</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Humen</span> : <span class="title">NSObject</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@protected</span> <span class="built_in">NSString</span> * name;</span><br><span class="line">    <span class="keyword">@protected</span> <span class="keyword">int</span> age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>) initWithName : (<span class="built_in">NSString</span> * ) name : andAge : (<span class="keyword">int</span>) age;</span><br><span class="line">- (<span class="keyword">void</span>) sayHello;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Humen</span></span></span><br><span class="line">- (<span class="keyword">id</span>) initWithName : (<span class="built_in">NSString</span> * ) name : andAge : (<span class="keyword">int</span>) age</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.name = name;</span><br><span class="line">    <span class="keyword">self</span>.age = age;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>) sayHello</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Hello My name is %@ and I'm %d "</span>,<span class="keyword">self</span>.name,<span class="keyword">self</span>.age);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>Create a child class</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">Humen</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@public</span> <span class="built_in">NSString</span> * address;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>) reportAddress ; </span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></span><br><span class="line">- (<span class="keyword">id</span>) initWithName : (<span class="built_in">NSString</span> * ) name : andAge : (<span class="keyword">int</span>) age : </span><br><span class="line">       andAddress : (<span class="built_in">NSString</span> *) address</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.name = name;</span><br><span class="line">    <span class="keyword">self</span>.age = age;</span><br><span class="line">    <span class="keyword">self</span>.address = address;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>) reportAddress</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">self</span> sayHello];</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"My location is %@"</span>,<span class="keyword">self</span>.address);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@autoreleasepool</span>&#123;</span><br><span class="line">        Student * student = [[Student alloc] initWithName : <span class="string">@"LeeMaster"</span> andAge : <span class="number">23</span> : adnAddress : <span class="string">"SJZ"</span>];</span><br><span class="line"></span><br><span class="line">        [student sayHello];</span><br><span class="line">        [student reportAddress];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>When I wrote this code as above , I suddenly understand the message delivery grammer — the method call , and the dunamic binding in runtime , so I can delivery a message to nil but the all program don’t exit with error code .</p>
+<h2 id="Categories"><a href="#Categories" class="headerlink" title="Categories"></a>Categories</h2><p>Like Golang the Objective-C also support the duck type , it belives that when a class implement a method define in the other class , this class can be saw as that class , it’s easy understand the duck can speak gaga , when a person speak gaga we can see this person as a duck !</p>
+<p>So to benifit this character we can dynamical add property and methods to a class , we defined before , so use this character we can implement a design pattern , Adaptor-Pattern ,and Bridge-Pattern also Proxy-Pattern.</p>
+<p>Now we have defined a class , which have contain the methods sayHello and reportAddress.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span> : <span class="title">NSObject</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">@public</span> <span class="built_in">NSString</span> * name;</span><br><span class="line">    <span class="keyword">@public</span> <span class="built_in">NSString</span> * address;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>) initWithName : (<span class="built_in">NSString</span> * ) name : andAge : (<span class="built_in">NSString</span> * ) address;</span><br><span class="line">- (<span class="keyword">void</span>) sayHello;</span><br><span class="line">- (<span class="keyword">void</span>) reportAddress;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span></span></span><br><span class="line">- (<span class="keyword">id</span>) initWithName : (<span class="built_in">NSString</span> * ) name : andAge : (<span class="built_in">NSString</span> *) address</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">self</span>.name = naem;</span><br><span class="line">    <span class="keyword">self</span>.address = address;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>) sayHello</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"My Name is %@"</span>,<span class="keyword">self</span>.name);</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>) reportAddress</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"My address is %@"</span>,<span class="keyword">self</span>.adress)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>But now we need this class can add a property and a method we can do as this way.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Person</span>(<span class="title">student</span>)</span></span><br><span class="line">- (<span class="keyword">void</span>) reportTime;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Person</span>(<span class="title">student</span>)</span></span><br><span class="line">- (<span class="keyword">void</span>) reportTime</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"now time is 2018"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>use this cahracter we can move the method in class which contains long code lines to a new file.m and then split a class implmentation in many way and expend the origin class everytime.</p>
+<h2 id="Extention"><a href="#Extention" class="headerlink" title="Extention"></a>Extention</h2><p>The catergories let a class implementation splited into many files and to manage easily , the Extention really expand the class everytime and everywhere , and most time this character is used to make some private methods.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span> : <span class="title">NSObject</span></span></span><br><span class="line">- (<span class="keyword">void</span>) learning : (<span class="keyword">int</span>) time;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">Student</span>()</span></span><br><span class="line">- (<span class="keyword">void</span>) hardWorking;</span><br><span class="line">- (<span class="keyword">void</span>) lazyWorking;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Student</span></span></span><br><span class="line">- (<span class="keyword">void</span>) learning : (<span class="keyword">int</span>) time</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"I'm learning"</span>);</span><br><span class="line">    <span class="keyword">if</span>(time &gt;= <span class="number">10</span>)&#123;</span><br><span class="line">        [<span class="keyword">self</span> hardWorking];</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        [<span class="keyword">self</span> lazeWorking];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>) hardWorking</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"I'm learning hard"</span>);</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">void</span>) lazyWorking</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"I'm learning lazily"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h2 id="Interface-gt-Protocal"><a href="#Interface-gt-Protocal" class="headerlink" title="Interface -&gt; Protocal"></a>Interface -&gt; Protocal</h2><p>As the interface in Java and the abstact in C++ , we can belive the protocal is the interface in Objective-C and the protocal declare the methods and all implementation of this protocal must implement the methods . But in objective-c we don’t need implement all methods!</p>
+<p>Delegate , I think this pattern is the best thing in OC , like the dynamic proxy in Java , we need a protocal and then define the must implement methods and then create a origin class and next create the proxy class to do some addtional thing in next thing.</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@protocol</span> <span class="title">PrintProtocolDelegate</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)processCompleted;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">PrintClass</span> :<span class="title">NSObject</span></span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">id</span> delegate;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>) printDetails;</span><br><span class="line">- (<span class="keyword">void</span>) setDelegate:(<span class="keyword">id</span>)newDelegate;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">PrintClass</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)printDetails&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Printing Details"</span>);</span><br><span class="line">    [delegate processCompleted];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>) setDelegate:(<span class="keyword">id</span>)newDelegate&#123;</span><br><span class="line">    delegate = newDelegate;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">SampleClass</span>:<span class="title">NSObject</span>&lt;<span class="title">PrintProtocolDelegate</span>&gt;</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)startAction;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">SampleClass</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)startAction&#123;</span><br><span class="line">    PrintClass *printClass = [[PrintClass alloc]init];</span><br><span class="line">    [printClass setDelegate:<span class="keyword">self</span>];</span><br><span class="line">    [printClass printDetails];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)processCompleted&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"Printing Process Completed"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span> <span class="keyword">char</span> * argv[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSAutoreleasePool</span> * pool = [[<span class="built_in">NSAutoreleasePool</span> alloc] init];</span><br><span class="line">    SampleClass *sampleClass = [[SampleClass alloc]init];</span><br><span class="line">    [sampleClass startAction];</span><br><span class="line">    [pool drain];</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The origin class can do some thing base , and then call delegate to do next thing , then we can use this pattern to create some program to do in Ios develop.</p>
+<h2 id="property-synthesize"><a href="#property-synthesize" class="headerlink" title="@property @synthesize"></a>@property @synthesize</h2><h3 id="property-attribute"><a href="#property-attribute" class="headerlink" title="@property attribute"></a>@property attribute</h3><h3 id="Usage-Setter-and-Getter"><a href="#Usage-Setter-and-Getter" class="headerlink" title="Usage Setter and Getter"></a>Usage Setter and Getter</h3><p>Like java  setter/getter rule ,the oc have the same rule to use ,and we can do the same thing </p>
+<h1 id="Message-delivery"><a href="#Message-delivery" class="headerlink" title="Message delivery"></a>Message delivery</h1><p>Now this character is the more puzzle thing in the all programming in OC , I dont’t know anything in the OOP in the real world , but in a deep thinking then I suddenly understand the method calling function .</p>
+<p>For example , we have a mathmatic teacher and a english teacher , we aussume that the mathmatic teacher don’t know how to teach english and the english teacher don’t know how to teach the math , so we can write this code .</p>
+<figure class="highlight objc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">MathTeacher</span> : <span class="title">NSObject</span></span></span><br><span class="line">- (<span class="keyword">void</span>) teachMath;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">MathTeacher</span></span></span><br><span class="line">- (<span class="keyword">void</span>) teachMath</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">"TEACH MATH"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<pre><code class="lang-objc">@interface EnglishTeacher : NSObject
+- (void) teachEnglish;
+@end
+
+@implementation EnglishTeacher
+- (void) teachEnglish
+{
+    NSLog(&quot;TEACH ENGLISH&quot;);
+}
+@end
+</code></pre>
+<p>If we do the same thing call EnglishTeach Object to use the teachMath method ,we will get a compile error just now . But in OC we can do the thing to call EnglishTeacher teachMath method but get no error in compiling . Because the dynamic binding in runtime .</p>
+<p>But what is the message delivery ? I think the Object in computer just a memory segment in action and then compile time we can bind the address of a method to an Object memeory model, But the real world this thing will don’t present anymore , we just know a person is a teacher , but we don’t need know if he can teach the math , all thing we be confirm in the time we call him to tell us how learn math .</p>
+<p>And the program stack , we can assume that the label paramter will be confirm and then pop the stack and to charge if the next paramter can in the identify type , and this character we call as the duck type .</p>
+<p>Message is the parameter and a function stack ,we can transmit these thing to a stack and we can decide this paramter if we can receive , to this point we can find that is more like a closure in some dynamice programming .</p>
+<h2 id="Dynamic-Binding"><a href="#Dynamic-Binding" class="headerlink" title="Dynamic Binding"></a>Dynamic Binding</h2><p>Dynamic binding , in Java ,can support the runtime selection for what to do next time , and select which function and method to call .</p>
+<p>In objective-c we don’t need a interface or super class to define the method to use , we belive the message is the final design in Oc , a paramter deliver to an object then the object will use the label to choose how and what to response this message , if we don’t define the handler to handle message then OC will do nothing.</p>
+<h1 id="Foundation-library"><a href="#Foundation-library" class="headerlink" title="Foundation library"></a>Foundation library</h1>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Objective-c/" rel="tag"># Objective c</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/23/Linux-Programming-Autotools/" rel="next" title="Linux Programming Autotools ">
+                <i class="fa fa-chevron-left"></i> Linux Programming Autotools 
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/27/Authority-Control-RBAC-0/" rel="prev" title="Authority Control - RBAC 0">
+                Authority Control - RBAC 0 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@outlook.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#What-the-fuck-programming-in-OC"><span class="nav-number">1.</span> <span class="nav-text">What the fuck programming in OC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Basic-Grammer"><span class="nav-number">2.</span> <span class="nav-text">Basic Grammer</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Block"><span class="nav-number">2.1.</span> <span class="nav-text">Block</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Methods-or-Function"><span class="nav-number">2.2.</span> <span class="nav-text">Methods or Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Define-class"><span class="nav-number">2.3.</span> <span class="nav-text">Define class</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inheriting"><span class="nav-number">2.4.</span> <span class="nav-text">Inheriting</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Categories"><span class="nav-number">2.5.</span> <span class="nav-text">Categories</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extention"><span class="nav-number">2.6.</span> <span class="nav-text">Extention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interface-gt-Protocal"><span class="nav-number">2.7.</span> <span class="nav-text">Interface -&gt; Protocal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#property-synthesize"><span class="nav-number">2.8.</span> <span class="nav-text">@property @synthesize</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#property-attribute"><span class="nav-number">2.8.1.</span> <span class="nav-text">@property attribute</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Usage-Setter-and-Getter"><span class="nav-number">2.8.2.</span> <span class="nav-text">Usage Setter and Getter</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Message-delivery"><span class="nav-number">3.</span> <span class="nav-text">Message delivery</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dynamic-Binding"><span class="nav-number">3.1.</span> <span class="nav-text">Dynamic Binding</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Foundation-library"><span class="nav-number">4.</span> <span class="nav-text">Foundation library</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

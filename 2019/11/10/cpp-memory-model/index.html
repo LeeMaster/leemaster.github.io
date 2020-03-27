@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="C++ 数据存储的连续性，搬运一波避免脑壳疼。">
+<meta name="keywords" content="LeeMaster">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ 存储连续性">
+<meta property="og:url" content="http://leemaster.cn/2019/11/10/cpp-memory-model/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="C++ 数据存储的连续性，搬运一波避免脑壳疼。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-03-25T18:06:58.998Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ 存储连续性">
+<meta name="twitter:description" content="C++ 数据存储的连续性，搬运一波避免脑壳疼。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2019/11/10/cpp-memory-model/"/>
+
+
+
+
+
+  <title>C++ 存储连续性 | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2019/11/10/cpp-memory-model/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++ 存储连续性</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-11-10T04:46:35+08:00">
+                2019-11-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>C++ 数据存储的连续性，搬运一波避免脑壳疼。</p>
+<a id="more"></a>
+<h1 id="单独编译"><a href="#单独编译" class="headerlink" title="单独编译"></a>单独编译</h1><p>在C++中声明和定义是分离的，声明的意义是为了编译器构建符号表，而定义则是定义各个数据类型，编译器处理完了符号表，会根据定义进行内存分配和指令分配，正是这个性质，导致C++好像很难学的样子，但是事实他就是有点难学。</p>
+<p>头文件会在被引入源文件的时候，进行展开，凡是需要被展开的东西统统都塞入头文件就对了，比如常见的宏、inline函数。当然模板的定义和声明是不能分割的，如果说OOP是用来抽象数据模型的，那么模板就是用来抽象算法的，回顾算法的定义，算法其实是一系列用来解决问题的指令序列，模板自然要将声明和定义绑定在一起放在头文件里，而模板的具体化和实例化，并不是要讨论的重点，记住这玩意放入头文件就可以啦。</p>
+<p>编译后的结果进行链接才能生成各种构建物，用于构建软件世界，比如可执行文件和动态链接库等等等。所以这里要引入一个比较重要的概念了——编译单元。</p>
+<p>什么是编译单元呢？我的理解是，对于一个大规模工程，是一个一个的源文件构成的，那么在C/C++中这些源文件组成了一个又一个的编译单元，编译单元可以认为是编译器可以处理的最小的源文件单位。既然是编译的最小单元，那么在每一个单元中都会有编译原理中经典的作用域问题。</p>
+<h1 id="存储持续性"><a href="#存储持续性" class="headerlink" title="存储持续性"></a>存储持续性</h1><ul>
+<li>自动存储持续性，这个其实很好理解，进入作用域生效，离开作用域失效的变量，拥有的都是自动存储持续性，参考auto关键字。</li>
+<li>静态存储持续性，既然是静态的，那么在编译时被分配了内存，这个内存位置在整个程序运行过程中都会生效。</li>
+<li>线性存储持续性，我觉得这个词用的非常准确，thread_local 定义的变量统统都是线性的存储持续性，因为只能被一个线程可见，而且和整个线程的生命周期一样长。</li>
+<li>动态存储持续性，指针变量，这种直接指向动态内存的变量拥有的都是动态存储持续性，也是最难搞的东西，内存泄漏的元凶之一。</li>
+</ul>
+<h1 id="链接性"><a href="#链接性" class="headerlink" title="链接性"></a>链接性</h1><p>关于编译单元的概念已经解释清楚了，在整个工程构建的过程中，可以认为将所有的代码转换成为一个超级长的汇编代码文件，那么在整个汇编文件中，有一部分从一个文件来，有一部分从另外一个文件来，所以自然是有方法让从文件一来的代码访问来自文件二来的代码中的变量和函数，这里就涉及到了链接性了。</p>
+<h2 id="静态持续，外部链接"><a href="#静态持续，外部链接" class="headerlink" title="静态持续，外部链接"></a>静态持续，外部链接</h2><p>静态变量外部链接在定义和使用上有两个条件</p>
+<ul>
+<li>不使用static关键字进行修饰</li>
+<li>在其他文件中使用extern关键字进行再次声明</li>
+</ul>
+<p>C++使用了单定义规则，变量只能有一次定义，分为两种声明</p>
+<ul>
+<li>定义声明，这种声明，会要求编译器进行内存分配</li>
+<li>引用声明，这种声明，只是引用，主要是为了解决编译器的符号表建立过程，如果引用了外部不存在的变量，那么会在链接的过程中报错。</li>
+</ul>
+<h2 id="静态持续，内部链接"><a href="#静态持续，内部链接" class="headerlink" title="静态持续，内部链接"></a>静态持续，内部链接</h2><p>直接使用static关键字标记，这个变量就只能在当前文件内可见了，也就是所谓的内部链接性。</p>
+<h2 id="静态持续，无链接性"><a href="#静态持续，无链接性" class="headerlink" title="静态持续，无链接性"></a>静态持续，无链接性</h2><p>函数内的变量使用static进行修饰，那么这个变量就是局部的静态变量，只能在当前函数内使用，自然没有链接性了。</p>
+<h1 id="说明符和限定符"><a href="#说明符和限定符" class="headerlink" title="说明符和限定符"></a>说明符和限定符</h1><h2 id="CV限定符"><a href="#CV限定符" class="headerlink" title="CV限定符"></a>CV限定符</h2><ul>
+<li>const </li>
+<li>volatile </li>
+</ul>
+<p>被const修饰的变量，语义是当前被修饰的内存不能再被修改了，属于对物理常量性的一个描述。volatile属于强制内存取值，避免编译器使用某些优化手段导致在并发情况下，对某一变量的读取是不一致的。</p>
+<p>mutable修饰符</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">const_struct</span>&#123;</span></span><br><span class="line">  <span class="keyword">int</span> a ;</span><br><span class="line">  <span class="keyword">mutable</span> <span class="keyword">int</span> accesses;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上述代码一样，尽管可以使用const来修饰某个结构变量，但是其中的mutable修饰的变量仍是可以被修改的，这个特性在并发编程的时候会被用到。</p>
+<p>但是const会修改变量的链接性，当全局变量（外部链接性）被const修饰了之后，那么这个变量就变成了内部链接性，但是对于工程来讲，常量确实应该是一个编译单元应该具有的东西，如果需要做全局的常量。可以通过 extern + const 组合修饰来使用。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/06/trie-radix-suffix-tree/" rel="next" title="Trie 这个东西">
+                <i class="fa fa-chevron-left"></i> Trie 这个东西
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/07/memory-barrier/" rel="prev" title="内存屏障">
+                内存屏障 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单独编译"><span class="nav-number">1.</span> <span class="nav-text">单独编译</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#存储持续性"><span class="nav-number">2.</span> <span class="nav-text">存储持续性</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#链接性"><span class="nav-number">3.</span> <span class="nav-text">链接性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#静态持续，外部链接"><span class="nav-number">3.1.</span> <span class="nav-text">静态持续，外部链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态持续，内部链接"><span class="nav-number">3.2.</span> <span class="nav-text">静态持续，内部链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#静态持续，无链接性"><span class="nav-number">3.3.</span> <span class="nav-text">静态持续，无链接性</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#说明符和限定符"><span class="nav-number">4.</span> <span class="nav-text">说明符和限定符</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CV限定符"><span class="nav-number">4.1.</span> <span class="nav-text">CV限定符</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
