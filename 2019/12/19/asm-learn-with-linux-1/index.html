@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="回忆一下汇编程序的编写，最后用两个小例子，结束回忆的第一章。">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回忆一下汇编的世界(1)">
+<meta property="og:url" content="http://leemaster.cn/2019/12/19/asm-learn-with-linux-1/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="回忆一下汇编程序的编写，最后用两个小例子，结束回忆的第一章。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-03-29T18:48:48.790Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="回忆一下汇编的世界(1)">
+<meta name="twitter:description" content="回忆一下汇编程序的编写，最后用两个小例子，结束回忆的第一章。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2019/12/19/asm-learn-with-linux-1/"/>
+
+
+
+
+
+  <title>回忆一下汇编的世界(1) | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friends">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Friends
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2019/12/19/asm-learn-with-linux-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">回忆一下汇编的世界(1)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-19T01:30:52Z">
+                2019-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ASM/" itemprop="url" rel="index">
+                    <span itemprop="name">ASM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>回忆一下汇编程序的编写，最后用两个小例子，结束回忆的第一章。</p>
+<a id="more"></a>
+<h1 id="一台计算机"><a href="#一台计算机" class="headerlink" title="一台计算机"></a>一台计算机</h1><p>远离实际的业务场景，如果我们仅仅考虑一个计算过程，那么计算机还是挺简单的。</p>
+<h2 id="简单聊聊图灵机和现代计算机"><a href="#简单聊聊图灵机和现代计算机" class="headerlink" title="简单聊聊图灵机和现代计算机"></a>简单聊聊图灵机和现代计算机</h2><p>恰好最近在读<code>SICP</code>，写了点scheme，看了看<code>turing machine</code>的paper，感觉对计算机的理解又深入了那么一点点，简单来说<code>turing machine</code>是一个一直处理一条打孔纸带，一直到停机，在处理的过程中，会产生中间状态，并能根据纸带和中间状态决定下一次的操作，所以这个计算机的模型，也是<code>利用存储加上指令来决定下一个状态，模拟了一个计算过程，计算从初始状态通过一个一个的中间状态到达了最后的终止状态</code>。</p>
+<p>那么在<code>turing machine</code>里面抽象了整个计算的过程，而真正的CPU构造，就下面这五个部分了：</p>
+<ul>
+<li>寄存器</li>
+<li>ALU</li>
+<li>数据总线</li>
+<li>指令计数器</li>
+<li>程序计数器</li>
+</ul>
+<p>我们先想一下，我们日常写代码的时候，一般有哪几种结构呢？</p>
+<ul>
+<li>线性结构</li>
+<li>分支结构</li>
+<li>循环结构</li>
+</ul>
+<p>其实也就这三种代码结构了，线性结构就是正常的几行代码的书写方式，而分支结构也就是<code>if-else</code>了，循环结构其实包含了递归和递推，简单来说就是<code>for</code>循环这样子。但是因为我们的程序最后一定会被编译成一个类似于纸带一样的线性结构，那么如何在这个线性结构上跳转呢，又如何在线性结构上利用跳转完成循环呢？</p>
+<p>上面这个问题，图灵老爷子已经给出了他的<code>turing machine</code>模型，也就是本节开头的一句话<code>利用存储加上指令来决定下一个状态，模拟了一个计算过程，计算从初始状态通过一个一个的中间状态到达了最后的终止状态</code>.</p>
+<h2 id="汇编"><a href="#汇编" class="headerlink" title="汇编"></a>汇编</h2><p>图灵老爷子做的抽象实在太数学系了，但是还好还是有人把他的抽象弄成了计算机，只不过这个时候的计算机执行的程序和盲文一样，就是传说中的打孔纸带，一堆1010一样的二进制，那个时候的程序员可以想象在用一个针戳一个纸带，然后在机器上跑一波，虽然就是计算一个简单的加减乘除，但是还是好麻烦哦，人类永远是懒惰的，所以，后面就有人发明了汇编这个东西。</p>
+<p>最开始学习汇编的时候，还是学习操作系统的时候学习bootloader的时候看过这个东西，一直没有用汇编写什么东西，但是这个东西貌似在工业界用的还比较多的，因为工业界的语言写完了以后编译完了以后，就会变成一条超级长的打孔纸带，然后跑在CPU的某个核心上，然后呢，其实如果有接口，可以直接通过汇编来执行，实现某些性能敏感的操作，或者不那么好搞的操作。</p>
+<ul>
+<li>golang 获取 goroutine的ID</li>
+<li>Java ASM 代理</li>
+<li>gcc 搞出来的内存屏障</li>
+</ul>
+<p>反正以上应该都属于汇编在工业界中的一些小应用，当然在JVM上跑的也是指令，所以基本也可以认为是汇编在搞事情。那现在就开始捣腾点纯正的ATT汇编吧。</p>
+<h3 id="关于组成"><a href="#关于组成" class="headerlink" title="关于组成"></a>关于组成</h3><p>其实想学会汇编，真的挺依赖计算机组成的，主要依赖计算机体系结构，当然如果要跑在linux上来做系统调用的汇编代码，可能还要了解一下linux的ABI规范，不过这份文章也不是讲计算机组成的，但是组成又还挺重要，所以简单说一下吧。</p>
+<p>一个简单的计算机其实只需要内存和cpu就足够了，让通过一些电路连线将两个东西链接到一起，其实就能做一些简单的计算了，这里就不考虑底层的I/O的情况了，就做简单的计算。</p>
+<p>那么现代的计算机体系，基本都是冯老爷子捣腾出来的那个架构的扩展，也就是以内存为中心的体系结构，那么这种架构呢，其实很像<code>turing machine</code>的具象版本，通过寄存器来保存中间状态，通过内存寻址来实现纸带的移动，那么在X86的架构机器上，这些东西都是什么呢？</p>
+<h4 id="Registers"><a href="#Registers" class="headerlink" title="Registers"></a>Registers</h4><p>x86的体系结构上，寄存器属于CPU的片内组成部分，这些寄存器在每个核上都是一样的，一般分为：</p>
+<ul>
+<li>通用寄存器（EAX,EBX,ECX,EDX)</li>
+<li>地址寄存器 (ESP,EBP)</li>
+<li>索引寄存器 (ESI,EDI)</li>
+<li>标志寄存器 (Eflags)</li>
+</ul>
+<p>而汇编中的指令其实就是在操作这些寄存器，当然还有下面的内存操作。</p>
+<h4 id="Addressing"><a href="#Addressing" class="headerlink" title="Addressing"></a>Addressing</h4><p>这个就是寻址了，通过寻址，我们可以很快地找到某个内存块，然后在这个内存块上做一些增删改查的操作，比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mov string_addr(,%ecx,1), %eax</span><br></pre></td></tr></table></figure>
+<p>上面一句就是将<code>string_addr</code>中的以<code>%ecx</code>为索引取出<code>1</code>个字节的数据，放到<code>%eax</code>寄存器中。</p>
+<p>在所有的汇编语法中，寻址都是几种方式</p>
+<ul>
+<li>直接寻址(mov ADDRESS, %eax) eax= &amp;ADDRESS</li>
+<li>索引寻址(mov str(,%ecx,1), %eax) eax = str[ecx*1]</li>
+<li>间接寻址(mov (%ecx), %eax) eax = *ecx</li>
+<li>基址寻址(mov 4(%ebx), %eax) eax = *(ebx + 4)</li>
+<li>立即寻址(mov $1, %eax) eax = 1</li>
+<li>寄存器寻址(mov %ecx, %eax) eax = ecx</li>
+</ul>
+<p>对着每种寻址的方式后的C代码，大概就知道是怎么进行寻址了。</p>
+<p>当然啦，其中的基址寻址方式遵循这样的一个公式 <code>offset(basement, index, factor)</code> 这个公式中，计算地址的公式 <code>basement + offset + index * factor</code>，四个变量的含义从左到右分别是，偏移量，基址寄存器，索引寄存器，比例因子，如果写汇编的时候某个部分不填写，默认的就是0。</p>
+<h3 id="关于函数"><a href="#关于函数" class="headerlink" title="关于函数"></a>关于函数</h3><p>如果没有函数，那么整个计算机的世界还挺糟糕的，在汇编里这个事情更加的明显，没有函数我们要重复地写很多逻辑，这就非常糟糕了，那么在汇编里函数怎么实现呢？考虑一下<code>turing machine</code>模型，函数就是纸带上的某一部分，那么这个函数执行完了就需要跳回到调用这个函数的位置的下一行执行，那么这个过程就好像是纸带在滚动，如果有这个概念就好理解多了。</p>
+<p>这里就介绍一些C语言的汇编调用规则吧，其实也可以算是ABI的一部分了。</p>
+<p>还记得之前学C语言的时候老师们一直在说什么保存现场然后执行函数内指令，执行完成之后恢复现场，返回值这个时候一定是放在了某个寄存器里面，供调用函数的代码来拿。</p>
+<h4 id="CALL-指令"><a href="#CALL-指令" class="headerlink" title="CALL 指令"></a>CALL 指令</h4><p>既然是调用函数，那么就使用CALL指令就好了，根据上面说的，要保存现场，那么CALL还有调用之前的操作应该就是保存现场了。</p>
+<p>考虑这样一段C代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = function(<span class="number">1</span>);</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">"%d"</span>, a);</span><br></pre></td></tr></table></figure>
+<p>这样的一段C代码看起来调用了一个函数，然后将结果存储在a里面，那么 可以描述成这样的一段伪代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pushl $1 # 将参数压入栈，等待function进行获取参数</span><br><span class="line">call function # 调用function </span><br><span class="line">movl %eax, a # 将结果放在a变量里</span><br><span class="line">printf (a) # 伪指令，假设我们有这么一个指令吧</span><br></pre></td></tr></table></figure>
+<p>如果我们的function在C语言中这么定义的话</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">function</span><span class="params">(<span class="keyword">int</span> v)</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> v + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假设我们没有函数调用的规定，简单地使用宏替换的思路，那么整个代码会变成这个样子 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pushl $1 # 将参数压入栈，等待function进行获取参数</span><br><span class="line">pop %eax # 把参数拿出来</span><br><span class="line">addl $1, %eax # 执行计算</span><br><span class="line">movl %eax, a # 将结果放在a变量里</span><br><span class="line">printf (a) # 伪指令，假设我们有这么一个指令吧</span><br></pre></td></tr></table></figure>
+<p>这样看起来就简单多了，但是现实总是没有这么好，因为我们的汇编代码会在一个文件内，但是并不支持展开，那么怎么办呢，让我们回想一下<code>turing machine</code> ，我们只要能让我们的纸带来回移动就好了。如何移动呢？这里就展开了我们的函数调用规则（C语言）</p>
+<ul>
+<li>将当前环境中的寄存器变量压入栈（保存现场，保存当前代码的局部变量）</li>
+<li>将调用参数逆序地压入栈中 （C语言的调用规范）</li>
+<li>使用call指令调用函数</li>
+</ul>
+<p>那么这里的call指令做了两件事：</p>
+<ul>
+<li>将下一条指令的地址压入了栈中 （上面代码中的 printf指令）</li>
+<li>修改寄存器%eip为函数中第一条指令的地址 （也就是 <code>return v + 1</code> 这条语句的地址上）</li>
+</ul>
+<p>那么在函数<code>function</code> 内部应该首先做什么呢，首先我们要保存当前的%ebp寄存器的地址，也就是我们需要保存现场的另外一个部分（保存基址），然后我们把当前%esp的地址给%ebp，因为这样我们就可以通过%ebp来进行基址寻址了，这样我们才能拿到我们的参数，然后我们要恢复%esp到调用call指令时压入栈的那个%esp的值。</p>
+<h4 id="RET-指令"><a href="#RET-指令" class="headerlink" title="RET 指令"></a>RET 指令</h4><p>RET指令主要工作就是直接把当前的%esp指针指向的位置的值，拿出来放到%eip中，这样就能进行下一步的操作了，但是在函数返回的时候，我们其实做了三件事</p>
+<ul>
+<li>将结果放入%eax</li>
+<li>恢复栈指针和%ebp</li>
+<li>调用ret指令</li>
+</ul>
+<h4 id="一个函数实例"><a href="#一个函数实例" class="headerlink" title="一个函数实例"></a>一个函数实例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">.section .data</span><br><span class="line">.section .text</span><br><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">  pushl $3</span><br><span class="line">  pushl $2</span><br><span class="line">  call power</span><br><span class="line">  addl $8, %esp # 恢复esp到调用之前的状态，因为调用之前push了两个结果，所以倒退回去8个字节</span><br><span class="line">  movl %eax, %ebx # 设置返回值为函数执行后的值</span><br><span class="line">  movl $1, %eax</span><br><span class="line">  int $0x80</span><br><span class="line"></span><br><span class="line">.type power @function # 汇编指令，告诉汇编器这个power是一个函数地址</span><br><span class="line">power:</span><br><span class="line">  pushl %ebp # 保存当前的基地址</span><br><span class="line">  movl %esp, %ebp # 让我们的ebp保存的是当前的栈指针地址，但是返回地址在这个地址之前4个字节</span><br><span class="line">  subl $4, %esp # 相当于开辟了一个局部变量存储中间值</span><br><span class="line">  movl 8(%ebp), %ebx</span><br><span class="line">  movl 12(%ebp), %ecx</span><br><span class="line">  movl %ebx, -4(%ebp)</span><br><span class="line"></span><br><span class="line">power_loop:</span><br><span class="line">  cmp $1, %ecx</span><br><span class="line">  je power_exit</span><br><span class="line">  movl -4(%ebp), %eax</span><br><span class="line">  imull %ebx, %eax # 进行一次幂运算</span><br><span class="line">  movl %eax, -4(%ebp)</span><br><span class="line">  decl %ecx # 减少计算次数</span><br><span class="line">  jmp power_loop</span><br><span class="line"></span><br><span class="line">power_exit:</span><br><span class="line">  movl -4(%ebp), %eax # 保存返回值</span><br><span class="line">  movl %ebp, %esp # 恢复栈指针</span><br><span class="line">  popl %ebp # 恢复基址，这次弹出也就将我们的esp成功恢复到了那个有返回地址的槽了</span><br><span class="line">  ret # 调用ret</span><br></pre></td></tr></table></figure>
+<h2 id="两个例子"><a href="#两个例子" class="headerlink" title="两个例子"></a>两个例子</h2><h3 id="查找最大值"><a href="#查找最大值" class="headerlink" title="查找最大值"></a>查找最大值</h3><p>给一个列表查找其中最大数字，首先看看C语言版本的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span>[] data_items = &#123;<span class="number">3</span>, <span class="number">67</span>, <span class="number">34</span>, <span class="number">222</span>, <span class="number">45</span>, <span class="number">75</span>, <span class="number">54</span>, <span class="number">34</span>, <span class="number">44</span>, <span class="number">33</span>, <span class="number">22</span>, <span class="number">11</span>, <span class="number">66</span>,<span class="number">0</span>&#125;;</span><br><span class="line">  <span class="keyword">int</span> eax, ebx;</span><br><span class="line">  <span class="keyword">int</span> idx = <span class="number">1</span>;</span><br><span class="line">  eax = data_items[<span class="number">0</span>];</span><br><span class="line">  ebx = eax;</span><br><span class="line">  <span class="keyword">for</span>(;eax != <span class="number">0</span>;)&#123;</span><br><span class="line">    eax = data_items[idx];</span><br><span class="line">    idx++;</span><br><span class="line">    <span class="keyword">if</span> (eax &lt; ebx)coninue;</span><br><span class="line">    ebx = eax;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> ebx;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再来看看汇编版本的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">.section .data</span><br><span class="line">data_items:</span><br><span class="line">  .long 3, 67, 34, 222, 45, 75, 54, 34, 44, 33, 22, 11, 66,0</span><br><span class="line">.section .text</span><br><span class="line">.global _start</span><br><span class="line">_start:</span><br><span class="line">  movl $0, %edi</span><br><span class="line">  movl data_items(, %edi, 4), %eax # data_items 内存储的是32bit字节的数据，也就是4位，所以factor是4</span><br><span class="line">  movl %eax, %ebx</span><br><span class="line"></span><br><span class="line">start_loop:</span><br><span class="line">  cmpl $0, %eax # 检测是否到达了末尾，因为最后一个数字是0</span><br><span class="line">  je loop_exit</span><br><span class="line">  incl $edi</span><br><span class="line">  movl data_items(, %edi, 4), %eax</span><br><span class="line">  cmpl %ebx, %eax</span><br><span class="line">  jle start_loop</span><br><span class="line">  movl %eax, %ebx</span><br><span class="line">  jmp start_loop</span><br><span class="line"></span><br><span class="line">loop_exit:</span><br><span class="line">  movl $1, %eax</span><br><span class="line">  int $0x80</span><br></pre></td></tr></table></figure>
+<h3 id="计算阶乘"><a href="#计算阶乘" class="headerlink" title="计算阶乘"></a>计算阶乘</h3><p>C语言代码</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">factorial</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(n == <span class="number">1</span>) <span class="keyword">return</span> n;</span><br><span class="line">  <span class="keyword">return</span> n * factorial(n<span class="number">-1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main()&#123;</span><br><span class="line">  <span class="keyword">return</span> factorial(<span class="number">3</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>汇编语言的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">.section .data</span><br><span class="line">.section .text</span><br><span class="line">.global _start</span><br><span class="line">_start: # 上面C代码的main函数</span><br><span class="line">  pushl $3</span><br><span class="line">  call factorial</span><br><span class="line">  addl $4, %esp</span><br><span class="line">  movl %eax, %ebx</span><br><span class="line">  movl $1, %eax</span><br><span class="line">  int $0x80</span><br><span class="line"></span><br><span class="line">.type factorial @function </span><br><span class="line">factorial:</span><br><span class="line">  pushl %ebp</span><br><span class="line">  movl %esp, %ebp</span><br><span class="line">  movl 8(%ebp), %eax # 获取参数</span><br><span class="line">  cmpl $1, %eax</span><br><span class="line">  je end_factorial</span><br><span class="line">  decl %eax</span><br><span class="line">  pushl %eax</span><br><span class="line">  call factorial</span><br><span class="line">  movl 8(%ebp), %ebx # 获取上一个%eax 也就是n </span><br><span class="line">  imull %ebx, %eax # 计算 n * (n-1)</span><br><span class="line"></span><br><span class="line">end_fatorial:</span><br><span class="line">  movl %ebp, %esp</span><br><span class="line">  popl %ebp</span><br><span class="line">  ret</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/19/leveldb-overview/" rel="next" title="LevelDB 源码中的设计思路">
+                <i class="fa fa-chevron-left"></i> LevelDB 源码中的设计思路
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/19/asm-learn-with-linux-3/" rel="prev" title="回忆一下汇编的世界(3)">
+                回忆一下汇编的世界(3) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一台计算机"><span class="nav-number">1.</span> <span class="nav-text">一台计算机</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简单聊聊图灵机和现代计算机"><span class="nav-number">1.1.</span> <span class="nav-text">简单聊聊图灵机和现代计算机</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#汇编"><span class="nav-number">1.2.</span> <span class="nav-text">汇编</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于组成"><span class="nav-number">1.2.1.</span> <span class="nav-text">关于组成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Registers"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">Registers</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Addressing"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Addressing</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于函数"><span class="nav-number">1.2.2.</span> <span class="nav-text">关于函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CALL-指令"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">CALL 指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RET-指令"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">RET 指令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一个函数实例"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">一个函数实例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#两个例子"><span class="nav-number">1.3.</span> <span class="nav-text">两个例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查找最大值"><span class="nav-number">1.3.1.</span> <span class="nav-text">查找最大值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计算阶乘"><span class="nav-number">1.3.2.</span> <span class="nav-text">计算阶乘</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

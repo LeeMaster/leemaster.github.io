@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Linux," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="LeeMaster&apos;s Blog">
-<meta name="keywords" content="LeeMaster">
-<meta property="og:type" content="website">
-<meta property="og:title" content="LeeMaster&#39;s Blog">
-<meta property="og:url" content="http://leemaster.cn/tags/BigTable/index.html">
+<meta name="description" content="回忆了函数以后，那么就可以开始考虑一下如何读写文件，读写结构体了。">
+<meta name="keywords" content="Linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回忆一下汇编的世界(2)">
+<meta property="og:url" content="http://leemaster.cn/2019/12/19/asm-learn-with-linux-2/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="LeeMaster&apos;s Blog">
+<meta property="og:description" content="回忆了函数以后，那么就可以开始考虑一下如何读写文件，读写结构体了。">
 <meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-03-29T18:47:17.944Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeeMaster&#39;s Blog">
-<meta name="twitter:description" content="LeeMaster&apos;s Blog">
+<meta name="twitter:title" content="回忆一下汇编的世界(2)">
+<meta name="twitter:description" content="回忆了函数以后，那么就可以开始考虑一下如何读写文件，读写结构体了。">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://leemaster.cn/tags/BigTable/"/>
+  <link rel="canonical" href="http://leemaster.cn/2019/12/19/asm-learn-with-linux-2/"/>
 
 
 
 
 
-  <title>Tag: BigTable | LeeMaster's Blog</title>
+  <title>回忆一下汇编的世界(2) | LeeMaster's Blog</title>
   
 
 
@@ -144,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,54 +249,173 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>BigTable<small>Tag</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2019/12/19/asm-learn-with-linux-2/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/12/08/bigtable/" itemprop="url">
-              
-                <span itemprop="name">Bigtable 论文</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">回忆一下汇编的世界(2)</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-12-07T20:05:53Z"
-              content="2019-12-07" >
-          12-07
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-12-19T01:48:52Z">
+                2019-12-19
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ASM/" itemprop="url" rel="index">
+                    <span itemprop="name">ASM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    </div>
+      
 
+      
+        <p>回忆了函数以后，那么就可以开始考虑一下如何读写文件，读写结构体了。</p>
+<a id="more"></a>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/19/asm-learn-with-linux-3/" rel="next" title="回忆一下汇编的世界(3)">
+                <i class="fa fa-chevron-left"></i> 回忆一下汇编的世界(3)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/19/asm-learn-with-linux-4/" rel="prev" title="回忆一下汇编的世界(2)">
+                回忆一下汇编的世界(2) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -303,6 +423,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -533,6 +657,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
@@ -590,26 +718,6 @@
   
 
   
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 

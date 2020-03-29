@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
 <meta property="og:description" content="设计模式是个好东西，但是设计模式也不是一个特别好的东西，每个系统都有每个系统的划分，每个划分都有不同的组装和行为。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-03-27T20:36:33.871Z">
+<meta property="og:updated_time" content="2020-03-29T14:53:39.877Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="回顾设计模式(一个消息中心系统设计回顾)">
 <meta name="twitter:description" content="设计模式是个好东西，但是设计模式也不是一个特别好的东西，每个系统都有每个系统的划分，每个划分都有不同的组装和行为。">
@@ -292,7 +292,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-27T23:49:32Z">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-28T07:49:32+08:00">
                 2020-03-27
               </time>
             
@@ -355,7 +355,7 @@
         <p>设计模式是个好东西，但是设计模式也不是一个特别好的东西，每个系统都有每个系统的划分，每个划分都有不同的组装和行为。 </p>
 <a id="more"></a>
 <h1 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h1><blockquote>
-<p>写在前面：最近可能到了一个新的bottleneck了，感谢写了很多的代码，然后也做了不少的事情，但是突然感觉自己写的代码已经没有办法看了和维护下去了，这个时候我觉得是一个非常好的时机，拿起设计模式重新读一读了，思考一下面向对象行为的系统设计思路。毕竟每个系统无论web还是底层的中间件又或者是OS、DB这种底层的东西，其实都是在描述某种东西，web在描述业务，中间件在描述计算机的某个元件的网络版本，OS和DB好像又在描述硬件和一些其他的抽象。</p>
+<p>写在前面：最近可能到了一个新的bottleneck了，写了很多的代码，然后也做了不少的事情，但是突然感觉自己写的代码已经没有办法看了和维护下去了，这个时候我觉得是一个非常好的时机，拿起设计模式重新读一读了，思考一下面向对象行为的系统设计思路。毕竟每个系统无论web还是底层的中间件又或者是OS、DB这种底层的东西，其实都是在描述某种东西，web在描述业务，中间件在描述计算机的某个元件的网络版本，OS和DB好像又在描述硬件和一些其他的抽象。</p>
 </blockquote>
 <p>就拿最近的一个项目来说吧，最近在重构整个平台的消息中心，简单来说一下业务吧。我们希望通过构建一个统一的消息中心入口，统一地将websocket消息，网站内站内信，邮件等多种消息推送方式，收敛到一起，为用户提供统一的消息推送接口，并支持多个消息同时推送到多个目的地去，当然也要具有一定的消息接受和处理能力。</p>
 <h2 id="分析需求"><a href="#分析需求" class="headerlink" title="分析需求"></a>分析需求</h2><p>首先消息中心的定位是一个中心化的消息中转中心，我们的用户一定是希望我们能有下面的这些能力：</p>
@@ -504,8 +504,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/26/rust-traits-sized/" rel="next" title="rust-traits-sized">
-                <i class="fa fa-chevron-left"></i> rust-traits-sized
+              <a href="/2020/03/26/rust-traits-sized/" rel="next" title="Rust中的Sized">
+                <i class="fa fa-chevron-left"></i> Rust中的Sized
               </a>
             
           </div>
@@ -589,7 +589,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -600,7 +600,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -611,7 +611,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-count">21</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
