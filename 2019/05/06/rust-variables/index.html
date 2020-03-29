@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="编程语言中的值和引用在任何一个语言中都有值和引用的概念，这是一个很简单的概念，但是也很容易让人忽略内存本质的概念。">
+<meta name="description" content="关于所有权和生命周期的一些小笔记。">
 <meta name="keywords" content="Rust">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rust 中令人迷惑的所有权和生命周期">
 <meta property="og:url" content="http://leemaster.cn/2019/05/06/rust-variables/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="编程语言中的值和引用在任何一个语言中都有值和引用的概念，这是一个很简单的概念，但是也很容易让人忽略内存本质的概念。">
+<meta property="og:description" content="关于所有权和生命周期的一些小笔记。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-02-29T07:40:23.611Z">
+<meta property="og:updated_time" content="2020-03-29T19:15:12.279Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rust 中令人迷惑的所有权和生命周期">
-<meta name="twitter:description" content="编程语言中的值和引用在任何一个语言中都有值和引用的概念，这是一个很简单的概念，但是也很容易让人忽略内存本质的概念。">
+<meta name="twitter:description" content="关于所有权和生命周期的一些小笔记。">
 
 
 
@@ -330,8 +330,9 @@
       
 
       
-        <h1 id="编程语言中的值和引用"><a href="#编程语言中的值和引用" class="headerlink" title="编程语言中的值和引用"></a>编程语言中的值和引用</h1><p>在任何一个语言中都有值和引用的概念，这是一个很简单的概念，但是也很容易让人忽略内存本质的概念。</p>
+        <p>关于所有权和生命周期的一些小笔记。</p>
 <a id="more"></a>
+<h1 id="编程语言中的值和引用"><a href="#编程语言中的值和引用" class="headerlink" title="编程语言中的值和引用"></a>编程语言中的值和引用</h1><p>在任何一个语言中都有值和引用的概念，这是一个很简单的概念，但是也很容易让人忽略内存本质的概念。</p>
 <p>冯诺伊曼体系，以内存为中心的计算机体系结构，提供了这两个概念存在的理论基础。</p>
 <p>什么是值，什么是引用，并没有一个很良好的定义，因为在不同的语言中行为是不同的。在解释这个事情之前，首先解释一下在运行时内存的粗略划分。大家应该都知道在运行时有两个内存区域，一个是栈空间，一个是堆空间。</p>
 <h2 id="栈空间"><a href="#栈空间" class="headerlink" title="栈空间"></a>栈空间</h2><p>栈空间，在运行时用于存储临时变量，包括传递到函数内实际参数和在函数内部出现的生命语句，都有可能产生栈上变量，而变量一定是有值的，哪怕是NULL这种零值。这个值存在哪呢？</p>
@@ -493,7 +494,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
