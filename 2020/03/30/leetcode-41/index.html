@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
 <meta property="og:description" content="Hash思想活灵活现的妙用。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-03-29T19:28:54.103Z">
+<meta property="og:updated_time" content="2020-03-29T19:31:09.281Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="leetcode 41题">
 <meta name="twitter:description" content="Hash思想活灵活现的妙用。">
@@ -292,7 +292,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-30T03:17:10Z">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-30T11:17:10+08:00">
                 2020-03-30
               </time>
             
@@ -358,6 +358,8 @@
 <p>首先考虑一个极限的情况，如果这个数组刚好一个正数都不缺会是什么情况呢？看起来一个长度为n的数组，如果全部正数都在的话，那么一定是这个样子$\left[ 1 , 2 , 3 … n-1 \right]$， 诶这么一看的话， 如果数组中缺少一个元素的话，那么这个数字  $x$ 一定满足 $ x \in \left[ 1 … n \right]$ 这个条件的，如果不满足的话，那么这个数组就已经包含了全部应该有的正整数。那么考虑刚才分析出的样子，好像满足了一个规律 $arr_{ \left[ n - 1 \right]} = n$。</p>
 <p>这样的话，看起来我们就能做出来了，我们遍历数组，如果发现了一个正整数，然后把这个正整数挪到他应该在的位置，和他应该在的位置的那个元素交换一下，然后最后我们把这个数组从头开始扫描如果当前位置不满足 $arr_{ \left[ n - 1 \right]} = n$ 的话那么就找到了这个数字了！</p>
 <h2 id="Rust-答案"><a href="#Rust-答案" class="headerlink" title="Rust 答案"></a>Rust 答案</h2><figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">impl</span> Solution &#123;</span><br><span class="line">  <span class="comment">// nums  作为一个 HashMap 当 数字大于0 的时候 </span></span><br><span class="line">  <span class="comment">// nums[i] = i + 1</span></span><br><span class="line">  <span class="comment">// 如果某个 nums[i] != i + 1 那么这个 i+1 就是要找的数字</span></span><br><span class="line">  <span class="keyword">pub</span> <span class="function"><span class="keyword">fn</span> <span class="title">first_missing_positive</span></span>(nums: <span class="built_in">Vec</span>&lt;<span class="built_in">i32</span>&gt;) -&gt; <span class="built_in">i32</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> <span class="keyword">mut</span> nums = nums;</span><br><span class="line">      (<span class="number">0</span>..nums.len()).for_each(</span><br><span class="line">          |i| </span><br><span class="line">          <span class="keyword">while</span> nums[i] &gt; <span class="number">0</span> &amp;&amp; </span><br><span class="line">          (nums[i] <span class="keyword">as</span> <span class="built_in">usize</span>) &lt; nums.len() &amp;&amp; </span><br><span class="line">          nums[(nums[i] - <span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">usize</span>] != nums[i]&#123;</span><br><span class="line">              <span class="keyword">let</span> pos = (nums[i]-<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">usize</span>;</span><br><span class="line">              nums.swap(pos, i); </span><br><span class="line">          &#125;</span><br><span class="line">      );  </span><br><span class="line">      <span class="keyword">for</span> i <span class="keyword">in</span> (<span class="number">0</span>..nums.len())&#123;</span><br><span class="line">          <span class="keyword">if</span> nums[i] != (i+<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">i32</span>&#123;</span><br><span class="line">              <span class="keyword">return</span> (i+<span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">i32</span>;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> (nums.len() + <span class="number">1</span>) <span class="keyword">as</span> <span class="built_in">i32</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="关于Hash"><a href="#关于Hash" class="headerlink" title="关于Hash"></a>关于Hash</h2><p>学习hash的时候，看起来都是在用HashTable来讲这个事情，通过这道题，我觉得其实就是我们把一个数组的位置标号集合和每个位置应该有的数组做了一个映射，只要满足一个映射关系，数据结构什么的不重要，那么可以认为满足这样一个映射条件的程序中的某个结构，就可以看成是一个HashTable。</p>
+
       
     </div>
     
@@ -543,7 +545,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分析题目"><span class="nav-number">1.</span> <span class="nav-text">分析题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Rust-答案"><span class="nav-number">1.1.</span> <span class="nav-text">Rust 答案</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#分析题目"><span class="nav-number">1.</span> <span class="nav-text">分析题目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Rust-答案"><span class="nav-number">1.1.</span> <span class="nav-text">Rust 答案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Hash"><span class="nav-number">1.2.</span> <span class="nav-text">关于Hash</span></a></li></ol></li></ol></div>
             
 
           </div>
