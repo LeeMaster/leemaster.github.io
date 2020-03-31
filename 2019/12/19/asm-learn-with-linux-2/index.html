@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="回忆了函数以后，那么就可以开始考虑一下如何读写文件，读写结构体了。">
+<meta name="description" content="要不一起用汇编读写文件和结构体吧？">
 <meta name="keywords" content="Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="回忆一下汇编的世界(2)">
 <meta property="og:url" content="http://leemaster.cn/2019/12/19/asm-learn-with-linux-2/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
-<meta property="og:description" content="回忆了函数以后，那么就可以开始考虑一下如何读写文件，读写结构体了。">
+<meta property="og:description" content="要不一起用汇编读写文件和结构体吧？">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-03-29T18:52:21.561Z">
+<meta property="og:updated_time" content="2020-03-31T18:21:31.644Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="回忆一下汇编的世界(2)">
-<meta name="twitter:description" content="回忆了函数以后，那么就可以开始考虑一下如何读写文件，读写结构体了。">
+<meta name="twitter:description" content="要不一起用汇编读写文件和结构体吧？">
 
 
 
@@ -352,8 +352,43 @@
       
 
       
-        <p>回忆了函数以后，那么就可以开始考虑一下如何读写文件，读写结构体了。</p>
+        <p>要不一起用汇编读写文件和结构体吧？</p>
 <a id="more"></a>
+<blockquote>
+<p>文件和结构体都是对数据的一种抽象和组织形式</p>
+</blockquote>
+<h1 id="关于抽象"><a href="#关于抽象" class="headerlink" title="关于抽象"></a>关于抽象</h1><p>还挺难讲清楚抽象是什么，写代码时间长了感觉很多事情一看就那么回事，还真的没有系统地思考过这个问题，不过在回忆读写问题的时候，突然好像明白了抽象是个什么东西。</p>
+<p>可以说，我们的系统设计是一个抽象，我们的数据结构是一个抽象，我们将业务模型通过系统设计的文档表达出来，而又通过各种数据结构和算法来表达文档的逻辑，最后我们的数据结构表达了数据，算法处理了数据，将有共同点的东西统统用相同的方法来处理，这个看起来就是抽象的本质了。</p>
+<p>在计算机中，文件是一种对硬盘数据的抽象，还记得硬盘怎么存储数据吗？是的硬盘上的数据被组织到了一圈一圈的磁道上，如果我们没有文件这个抽象，那么在向硬盘存储数据的时候，不仅要计算角速度还要计算写入速度，真的有点麻烦。但是文件给了我们一个很简单的抽象，文件记录了一堆数据在磁盘上的位置，然后将这个位置交给磁盘控制器，磁盘控制器定位到了文件的起始位置后，向操作系统发送一个可读的信号，然后操作系统不关心什么角速度什么写入读取速度，只需要告诉磁盘，我想从现在你这个文件的位置读取多少多少数据就好了。</p>
+<p>那么结构体呢？其实是对内存数据的一种抽象，在内存中如果没有数据类型，那么这是一个非常糟糕的事情，因为我们只能拿字节，这就很麻烦了，有了结构体，有了基本数据类型，我们对内存的使用能力，至少在逻辑能力上变得很好了。</p>
+<h1 id="关于文件读写"><a href="#关于文件读写" class="headerlink" title="关于文件读写"></a>关于文件读写</h1><p>上文说到，文件是操作系统对磁盘操作的一个抽象，而对文件的操作其实是CPU发出的一系列的指令，那么如何执行这些指令来读取写入数据到磁盘呢？</p>
+<h2 id="关于数据读写"><a href="#关于数据读写" class="headerlink" title="关于数据读写"></a>关于数据读写</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">                                                               ┼   .─────. </span><br><span class="line">                                                               ├──( DISK  )</span><br><span class="line">                                                               │   `─────&apos; </span><br><span class="line">               ┌──────────┐                                    │   .─────. </span><br><span class="line">               │   cpu    │                                    ├─── DISK  )</span><br><span class="line">               └─────┬────┘   ┌─────────┐                      │   `─────&apos; </span><br><span class="line">                     │────────┤ cache   │                      │   .─────. </span><br><span class="line">                     │        └─────────┘                      ├─── DISK  )</span><br><span class="line">                     │                                         │   `─────&apos; </span><br><span class="line">               ┌─────┴────┐                         ┌────────────────────┐ </span><br><span class="line">               │ mem-ctrl │                         │   SCI Controller   │ </span><br><span class="line">               └──────────┘                         │                    │ </span><br><span class="line">                     │                              └──────────┬─────────┘ </span><br><span class="line">┌────────────────────┼─────────────────────────────────────────┼──────────┐</span><br><span class="line">│                    └─────────────PCI bus─────────────────────┘          │</span><br><span class="line">└─────────────────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
+<p>在上图我们看到计算机的组成，CPU通过电路板上的连线，直接连接到了PCI总线上，而PCI总线又直接和SCI控制器连接到一起了，SCI控制器负责发出信号，而磁盘负责响应信号。而数据从磁盘到CPU呢，也是一样的，一样需要经过SCI控制器，也要经过PCI总线，然后才能到CPU进行处理。</p>
+<p>当然这篇文章不是说操作系统的I/O子系统，主要是将文件系统，但是这张图已经足够说明计算机是如何读取磁盘数据的了，这就够了。</p>
+<h2 id="Linux-是怎么抽象的呢？"><a href="#Linux-是怎么抽象的呢？" class="headerlink" title="Linux 是怎么抽象的呢？"></a>Linux 是怎么抽象的呢？</h2><p>在Linux系统中，文件就是一切，真的是一个哲学，如果我们只读写读写文件，也就算不上什么哲学了，Linux采用了VFS文件系统，为上层的应用程序提供了统一的文件读写操作，而应用程序将很多Linux内的控制系统都看成文件进行读写，比如我在大学时候写的OJ判题核心，主要就是通过读取proc文件系统来实现某个题目编写后的程序运行时间占用时长的获取，而在未来的一段时间内，我写的Skunk网络通信框架也会通过timerfd来获取时间事件，当然来还有eventfd在Linux系统内创建一个事件驱动的应用程序。</p>
+<p>Linux将一个文件打开后使用一个int表示，这个int被成为文件描述符，那么既然在Linux上读写文件，也就要遵守这个规则了，然后利用系统调用进行文件的读写。</p>
+<p>废话不多说直接写代码好了。</p>
+<h2 id="汇编实现文件读写"><a href="#汇编实现文件读写" class="headerlink" title="汇编实现文件读写"></a>汇编实现文件读写</h2><p>既然是写代码，首先我们的目标就是读取一个文件到缓冲区，那么Linux提供了几种和文件有关的系统调用呢？<code>open</code>,<code>read</code>,<code>write</code>,<code>close</code>,四个操作足够操作文件了。</p>
+<p>首先我们在全局准备一个缓冲区</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.section .bss</span><br><span class="line">.lcomm BUFFER 500 # 开启一个500字节大小的缓冲区 等价的 C代码 char * BUFFER = (char*)malloc(sizeof(char) * 500);</span><br></pre></td></tr></table></figure>
+<p>然后我们编写我们的文件打开函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.open_file:</span><br><span class="line">  pushl %ebp</span><br><span class="line">  movl %esp, %ebp</span><br><span class="line">  movl $5, %eax # Linux open系统调用号是 5</span><br><span class="line">  movl 8(%ebp), %ebx</span><br><span class="line">  movl $0, %ecx # 以 O_RDONLY 模式打开</span><br><span class="line">  movl %0666, %edx # 权限走 666 就行了 也就是 -rw-rw-rw模式</span><br><span class="line">  int 0x80</span><br><span class="line">  movl %ebp, %esp # 因为进过一次系统调用之后 %eax内已经是文件描述符了</span><br><span class="line">  popl %ebp</span><br><span class="line">  ret</span><br></pre></td></tr></table></figure>
+<p>接下来编写文件读取函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">read_file:</span><br><span class="line">  pushl %ebp</span><br><span class="line">  movl %esp, %ebp # 下面的四行 等价 c 代码 read(fd, BUFFER, 500); </span><br><span class="line">  movl $3, %eax # Linux read系统调用号是 3</span><br><span class="line">  movl 8(%ebp), %ebx # 文件描述符号</span><br><span class="line">  movl BUFFER, %ecx</span><br><span class="line">  movl $500, %edx # 文件长度</span><br><span class="line">  int 0x80</span><br><span class="line">  cmpl $0, %eax # 判断是否正常读取如果 read调用返回负数那么调用失败了</span><br><span class="line">  jle end_read</span><br><span class="line"></span><br><span class="line">end_read:</span><br><span class="line">  movl $6, %eax # 关闭文件描述符号</span><br><span class="line">  movl 8(%ebp), %ebx</span><br><span class="line">  int 0x80 </span><br><span class="line">  movl $1, %eax</span><br><span class="line">  movl $0, %ebx</span><br><span class="line">  int 0x80</span><br></pre></td></tr></table></figure>
+<p>那么文件的写函数，就交给各位看官姥爷自己实现就好了。</p>
+<h1 id="关于结构体"><a href="#关于结构体" class="headerlink" title="关于结构体"></a>关于结构体</h1><p>结构体是对字节数据的一个抽象，因为我们读取回来了一堆字节，那么这个字节如果我们人工去处理，就非常恶心了，这么恶心的事情就交给编译器去做吧。首先我们看一个常见的结构体：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">person</span>&#123;</span></span><br><span class="line">  <span class="keyword">char</span>[<span class="number">40</span>] last_name;</span><br><span class="line">  <span class="keyword">char</span>[<span class="number">40</span>] first_name;</span><br><span class="line">  <span class="keyword">char</span>[<span class="number">240</span>] address;</span><br><span class="line">  <span class="keyword">int</span> age</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这样的一个结构体，在学C语言的时候我们都学过，这个结构体占用的大小是多少呢？明显的324个字节，当然啦，我们不考虑内存对齐哈。</p>
+<p>我们先琢磨个办法，怎么把这个结构体扔到临时的栈空间上，作为一个局部变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">some_func:</span><br><span class="line">  pushl %ebp</span><br><span class="line">  movl %esp, %ebp</span><br><span class="line">  subl $324, %ebp # 为这个结构体开辟一个内存空间</span><br></pre></td></tr></table></figure>
+<p>有了局部空间了，那么我们尝试给其中的age字段赋值吧</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">movl %12, -4(%ebp) # 因为age字段的内存地址在当前%ebp上4个字节位置</span><br></pre></td></tr></table></figure>
+<p>那么设置字符串怎么办呢？交给你们了！给点小提示：</p>
+<ul>
+<li>%edi做索引</li>
+<li>利用索引寻址语法来做， mem(%eax, %edi, 1) 代表访问 mem[eax + edi * 1]</li>
+</ul>
+
       
     </div>
     
@@ -447,8 +482,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -524,6 +568,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于抽象"><span class="nav-number">1.</span> <span class="nav-text">关于抽象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于文件读写"><span class="nav-number">2.</span> <span class="nav-text">关于文件读写</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于数据读写"><span class="nav-number">2.1.</span> <span class="nav-text">关于数据读写</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux-是怎么抽象的呢？"><span class="nav-number">2.2.</span> <span class="nav-text">Linux 是怎么抽象的呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#汇编实现文件读写"><span class="nav-number">2.3.</span> <span class="nav-text">汇编实现文件读写</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于结构体"><span class="nav-number">3.</span> <span class="nav-text">关于结构体</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
