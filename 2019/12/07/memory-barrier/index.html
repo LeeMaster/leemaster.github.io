@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="C++," />
+  <meta name="keywords" content="C++,GCC,Memory Barrier," />
 
 
 
@@ -80,14 +80,14 @@
 
 
 <meta name="description" content="关于lock-free的底层原理思考">
-<meta name="keywords" content="C++">
+<meta name="keywords" content="C++,GCC,Memory Barrier">
 <meta property="og:type" content="article">
 <meta property="og:title" content="内存屏障">
 <meta property="og:url" content="http://leemaster.cn/2019/12/07/memory-barrier/index.html">
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
 <meta property="og:description" content="关于lock-free的底层原理思考">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-12T17:50:20.271Z">
+<meta property="og:updated_time" content="2020-04-01T18:17:52.629Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="内存屏障">
 <meta name="twitter:description" content="关于lock-free的底层原理思考">
@@ -303,6 +303,28 @@
           </span>
 
           
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Concurrency/" itemprop="url" rel="index">
+                    <span itemprop="name">Concurrency</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
 
           
             
@@ -332,16 +354,7 @@
       
         <p>关于lock-free的底层原理思考</p>
 <a id="more"></a>
-<h1 id="关于CPU和存储"><a href="#关于CPU和存储" class="headerlink" title="关于CPU和存储"></a>关于CPU和存储</h1><p>在计算机组成原理中，学习过现代的计算机是以存储为中心的，而内存屏障是用来保证指令顺序的，也就是在CPU流水线执行的时候通过插入一些tricky来保证高层程序逻辑上的顺序一致性。</p>
-<h2 id="CPU流水线"><a href="#CPU流水线" class="headerlink" title="CPU流水线"></a>CPU流水线</h2><h2 id="CPU-多级Cache"><a href="#CPU-多级Cache" class="headerlink" title="CPU 多级Cache"></a>CPU 多级Cache</h2><h2 id="CPU-指令重排"><a href="#CPU-指令重排" class="headerlink" title="CPU 指令重排"></a>CPU 指令重排</h2><h3 id="一个小问题"><a href="#一个小问题" class="headerlink" title="一个小问题"></a>一个小问题</h3><p>还是先从一个问题开始出发:</p>
-<p>如果在一个并行程序中，指令的执行顺序如下，那么执行完成后，x和y的值有几种可能性？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CPU 1		        CPU 2</span><br><span class="line">===============	===============</span><br><span class="line">&#123; A == 1; B == 2 &#125; // RAM中的值</span><br><span class="line">A = 3;		      x = B;</span><br><span class="line">B = 4;		      y = A;</span><br></pre></td></tr></table></figure>
-<p>这个问题提出来会比较抽象一点，抽象的原因是因为没有业务场景，如果有业务场景，那么虽然程序是并行的，那么这两个并行的指令序列执行完成后，结果应该是遵守一个序关系的。</p>
-<p>那么可能的指令执行顺序如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">STORE A=3,	STORE B=4,	y=LOAD A-&gt;3,	x=LOAD B-&gt;4</span><br><span class="line">STORE A=3,	STORE B=4,	x=LOAD B-&gt;4,	y=LOAD A-&gt;3</span><br><span class="line">STORE A=3,	y=LOAD A-&gt;3,	STORE B=4,	x=LOAD B-&gt;4</span><br><span class="line">STORE A=3,	y=LOAD A-&gt;3,	x=LOAD B-&gt;2,	STORE B=4</span><br><span class="line">STORE A=3,	x=LOAD B-&gt;2,	STORE B=4,	y=LOAD A-&gt;3</span><br><span class="line">STORE A=3,	x=LOAD B-&gt;2,	y=LOAD A-&gt;3,	STORE B=4</span><br><span class="line">STORE B=4,	STORE A=3,	y=LOAD A-&gt;3,	x=LOAD B-&gt;4</span><br><span class="line">STORE B=4, ...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
-<p>结果为（x，y两个变量，所以一定有这两个变量全排列多个结果）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x == 2, y == 1</span><br><span class="line">x == 2, y == 3</span><br><span class="line">x == 4, y == 1</span><br><span class="line">x == 4, y == 3</span><br></pre></td></tr></table></figure>
-<h3 id="分析一下指令重排"><a href="#分析一下指令重排" class="headerlink" title="分析一下指令重排"></a>分析一下指令重排</h3><h1 id="关于屏障"><a href="#关于屏障" class="headerlink" title="关于屏障"></a>关于屏障</h1><h2 id="并行还是并发"><a href="#并行还是并发" class="headerlink" title="并行还是并发"></a>并行还是并发</h2><h2 id="内存语义"><a href="#内存语义" class="headerlink" title="内存语义"></a>内存语义</h2><h2 id="正式介绍屏障"><a href="#正式介绍屏障" class="headerlink" title="正式介绍屏障"></a>正式介绍屏障</h2><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://www.kernel.org/doc/Documentation/memory-barriers.txt" target="_blank" rel="noopener">Kernel 内存屏障文档</a></p>
+<p><a href="https://www.kernel.org/doc/Documentation/memory-barriers.txt" target="_blank" rel="noopener">Kernel 内存屏障文档</a></p>
 
       
     </div>
@@ -360,6 +373,10 @@
         <div class="post-tags">
           
             <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/GCC/" rel="tag"># GCC</a>
+          
+            <a href="/tags/Memory-Barrier/" rel="tag"># Memory Barrier</a>
           
         </div>
       
@@ -436,17 +453,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -461,7 +469,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">28</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -472,7 +480,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -483,7 +491,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
@@ -522,22 +530,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于CPU和存储"><span class="nav-number">1.</span> <span class="nav-text">关于CPU和存储</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU流水线"><span class="nav-number">1.1.</span> <span class="nav-text">CPU流水线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU-多级Cache"><span class="nav-number">1.2.</span> <span class="nav-text">CPU 多级Cache</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU-指令重排"><span class="nav-number">1.3.</span> <span class="nav-text">CPU 指令重排</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个小问题"><span class="nav-number">1.3.1.</span> <span class="nav-text">一个小问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析一下指令重排"><span class="nav-number">1.3.2.</span> <span class="nav-text">分析一下指令重排</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于屏障"><span class="nav-number">2.</span> <span class="nav-text">关于屏障</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#并行还是并发"><span class="nav-number">2.1.</span> <span class="nav-text">并行还是并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存语义"><span class="nav-number">2.2.</span> <span class="nav-text">内存语义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正式介绍屏障"><span class="nav-number">2.3.</span> <span class="nav-text">正式介绍屏障</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="rust," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="用Rust写一个Regex处理引擎，重新捡起Compiler回忆了一下。">
+<meta name="keywords" content="rust">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式和识别（1）">
+<meta property="og:url" content="http://leemaster.cn/2020/03/14/regex-recognition-1/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="用Rust写一个Regex处理引擎，重新捡起Compiler回忆了一下。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-01T18:11:48.196Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="正则表达式和识别（1）">
+<meta name="twitter:description" content="用Rust写一个Regex处理引擎，重新捡起Compiler回忆了一下。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2020/03/14/regex-recognition-1/"/>
+
+
+
+
+
+  <title>正则表达式和识别（1） | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-resources">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Resources
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2020/03/14/regex-recognition-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">正则表达式和识别（1）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-13T23:16:26Z">
+                2020-03-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Compiler/" itemprop="url" rel="index">
+                    <span itemprop="name">Compiler</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>用Rust写一个Regex处理引擎，重新捡起Compiler回忆了一下。</p>
+<a id="more"></a>
+<h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>正则表达式的主要工作就是验证一个字符串是否符合这个正则表达式的规则，如果是正则表达式的规则，那么接受这个字符串，并为这个字符串生成一个Token表示，生成了以后填入Token流，等待下一步的Parser处理成为AST。</p>
+<h2 id="识别一个单词"><a href="#识别一个单词" class="headerlink" title="识别一个单词"></a>识别一个单词</h2><p>既然是为了识别一个字符串，那么这个字符串可以认为是一个单词，解释这个问题，首先从识别一个简单的字符串<em>new</em>开始。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ch = next_char()</span><br><span class="line"><span class="keyword">if</span> ch = <span class="string">'n'</span>: <span class="comment"># S0</span></span><br><span class="line">  ch = next_char()</span><br><span class="line">  <span class="keyword">if</span> ch == <span class="string">'e'</span>: <span class="comment"># S1</span></span><br><span class="line">    ch == next_char();</span><br><span class="line">    <span class="keyword">if</span> ch == <span class="string">'w'</span>: <span class="comment"># S2</span></span><br><span class="line">      <span class="keyword">return</span> Token(KEYWORD, <span class="string">'new'</span>, now_position() - <span class="number">1</span>) <span class="comment"># S3</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">return</span> Error() <span class="comment"># SE</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">return</span> Error() <span class="comment"># SE</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="keyword">return</span> Error() <span class="comment"># SE</span></span><br></pre></td></tr></table></figure>
+<p>手写识别一个固定单词的程序是很简单的，因为当前这个程序能接受的字符串只有一个，所以只要一个一个的匹配就行了， 如果我们给这个程序的每个步骤加上一个状态，那么每个<em>if</em>分支代笔一个状态。程序中的注解表达这个意思，那么当程序到达状态<em>S3</em> 的时候，我们认为匹配成功，当程序返回状态 <em>SE</em>的时候我们认为识别失败，这样的话，完全可以一般化这个识别的过程，即从开始匹配开始，一路状态转移，当到达接受状态的时候，停止接受字符串，返回最终接受的字符串。那么如果现在这个程序要识别<em>new</em>和<em>not</em> 呢？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">ch = next_char()</span><br><span class="line"><span class="keyword">if</span> ch = <span class="string">'n'</span>: <span class="comment"># S0</span></span><br><span class="line">  ch = next_char()</span><br><span class="line">  <span class="keyword">if</span> ch == <span class="string">'e'</span>: <span class="comment"># S1</span></span><br><span class="line">    ch == next_char();</span><br><span class="line">    <span class="keyword">if</span> ch == <span class="string">'w'</span>: <span class="comment"># S2</span></span><br><span class="line">      <span class="keyword">return</span> Token(KEYWORD, <span class="string">'new'</span>, now_position() - <span class="number">1</span>) <span class="comment"># S3</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">return</span> Error() <span class="comment"># SE</span></span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">if</span> ch == <span class="string">'o'</span>: <span class="comment"># S4</span></span><br><span class="line">      ch = next_char()</span><br><span class="line">      <span class="keyword">if</span> ch == <span class="string">'t'</span>:</span><br><span class="line">        <span class="keyword">return</span> Token(KEYWORD, <span class="string">'new'</span>, now_position() - <span class="number">1</span>) <span class="comment"># S5</span></span><br><span class="line">      <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> Error() <span class="comment"># SE</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">      <span class="keyword">return</span> Error() <span class="comment"># SE</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">  <span class="keyword">return</span> Error() <span class="comment"># SE</span></span><br></pre></td></tr></table></figure>
+<p>程序就变成了上面这个样子，那么随着这个程序能接受的单词越来越多，我们会发现这个程序会变得越来越大，而根据上面的解释，我们发现字符串匹配的过程好像是一个状态转移的过程，而在日常写算法题的过程中，我们发现DP好像也是用一个什么东西来记录状态，然后根据一个事件触发状态转移，从而走到一个新的状态。</p>
+<p>阿哈，那么根据这个猜测，我们完全可以通过循环来改造分支处理程序，处理办法就是用一个Map记录上。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">trans_map = &#123;</span><br><span class="line">  (S0, <span class="string">'n'</span>) : S1,</span><br><span class="line">  (S1, <span class="string">'e'</span>) : S2,</span><br><span class="line">  (S1, <span class="string">'o'</span>) : S4,</span><br><span class="line">  (S2, <span class="string">'w'</span>) : S3,</span><br><span class="line">  (S4, <span class="string">'t'</span>) : S5,</span><br><span class="line">&#125;</span><br><span class="line">accepted = [S3, S5]</span><br><span class="line">state = S0</span><br><span class="line">record = <span class="string">""</span> </span><br><span class="line"><span class="keyword">while</span>(ch = next_char()):</span><br><span class="line">  state = trans_map[(state, ch)]</span><br><span class="line">  <span class="keyword">if</span> state == <span class="keyword">None</span>:</span><br><span class="line">    <span class="keyword">return</span> Error(record, now_position())</span><br><span class="line">  <span class="keyword">if</span> accepted.contains(state):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">      <span class="keyword">return</span> Token(KEYWORD, record, now_position() - len(record))</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">      record.clear()</span><br><span class="line">      state = S0</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    append(record, ch)</span><br></pre></td></tr></table></figure>
+<p>嗯大概就是这个样子了，主要是上面的分支结构在足够深的时候，就是一个典型的DFS而已，只不过我们手写出来的，当然通过Rust之类的宏系统可以自动生成，那么如果我们可以通过一个Map来记录这个状态转移的过程，那么就少了很多的分支，程序更简单了，当然在实现上主要还是通过递归下降的方式来搞定的，所以自然会减少栈的使用，那么根据这个结论，我们觉得识别一个单词的关键点在于如何构造这个Map，从而进行循环匹配。（当然这个程序是有问题的，如果next_char()返回了一个None怎么办？） </p>
+<h2 id="形式化识别器的定义"><a href="#形式化识别器的定义" class="headerlink" title="形式化识别器的定义"></a>形式化识别器的定义</h2><p>上面我们发现了这个识别器（Scanner）的雏形就是这个样子了，那么如何把这个东西在数学上形式化，从而找到递推关系，写下来程序。</p>
+<ul>
+<li>$S$ 有限的状态集合包含错误状态 $S_e$</li>
+<li>$\sum$ 有限的字符集合</li>
+<li>$\delta \left( s, c \right) $ 状态转移函数集合</li>
+<li>$S_0$ 起始状态</li>
+<li>$S_A$ 接受状态集合</li>
+</ul>
+<p>对于这个形式化的定义，可以认为一个 Scanner接受的字符串 $x_1 x_2 x_3 \ldots x_(n-1) x_n$ 可以形式化地表示为 :</p>
+<p>$\delta \left( \delta \left( \ldots \delta \left( \delta \left( \delta \left( x_0, x_1 \right), x_2 \right) , x_3\right)  ,\ldots \right) , x_n \right) \in S_A$</p>
+<p>一旦出现这个公式，很显然啊，这就是一个递归程序的呀，因为一层套着一层的，所以如何将递归转换为递推其实就是在用记忆化搜索的技巧。</p>
+<p>那么有了形式化的定义和分析，在接下来的文章中就研究如何实现这个记忆化表的生成了！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/rust/" rel="tag"># rust</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/08/rust-traits-FromStr/" rel="next" title="Rust 类型和字符串转换那点事">
+                <i class="fa fa-chevron-left"></i> Rust 类型和字符串转换那点事
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/15/regex-recognition-2/" rel="prev" title="正则表达式和识别（2）">
+                正则表达式和识别（2） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概览"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#识别一个单词"><span class="nav-number">1.1.</span> <span class="nav-text">识别一个单词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#形式化识别器的定义"><span class="nav-number">1.2.</span> <span class="nav-text">形式化识别器的定义</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
