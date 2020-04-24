@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python,Pandas," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="好吧，我承认我又跑出去代写作业了，反正国外留学的一个朋友作业写不出来了，就这样捎带手玩了玩pandas，就借着她的作业写篇文章咯。">
+<meta name="keywords" content="Python,Pandas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一天学会Pandas">
+<meta property="og:url" content="http://leemaster.cn/2020/04/04/pandas-sample/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="好吧，我承认我又跑出去代写作业了，反正国外留学的一个朋友作业写不出来了，就这样捎带手玩了玩pandas，就借着她的作业写篇文章咯。">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-06T14:40:03.028Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一天学会Pandas">
+<meta name="twitter:description" content="好吧，我承认我又跑出去代写作业了，反正国外留学的一个朋友作业写不出来了，就这样捎带手玩了玩pandas，就借着她的作业写篇文章咯。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2020/04/04/pandas-sample/"/>
+
+
+
+
+
+  <title>一天学会Pandas | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-resources">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Resources
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2020/04/04/pandas-sample/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一天学会Pandas</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-04-04T12:04:54+08:00">
+                2020-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Pandas/" itemprop="url" rel="index">
+                    <span itemprop="name">Pandas</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>好吧，我承认我又跑出去代写作业了，反正国外留学的一个朋友作业写不出来了，就这样捎带手玩了玩<code>pandas</code>，就借着她的作业写篇文章咯。</p>
+<a id="more"></a>
+<p>就不修仙了，直接案例教学，应该是三个案例，足够讲清楚怎么用<code>pandas</code>了！（数据集在Resources章节会给出来）。</p>
+<h1 id="关于pandas"><a href="#关于pandas" class="headerlink" title="关于pandas"></a>关于pandas</h1><p>写在前面： 在实习的时候偶然接触到了BI，就感觉写写SQL还挺简单的，然后再到后来负责整个云计算平台的运营数据统计项目的时候，诶，这个BI有点意思哦，每天都能看到不同的人访问不同的页面使用不同的功能，可视化了以后发现了挺多好玩的规律的，能直接指导我们的产品是不是合格，因为有的功能真的没有人用！做了就挺浪费人力的，所以这次虽然是代写作业吧，不过我觉得可以尝试把<code>pandas</code>用到实际的生产中捣腾捣腾数据。</p>
+<p><code>pandas</code>这个玩意我第一次听说，应该是大二的时候突然想做机器学习（事实证明：脑子是不太够用-_-!），然后就学了学<code>numpy</code>,<code>scipy</code>,<code>matplotlib</code>，然后我都忘了，主要是我没数据啊！</p>
+<h2 id="一个有趣的前奏"><a href="#一个有趣的前奏" class="headerlink" title="一个有趣的前奏"></a>一个有趣的前奏</h2><p>这真的是一个好问题，数据是从哪冒出来的？在没有计算机的时候数据也在不停地产生，不过那个时候的数据呢，没有被记录下来，所以大家感受不到数据的存在，后来图灵老爷子捣腾出来个图灵机，突然我们抽象了一个非常好用的计算模型，然后冯老爷子没事捣腾捣腾电路板子，人类历史上第一台计算机诞生了，从那以后，我们的数据可以被记录了，然后就产生了一堆很好玩的事情，比如被女朋友查手机有没有和妹妹聊天，那为啥能被查到呢？还不是因为数据被记录了，我们感受到了数据的存在，我们的脑子处理了数据，然后这个事情就变得更有趣了，不然的话好像民政局也不需要办离婚了-_-。</p>
+<p>随着世界上的数据越来越多，我们突然发现我们可以让计算机统计一下画个图，我们好像能发现一些帮助我们生产的规律，再后来就有了BI这个专门帮助企业制定一些商业计划的职业。</p>
+<p>举个例子吧，为什么企业需要BI，因为老板们只能看到结果，当看到某个结果没有达到预期，比如这个月的收入同比上个月下降了50%，诶，就肯定需要研究一下为什么这个月挣的少了，然后通过这个结果，找到关联的指标，一步一步地就找到了为什么这个月挣得少的原因了，那改进一下，下个月肯定可以的！</p>
+<p>随着我们的计算机性能越来越好，老板们发现经营数据真的可以发现一些规律，所以就成现在这个样子了，一般大点的公司都会有专门的BI团队研究数据，制定商业计划。在这个过程中我们发现用户的行为好像也能分析，就这样我们不停地采集用户信息，采集着采集着，数据越来越大，大数据这个神秘的概念就出来了，然后机器学习突然就火了起来了（还不是因为老板觉得机器BI比人工BI厉害）。</p>
+<h2 id="Pandas"><a href="#Pandas" class="headerlink" title="Pandas"></a>Pandas</h2><p>这个框架呢，据说用了很多写代码的骚技巧，让用的人感觉挺舒服的，不过我这个学计算机的没感觉有多舒服，不过还算简单上个手还是很快的。Pandas的抽象确实还挺合理的，因为他只有两种装数据的东西，一个叫<code>DataFrame</code>另外一个叫<code>Series</code>,哥俩的关系就和下面这张图一样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────────────────────┐</span><br><span class="line">│              DataFrame           │</span><br><span class="line">├──────┬──────┬──────┬──────┬──────┤</span><br><span class="line">│  S   │  S   │  S   │  S   │  S   │</span><br><span class="line">│  e   │  e   │  e   │  e   │  e   │</span><br><span class="line">│  r   │  r   │  r   │  r   │  r   │</span><br><span class="line">│  i   │  i   │  i   │  i   │  i   │</span><br><span class="line">│  e   │  e   │  e   │  e   │  e   │</span><br><span class="line">│  s   │  s   │  s   │  s   │  s   │</span><br><span class="line">└──────┴──────┴──────┴──────┴──────┘</span><br></pre></td></tr></table></figure>
+<p>不过我觉得其实这个名词都是表象，背后是什么呢? 在线性代数里面我们学过向量和矩阵，矩阵是由多个向量组成的，诶，这个事看起来好像有点意思了，是的<code>DataFrame</code>简单的看成矩阵就好了，<code>Series</code>看成向量就好了。这样我们看<code>pandas</code>的文档就方便很多啦！</p>
+<h3 id="数据需要模式"><a href="#数据需要模式" class="headerlink" title="数据需要模式"></a>数据需要模式</h3><p>这里的模式，是从数据库中借鉴出来的概念，什么是模式呢？还记得高中写作文的时候吧，大家的写作风格基本都是议论文的那一套，<code>先开个头交代个背景，引出论点，然后一条一条地议论一波，最后收个尾来个总结</code>。在你看到我前面说的这句划了重点的话的时候，其实你没啥特别的印象，但是如果这样呢？</p>
+<p>议论文的写作风格：</p>
+<ul>
+<li>交代背景</li>
+<li>引出论点</li>
+<li>分论点讨论</li>
+<li>概括总结</li>
+</ul>
+<p>看起来好多了，记忆起来也很轻松了，写作文的时候把这个东西放到草稿纸上一个一个对，然后数数字数，一篇‘优美’的议论文就写完了！这个结构就叫做议论文的模式。</p>
+<p>那么数据是一样的，在计算机的世界里，数据本身是没有模式的，因为都是些稀奇古怪的二进制，如果我们不用一种结构来描述某些数据，其实我们处理起来还挺麻烦的，所以我们的数据也就需要一个模式来描述，在数据库领域这个东西叫表结构，在<code>pandas</code>里面这个东西就是上面的哥俩<code>DataFrame</code>和<code>Series</code></p>
+<p>在接下来的<code>pandas</code>实际比划过程中，我们就一起研究一下这<code>DataFrame</code>和<code>Series</code>吧！</p>
+<h1 id="朋友的几个作业"><a href="#朋友的几个作业" class="headerlink" title="朋友的几个作业"></a>朋友的几个作业</h1><h2 id="Task-One"><a href="#Task-One" class="headerlink" title="Task One"></a>Task One</h2><blockquote>
+<p>在这个任务的数据集中，你将得到（2014/07/01-2015/07/01）一年中英国的全部天气历史数据，你需要完成下面三件事</p>
+<ol>
+<li>把数据从文件装载到dataframe中</li>
+<li>找出最热的一天和最冷的一天</li>
+<li>计算出每周和每月的平均温度</li>
+</ol>
+</blockquote>
+<h3 id="1-1"><a href="#1-1" class="headerlink" title="1.1"></a>1.1</h3><p>这个子任务，不是很难，只要用<code>pandas</code>中的那一堆I/O函数中的<code>read_csv</code>就能将数据全部拿出来了。然后在我们的计算机中形成一个<code>DataFrame</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd </span><br><span class="line">data = pd.read_csv(<span class="string">'task1.csv'</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="1-2"><a href="#1-2" class="headerlink" title="1.2"></a>1.2</h3><p>找到最热和最冷的一天，怎么找呢，首先我们需要做的事情就是找到气温最大和最小的那两行，找到以后，输出对应的日期就可以了。要是我们人类去找的话，还挺简单的，但是计算机的话就一定要用比较笨的办法了，先排个序，然后排序后的结果的第一行就是我们要的数据。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">hottest_day = data \</span><br><span class="line">            .sort_values(<span class="string">'actual_max_temp'</span>,ascending=<span class="keyword">False</span>) \</span><br><span class="line">            .head(<span class="number">1</span>)[<span class="string">'date'</span>].map(<span class="keyword">lambda</span> time: time.strftime(<span class="string">'%Y-%m-%d'</span>)) \</span><br><span class="line">            .values[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">coldest_day =  data \</span><br><span class="line">            .sort_values(<span class="string">'actual_max_temp'</span>,ascending=<span class="keyword">True</span>) \</span><br><span class="line">            .head(<span class="number">1</span>)[<span class="string">'date'</span>].map(<span class="keyword">lambda</span> time: time.strftime(<span class="string">'%Y-%m-%d'</span>)) \</span><br><span class="line">            .values[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<h3 id="1-3"><a href="#1-3" class="headerlink" title="1.3"></a>1.3</h3><p>这个task的任务是找到每个月和每个星期的平均温度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">date_data = data[<span class="string">'date'</span>].map(<span class="keyword">lambda</span> time: time.strftime(<span class="string">'%Y-%m-%d'</span>))</span><br><span class="line"><span class="comment"># replace 2014 12 (29,30,31) because these day belong to 2015 week 1 </span></span><br><span class="line">date_data = date_data.replace(regex=&#123;<span class="string">'2014-12-29'</span>:<span class="string">'2015-01-01'</span>,<span class="string">'2014-12-30'</span>:<span class="string">'2015-01-01'</span>,<span class="string">'2014-12-31'</span>:<span class="string">'2015-01-01'</span>&#125;)</span><br><span class="line"><span class="comment"># map date_data from str to datetime </span></span><br><span class="line">date_data = date_data.map(<span class="keyword">lambda</span> date: pd.to_datetime(date,format=<span class="string">'%Y-%m-%d'</span>, errors=<span class="string">'ignore'</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># get year month week series data </span></span><br><span class="line">year_series = date_data.dt.year</span><br><span class="line">month_series = date_data.dt.month</span><br><span class="line">week_series = date_data.dt.week</span><br><span class="line"></span><br><span class="line"><span class="comment"># set to the dataframe to help the next group by     </span></span><br><span class="line">data[<span class="string">'week_num'</span>] = week_series</span><br><span class="line">data[<span class="string">'year_num'</span>] = year_series</span><br><span class="line">data[<span class="string">'month_num'</span>] = month_series</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># step 2 groupby with the date year and the week</span></span><br><span class="line">weeks_mean_temp = data.groupby(by=[<span class="string">'year_num'</span>,<span class="string">'week_num'</span>])[temperature_agg_name].mean()</span><br><span class="line">month_mean_temp = data.groupby(by=[<span class="string">'year_num'</span>,<span class="string">'month_num'</span>])[temperature_agg_name].mean()</span><br><span class="line"></span><br><span class="line"><span class="comment"># step 3 format and print the result </span></span><br><span class="line"></span><br><span class="line"><span class="comment"># mean weeks temp result </span></span><br><span class="line">week_result = pd.DataFrame()</span><br><span class="line">week_result[<span class="string">'Year'</span>] = weeks_mean_temp.index.map(<span class="keyword">lambda</span> index: index[<span class="number">0</span>])</span><br><span class="line">week_result[<span class="string">'Week'</span>] = weeks_mean_temp.index.map(<span class="keyword">lambda</span> index: index[<span class="number">1</span>])</span><br><span class="line">week_result[<span class="string">'MeanTemp'</span>] = weeks_mean_temp.values</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Week Mean tempreture is : \n"</span>)</span><br><span class="line">print(week_result.to_string())</span><br><span class="line">print(<span class="string">"\n"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">month_result = pd.DataFrame()</span><br><span class="line">month_result[<span class="string">'Year'</span>] = month_mean_temp.index.map(<span class="keyword">lambda</span> index: index[<span class="number">0</span>])</span><br><span class="line">month_result[<span class="string">'Month'</span>] = month_mean_temp.index.map(<span class="keyword">lambda</span> index: index[<span class="number">1</span>])</span><br><span class="line">month_result[<span class="string">'MeanTemp'</span>] = month_mean_temp.values</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Month Mean tempreture is : \n"</span>)</span><br><span class="line">print(month_result.to_string())</span><br><span class="line">print(<span class="string">"\n"</span>)</span><br></pre></td></tr></table></figure>
+<p>这个Task的主要工作就是将数据按照多个Key进行聚合，聚合的过程就好像一个分类的过程，完成了这个分类的过程以后我们可以在每个分类上都执行相同的操作，也就完成了聚合。</p>
+<h2 id="Task-Two"><a href="#Task-Two" class="headerlink" title="Task Two"></a>Task Two</h2><h3 id="2-1"><a href="#2-1" class="headerlink" title="2.1"></a>2.1</h3><p>这个任务是要求我们从一堆数据中找到所有的人和日期，保证这个人在这个日期的消费不仅大于前一天，且大于后一天，这个问题一看就是滑动窗口的思想，我们给一个三个长度的窗口，然后让这个窗口在数据集合上滑动，每一次滑动就执行一次计算，计算的结果统计出来就就可以了。</p>
+<h3 id="2-2"><a href="#2-2" class="headerlink" title="2.2"></a>2.2</h3><p>和 2.1 类似，不过滑动窗口大小是15，检查的是当前天是否任意大于前七天或者后七天中的任何一天。</p>
+<h3 id="答案"><a href="#答案" class="headerlink" title="答案"></a>答案</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">task2_solution</span><span class="params">()</span>:</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># load data from dataset file </span></span><br><span class="line">    data = pd.read_csv(task2_dataset_path, parse_dates=[<span class="string">'date'</span>])</span><br><span class="line">    data = data.sort_values(<span class="string">'date'</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># calculate the previous day and next day expenses from 1 to 7 </span></span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> range(<span class="number">7</span>):</span><br><span class="line">        pos = x + <span class="number">1</span></span><br><span class="line">        prev_key_name = <span class="string">'prev'</span> + str(pos) + <span class="string">'day_expenses'</span></span><br><span class="line">        next_day_name = <span class="string">'next'</span> + str(pos) + <span class="string">'day_expenses'</span></span><br><span class="line">        data[prev_key_name] = data.shift(pos)[<span class="string">'expenses'</span>] </span><br><span class="line">        data[next_day_name] = data.shift(-pos)[<span class="string">'expenses'</span>] </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment"># find the data which this day expenses more than previous day and next day </span></span><br><span class="line">    <span class="comment"># &amp; -&gt; and </span></span><br><span class="line">    one_day_result = data[(data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'prev1day_expenses'</span>]) &amp; (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'next1day_expenses'</span>])]</span><br><span class="line">    </span><br><span class="line">    print_result = pd.DataFrame()</span><br><span class="line">    print_result[<span class="string">'Name'</span>] = one_day_result[<span class="string">'name'</span>]</span><br><span class="line">    print_result[<span class="string">'Date'</span>] = one_day_result[<span class="string">'date'</span>]</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">"2.1 Result is :\n %s \n"</span>%print_result.to_string())</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">        </span><br><span class="line">    <span class="comment"># calculate the previous day and next day expenses </span></span><br><span class="line">    data[<span class="string">'previous_7days_expense'</span>] = data.shift(<span class="number">7</span>)[<span class="string">'expenses'</span>]</span><br><span class="line">    data[<span class="string">'next_7days_expense'</span>] = data.shift(<span class="number">-7</span>)[<span class="string">'expenses'</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># find the data which this day expenses more than previous 7 days or and next 7 days</span></span><br><span class="line">    <span class="comment"># | -&gt; or </span></span><br><span class="line">    prev7_next7_more_data = data[</span><br><span class="line">        (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'prev1day_expenses'</span>]) | (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'next1day_expenses'</span>]) |</span><br><span class="line">        (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'prev2day_expenses'</span>]) | (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'next2day_expenses'</span>]) |</span><br><span class="line">        (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'prev3day_expenses'</span>]) | (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'next3day_expenses'</span>]) |</span><br><span class="line">        (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'prev4day_expenses'</span>]) | (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'next4day_expenses'</span>]) |</span><br><span class="line">        (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'prev5day_expenses'</span>]) | (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'next5day_expenses'</span>]) |</span><br><span class="line">        (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'prev6day_expenses'</span>]) | (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'next6day_expenses'</span>]) |</span><br><span class="line">        (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'prev7day_expenses'</span>]) | (data[<span class="string">'expenses'</span>] &gt; data[<span class="string">'next7day_expenses'</span>])</span><br><span class="line">    ]</span><br><span class="line">    </span><br><span class="line">    print_result = pd.DataFrame()</span><br><span class="line">    print_result[<span class="string">'Name'</span>] = prev7_next7_more_data[<span class="string">'name'</span>]</span><br><span class="line">    print_result[<span class="string">'Date'</span>] = prev7_next7_more_data[<span class="string">'date'</span>]</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">"2.2 Result is :\n %s \n"</span>%print_result.to_string())</span><br></pre></td></tr></table></figure>
+<h2 id="Task-Tree"><a href="#Task-Tree" class="headerlink" title="Task Tree"></a>Task Tree</h2><p>就是一个简单的word count </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">task3_solution</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="comment"># load data from dataset file </span></span><br><span class="line">    data = pd.read_csv(task3_dataset_path, sep=<span class="string">" "</span>, header = <span class="keyword">None</span>, engine=<span class="string">'python'</span>)</span><br><span class="line">    <span class="comment"># pandas will reinterupt this DataFrame as row format matrix Transverse</span></span><br><span class="line">    data = data.T</span><br><span class="line">    <span class="comment"># rename from 0 to word </span></span><br><span class="line">    data = data.rename(columns=&#123;<span class="number">0</span>:<span class="string">'word'</span>&#125;)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># group by word </span></span><br><span class="line">    word_count = data.groupby(<span class="string">'word'</span>).word.count()</span><br><span class="line">    </span><br><span class="line">    result = pd.DataFrame(data=&#123;\</span><br><span class="line">                                <span class="string">'index'</span>: [x <span class="keyword">for</span> x <span class="keyword">in</span> range(word_count.count())], \</span><br><span class="line">                                <span class="string">'word'</span>: word_count.index, \</span><br><span class="line">                                <span class="string">'frequency'</span>: word_count.values \</span><br><span class="line">                                &#125;)</span><br><span class="line">    </span><br><span class="line">    result.set_index([<span class="string">'index'</span>], inplace=<span class="keyword">True</span>)</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">'Word count result is : \n %s \n'</span>%result.to_string())</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># save the result to file </span></span><br><span class="line">    result.to_csv(<span class="string">'./result.csv'</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="Resources"><a href="#Resources" class="headerlink" title="Resources"></a>Resources</h1><ul>
+<li><a href="/2020/04/pandas-sample/task1.csv">Task 1 Dataset</a></li>
+<li><a href="/2020/04/pandas-sample/task2.csv">Task 2 Dataset</a></li>
+<li><a href="/2020/04/pandas-sample/task3.txt">Task 3 Dataset</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/Pandas/" rel="tag"># Pandas</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/02/gossip/" rel="next" title="一段有趣的绯闻">
+                <i class="fa fa-chevron-left"></i> 一段有趣的绯闻
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/12/skunk-reactor-model/" rel="prev" title="Reactor 模型">
+                Reactor 模型 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于pandas"><span class="nav-number">1.</span> <span class="nav-text">关于pandas</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#一个有趣的前奏"><span class="nav-number">1.1.</span> <span class="nav-text">一个有趣的前奏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pandas"><span class="nav-number">1.2.</span> <span class="nav-text">Pandas</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据需要模式"><span class="nav-number">1.2.1.</span> <span class="nav-text">数据需要模式</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#朋友的几个作业"><span class="nav-number">2.</span> <span class="nav-text">朋友的几个作业</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Task-One"><span class="nav-number">2.1.</span> <span class="nav-text">Task One</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2"><span class="nav-number">2.1.2.</span> <span class="nav-text">1.2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3"><span class="nav-number">2.1.3.</span> <span class="nav-text">1.3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Task-Two"><span class="nav-number">2.2.</span> <span class="nav-text">Task Two</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#答案"><span class="nav-number">2.2.3.</span> <span class="nav-text">答案</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Task-Tree"><span class="nav-number">2.3.</span> <span class="nav-text">Task Tree</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Resources"><span class="nav-number">3.</span> <span class="nav-text">Resources</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

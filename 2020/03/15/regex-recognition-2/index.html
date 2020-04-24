@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
 <meta property="og:description" content="活泼又严肃地讨论一下正则表达式吧。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-04-01T18:11:43.709Z">
+<meta property="og:updated_time" content="2020-04-10T20:55:45.522Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则表达式和识别（2）">
 <meta name="twitter:description" content="活泼又严肃地讨论一下正则表达式吧。">
@@ -292,7 +292,7 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-14T23:16:26Z">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-03-15T07:16:26+08:00">
                 2020-03-14
               </time>
             
@@ -360,11 +360,8 @@
 <li>仅仅支持ascii字符</li>
 <li>运算符号 <code>*</code> <code>+</code> <code>?</code> <code>(</code> <code>)</code> <code>|</code></li>
 </ul>
-<p>是的没有看错就是连字符通配符号都没有的原汁原味的正则表达式，但是在那个埃尼阿克刚刚十几岁的时代，这个玩意还挺好用的。</p>
-<h2 id="Turing-机"><a href="#Turing-机" class="headerlink" title="Turing 机"></a>Turing 机</h2><p>一般提到正则表达式的时候，基本都会提到Turing老爷子，毕竟Turing机是上文&lt;<a href="/2020/03/14/regex-parser-overriw/">RegEx Parser 的实现（1）</a>&gt;的超集，也就是说上一篇文章说到的什么<code>DFA</code>、<code>NFA</code>什么的都是Turing机的特殊化，那现在我们就看看这个Turing机是什么东西吧。</p>
-<p>在正式开始简单介绍这个东西之前呢，先把老爷子的paper拿出来整个排面<a href="https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf" target="_blank" rel="noopener">ON COMPUTABLE NUMBERS, WITH AN APPLICATION TO THE ENTSCHEIDUNGSPROBLEM</a>。</p>
-<h1 id="NFA"><a href="#NFA" class="headerlink" title="NFA"></a>NFA</h1><p>任何的正则表达式都可以表示成为一个<code>NFA</code>，在上一份文章&lt;<a href="/2020/03/14/regex-parser-overriw/">RegEx Parser 的实现（1）</a>&gt;中我们讨论如何手写去识别一个特定的单词，那么有了正则表达式就可以识别特定的单词，在正则表达式的定义中，发现有了运算符号，字符就可以重复了，不过这不重要，重复的匹配模式可以用分治的思想给他拆成一个个独立的字符，那么所有的字符都可以用这样的一个指令来表示来识别: $S_1 \underrightarrow{a} S_2$，这个东西的含义呢就是当现在的扫描器处于状态$S_1$时如果接受一个字符$a$那么下一个状态就是$S_2$。那么如果没有正则表达式中那几个讨厌的不确定符号: <code>*</code> <code>+</code>这个问题就变的简单了。直接把所有的字母都转换成为 $S_1 \underrightarrow{a} S_2$ 这种形式，然后连接起来就好了呀，然后接着按照&lt;<a href="/2020/03/14/regex-parser-overriw/">RegEx Parser 的实现（1）</a>&gt;中套路去匹配就好了！</p>
-<p>但是事情总是会变得糟糕，出现了<code>*</code> <code>+</code>这几个可以重复的符号，可以将他前面的状态重复的符号，这个事情就变得不确定了，因为 <code>*</code> <code>+</code> 这两个的存在，所以不知道到底要匹配多少回，那么连接起来就比较麻烦了，所以<code>NFA</code>就出来了。</p>
+<p>是的没有看错就是连字符通配符号都没有的原汁原味的正则表达式，但是在那个埃尼阿克刚刚十几岁的时代，这个玩意还挺好用的。但是后来，这个东西被无限的扩展，出现了所谓的后向引用之类的新概念了，还有<code>POSIX</code>等等等规范，不过依旧是正则表达式用来做语言匹配的。</p>
+<h2 id="a-b"><a href="#a-b" class="headerlink" title="a|b"></a>a|b</h2><p>首先呢从<code>a|b</code>这个简单的正则表达式说起</p>
 
       
     </div>
@@ -484,7 +481,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -495,7 +492,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -506,7 +503,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
@@ -555,7 +552,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#正则表达式"><span class="nav-number">1.</span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Turing-机"><span class="nav-number">1.1.</span> <span class="nav-text">Turing 机</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NFA"><span class="nav-number">2.</span> <span class="nav-text">NFA</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#正则表达式"><span class="nav-number">1.</span> <span class="nav-text">正则表达式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#a-b"><span class="nav-number">1.1.</span> <span class="nav-text">a|b</span></a></li></ol></li></ol></div>
             
 
           </div>

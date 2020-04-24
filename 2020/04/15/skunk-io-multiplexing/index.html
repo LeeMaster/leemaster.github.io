@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,Skunk," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一份应该还算不错的I/O文章-_-">
+<meta name="keywords" content="C++,Skunk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="I&#x2F;O 复用">
+<meta property="og:url" content="http://leemaster.cn/2020/04/15/skunk-io-multiplexing/index.html">
+<meta property="og:site_name" content="LeeMaster&#39;s Blog">
+<meta property="og:description" content="一份应该还算不错的I/O文章-_-">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2020-04-16T18:42:51.851Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="I&#x2F;O 复用">
+<meta name="twitter:description" content="一份应该还算不错的I/O文章-_-">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://leemaster.cn/2020/04/15/skunk-io-multiplexing/"/>
+
+
+
+
+
+  <title>I/O 复用 | LeeMaster's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">LeeMaster's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Find More effective things</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-resources">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            Resources
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://leemaster.cn/2020/04/15/skunk-io-multiplexing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="LeeMaster">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="LeeMaster's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">I/O 复用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-04-15T01:35:17Z">
+                2020-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Skunk/" itemprop="url" rel="index">
+                    <span itemprop="name">Skunk</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>一份应该还算不错的I/O文章-_-</p>
+<a id="more"></a>
+<h1 id="I-O"><a href="#I-O" class="headerlink" title="I/O"></a>I/O</h1><p>首先我们很清楚我们的计算机的工作就是利用程序处理数据，但是随着数据的增长，内存就装不下数据了，所以需要到更大的存储上去拿数据，但是我们的CPU只能看到内存上的数据，那么怎么从更大的存储拿数据到内存上呢？是的也就是操作系统中的I/O系统的概念。</p>
+<p>那么I/O系统如何工作的呢？我们知道我们的计算机拥有总线，用来连接CPU和外围设备，有这个东西的原因其实是设计中的一个重要概念——抽象，我们可以有各种各样的设备，设备的本质还是把外面的数据拿到CPU计算，然后在通过设备输出出来，这样厂商们就不关心怎么和CPU交互了，直接研究怎么和总线交互就行了，因为我们的CPU和总线有总线通信的协议，当然总线和外围设备也有外围设备的通信协议。符合这个协议，外部的设备就可以正常的提供和接受数据了。</p>
+<p>那么CPU和外围设备怎么进行通信的呢，也就是CPU怎么知道外围设备准备好数据可以读了，或者准备好被写入了，对于这个事情，操作系统的抽象是——中断，当外围设备准备好数据的时候，会产生一个数据准备完成的中断事件，然后CPU响应中断事件，响应完成了再把中断位改回来，毕竟计算机里很多的异步工作都可以用事件来抽象。</p>
+<p>关于更多I/O的概念可以参考<a href="https://doc.lagout.org/Operating%20System%20Concepts.pdf" target="_blank" rel="noopener">Operating System Concepts</a>中第13章节的内容。</p>
+<h2 id="传统I-O"><a href="#传统I-O" class="headerlink" title="传统I/O"></a>传统I/O</h2><p>在开始写传统I/O的内容前呢，还是要感叹一波Linux的万物皆文件的设计，我们在介绍I/O的时候，我们知道计算机硬件已经将各种外围设备抽象了，通过总线和CPU交互，那么在操作系统内，如何解释这些设备呢？没错就是文件的概念，Linux中所有的设备都可以叫做文件。只要是文件就可以读写，那么传统I/O就是使用操作系统提供的系统调用来进行读写数据的过程。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">read_func</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line">  <span class="keyword">int</span> fd,n;</span><br><span class="line">  fd = open(<span class="string">"tmpfile"</span>, O_RDONLY);</span><br><span class="line">  <span class="keyword">while</span>((n = read(fd, buffer, <span class="number">1024</span>)) &gt; <span class="number">0</span>)&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%s"</span>, buffer);</span><br><span class="line">  &#125;</span><br><span class="line">  close(fd)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">write_func</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">char</span> buffer[<span class="number">1024</span>];</span><br><span class="line">  <span class="keyword">int</span> fd,n;</span><br><span class="line">  buffer = <span class="string">"helloworld"</span>;</span><br><span class="line">  fd = open(<span class="string">"tmpfile"</span>, O_RDWR);</span><br><span class="line">  n = write(fd, buffer, <span class="number">1024</span>);</span><br><span class="line">  close(fd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>代码已经把传统I/O解释清楚了，继续下面的Topic;</p>
+<h2 id="I-O复用"><a href="#I-O复用" class="headerlink" title="I/O复用"></a>I/O复用</h2><p>传统的I/O程序会带来一个阻塞的问题，上文我们的程序是读文件，如果把文件描述符号换成<code>STDIN_FILENO</code>也就是标准输入的话，在读到<code>EOF</code>前，我们会发现我们的程序并没有退出，而是一直阻塞在<code>read</code>调用的地方，这个问题在我们自己单独机器运行个命令行工具看起来没啥问题，阻塞就等着呗，但是我们上文说到，所有的设备都是文件，那么网卡这个东西也是一个文件（当然可能不太准确，毕竟这玩意正式的编程名称叫socket），网卡用来进行网络通信，如果是客户端好像也没啥问题，但是如果用这个玩意做服务器的话，问题就来了，因为会在一瞬间有一群请求到网卡上，而我们的I/O方式如果使用传统I/O的话，那么我们在同一瞬间只能服务一个用户，如果瞬间有一群用户的话，只有一个人能接受服务，剩下的人都跪了。</p>
+<p>所以为了解决这个问题，我们需要让我们的I/O能同时处理很多的请求，解决这个问题的原理就是<code>在设备可读之前有一段时间是准备数据的过程，在网络编程中这个时间是三次握手后第一段数据传递过来的网络时间（毫秒级别），磁盘的内存寻道过程（纳秒级别）</code>，有这个时间差，如果我们的系统使用的是阻塞的方式的话，这段时间我们什么都干不了，看起来不多，但是架不住多呀。</p>
+<p>在一开始就说了，I/O是通过总线进行的，在设备准备数据的这段时间内，其实总线是闲着的，总线闲着那么CPU也是闲着的，那么这段时间当然还会有其他的请求到达，我们也可以处理呀，怎么办，就是I/O复用，这里我觉得各种文章都把这个概念搞的太邪乎了，其实I/O复用，用一种错误的但是让我们比较清晰的概念来解释就是<code>复用I/O总线，让I/O总线一直有事情做！</code>。</p>
+<h3 id="Select"><a href="#Select" class="headerlink" title="Select"></a>Select</h3><p>为了实现I/O复用，Linux提供了<code>select</code>调用，用来监听文件，在这个抽象中，我们把文件上操作发生的事件分为三类</p>
+<ul>
+<li>READ 可读事件</li>
+<li>WRITE 可写事件</li>
+<li>ERROR 错误事件</li>
+</ul>
+<p>一个文件的时候还看不出来什么，但是如果一堆文件的时候，就能看出来，这里我们选择从一个文件读出，然后打印到标准输出中，假设这个文件在被读取的同时还有一个人在不停的写入，那么如果使用<code>read</code>调用的话就麻烦咯，这个时候会被阻塞住，收到消息再打印到标准输出中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/select.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE 100</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">select_func</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">ssize_t</span> nbytes;</span><br><span class="line">  <span class="keyword">int</span> file;</span><br><span class="line">  fd_set read_set;</span><br><span class="line">  <span class="keyword">char</span> buffer[<span class="number">10</span>];</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  file = open(<span class="string">"./data"</span>, O_RDONLY);</span><br><span class="line">  <span class="keyword">if</span>(file &lt; <span class="number">0</span>)&#123;</span><br><span class="line">    perror(<span class="string">"Open Data File Failed !"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  FD_ZERO(&amp;read_set);</span><br><span class="line">  FD_SET(file, &amp;read_set);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">    <span class="keyword">if</span>(select(SIZE, &amp;read_set, <span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">      perror(<span class="string">"Select Failed"</span>);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>;i &lt; SIZE; i++)&#123;</span><br><span class="line">      <span class="keyword">if</span>(FD_ISSET(file, &amp;read_set))&#123;</span><br><span class="line">        <span class="keyword">if</span>((nbytes = read(file, &amp;buffer, <span class="number">10</span>)) &gt;= <span class="number">0</span>)&#123;</span><br><span class="line">          <span class="keyword">if</span>(nbytes == <span class="number">0</span>)&#123;</span><br><span class="line">            sleep(<span class="number">1</span>);</span><br><span class="line">          &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">"%s"</span>, buffer);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可能这个例子还不是很恰当，不过已经展示了<code>select</code>的用法，并且实现了一个简单的<code>tail -f</code>功能，监听文件是否有后续的写入。</p>
+<h3 id="Poll"><a href="#Poll" class="headerlink" title="Poll"></a>Poll</h3><p>虽然<code>select</code>已经挺好用的了，但是在Linux的实现中<code>select</code>的文件描述符的个数是有限制，对于超大规模的系统来说，可能就不太够了，所以这个时候就诞生了<code>poll</code>系统调用，也是利用轮循的方式来监听文件事件，然后通知用户程序进行处理。</p>
+<h2 id="非阻塞I-O"><a href="#非阻塞I-O" class="headerlink" title="非阻塞I/O"></a>非阻塞I/O</h2><h3 id="Epoll"><a href="#Epoll" class="headerlink" title="Epoll"></a>Epoll</h3><h3 id="Edge-Level-Trigger"><a href="#Edge-Level-Trigger" class="headerlink" title="Edge/Level Trigger"></a>Edge/Level Trigger</h3><h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://eklitzke.org/blocking-io-nonblocking-io-and-epoll" target="_blank" rel="noopener">Blocking I/O, Nonblocking I/O, And Epoll</a></li>
+<li><a href="http://pl.atyp.us/content/tech/servers.html" target="_blank" rel="noopener">High Performance Server</a></li>
+<li><a href="https://doc.lagout.org/Operating%20System%20Concepts.pdf" target="_blank" rel="noopener">Operating System Concepts</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Skunk/" rel="tag"># Skunk</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/04/12/skunk-reactor-model/" rel="next" title="Reactor 模型">
+                <i class="fa fa-chevron-left"></i> Reactor 模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/16/cmake-overview/" rel="prev" title="Yet another CMake toturial">
+                Yet another CMake toturial <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">LeeMaster</p>
+              <p class="site-description motion-element" itemprop="description">LeeMaster's Blog</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/leemaster" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:leemast3r@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#I-O"><span class="nav-number">1.</span> <span class="nav-text">I/O</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#传统I-O"><span class="nav-number">1.1.</span> <span class="nav-text">传统I/O</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#I-O复用"><span class="nav-number">1.2.</span> <span class="nav-text">I/O复用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Select"><span class="nav-number">1.2.1.</span> <span class="nav-text">Select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Poll"><span class="nav-number">1.2.2.</span> <span class="nav-text">Poll</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非阻塞I-O"><span class="nav-number">1.3.</span> <span class="nav-text">非阻塞I/O</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Epoll"><span class="nav-number">1.3.1.</span> <span class="nav-text">Epoll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Edge-Level-Trigger"><span class="nav-number">1.3.2.</span> <span class="nav-text">Edge/Level Trigger</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">LeeMaster</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
