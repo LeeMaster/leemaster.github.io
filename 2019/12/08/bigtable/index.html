@@ -87,10 +87,13 @@
 <meta property="og:site_name" content="LeeMaster&#39;s Blog">
 <meta property="og:description" content="看看google怎么管理这么大的一张表的吧。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2020-04-01T18:35:52.550Z">
+<meta property="og:image" content="http://leemaster.cn/2019/12/08/bigtable/bigtable1.png">
+<meta property="og:image" content="http://leemaster.cn/2019/12/08/bigtable/bigtable2.png">
+<meta property="og:updated_time" content="2020-05-02T17:31:56.013Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一张BigTable">
 <meta name="twitter:description" content="看看google怎么管理这么大的一张表的吧。">
+<meta name="twitter:image" content="http://leemaster.cn/2019/12/08/bigtable/bigtable1.png">
 
 
 
@@ -354,6 +357,76 @@
       
         <p>看看google怎么管理这么大的一张表的吧。</p>
 <a id="more"></a>
+<h1 id="BigTable解决的问题"><a href="#BigTable解决的问题" class="headerlink" title="BigTable解决的问题"></a>BigTable解决的问题</h1><p>Google 的主要业务其实还是搜索，搜索引擎中的数据大部分来自于Google的网路爬虫，在BigTable提出之前，也是互联网数据开始膨胀的时候，Google意识到了单台数据库实例已经存不下数据了，或者说存得下数据但是没有办法快速的检索了，又或者没有办法快速的进行ETL。所以Google就开始探索大数据的世界了，BigTable就是在这个背景下被研究出来的。BigTable主要实现了以下的三个特性：</p>
+<ul>
+<li>广泛的应用范围 （KV模式挺好用的）</li>
+<li>高性能 （数据分片，流量分散）</li>
+<li>高可用（数据冗余）</li>
+</ul>
+<h2 id="BigTable的数据模型"><a href="#BigTable的数据模型" class="headerlink" title="BigTable的数据模型"></a>BigTable的数据模型</h2><p>论文中说BigTable是一个稀疏的分布式持久化多维索引Map，内部的保存方式其实还是一个KV形式，那么这个名词拆解以下，有几个概念</p>
+<ol>
+<li>多维</li>
+<li>索引Map</li>
+<li>分布式持久化</li>
+</ol>
+<h3 id="解释上面的三个概念"><a href="#解释上面的三个概念" class="headerlink" title="解释上面的三个概念"></a>解释上面的三个概念</h3><p>分布式持久化，这个概念其实还蛮好解释的，我们的数据持久化到磁盘上，并且是分布式持久化的，分布式持久化的一个隐含意思就是我们的数据是有冗余备份的，因为BigTable是要求高可用的，也就是我们的不能让我们的数据产生单点，一旦这个单点崩溃了，如果数据修复不了，那相当于我们的数据就完全丢失掉了。</p>
+<p>关于多维这个概念其实还挺难理解的，不过如果我们对标一下关系型数据库中的二级索引和主索引的关系，应该就清晰很多了</p>
+<p><img src="/2019/12/08/bigtable/bigtable1.png" alt=""></p>
+<p>这张图中，google的爬虫的搜索结果，分为了三部分，一部分是网站内容，一部分是锚点。然后整个在一个大表格内，检索数据的方式也很简单 $(row:sring, column:string, timestamp:int64) -&gt; conten:string$，就是我们给定一个Key检索回来一个value，在这个图内，如果我想检索<code>CNN</code>那么我只需要<code>(row:com.cnn.www, column:anchor:cnnsi.com, t9)</code> 就可以拿到这个对应的数据了。因为这个特性所以我们可以根据业务的实际需求，建立不同的Key的构造方式就好了，然后实际的存储BigTable和Redis也差不多就是一个KV存储。</p>
+<h3 id="BigTable中的Rows"><a href="#BigTable中的Rows" class="headerlink" title="BigTable中的Rows"></a>BigTable中的Rows</h3><p>Bigtable支持行存储的特性，那么在Bigtable中，遵守下面的性质：</p>
+<ol>
+<li>对于单行数据，Bigtable的读写都是原子的，隐含的意思就是这个读写会有行级锁</li>
+<li>Bigtable维护的数据是按照行的Key的字典序进行排序的，这个性质可以支持我们的<code>scan</code>操作，也就是我们可以进行迭代了，当然数据分区也可以利用这个东西了</li>
+</ol>
+<p>这样设计的原因其实还是因为数据其实在某种程度上是可以进行分组聚合的，通过Bigtable的这种设计可以简化聚合的操作，也提升磁盘的运作效率，在逻辑上聚合在一起的数据，大多数数据库系统一般会把这些数据存储在连续的盘块上。</p>
+<h3 id="Bigtable中的Column-Families"><a href="#Bigtable中的Column-Families" class="headerlink" title="Bigtable中的Column Families"></a>Bigtable中的Column Families</h3><p>如果说Rows是为了支持行存储，那么Column Families就是为了支持列存储而存在的，关于列存储可能在大数据分析中其实还比较常见，因为存在大宽表，大宽表的存在一行一行的拿数据进行数据处理，非常的不划算，那么干脆就按照字段进行列存储把。</p>
+<p>论文中也说了，关于Column Families的定义就是，某个Column Families下的数据类型都是同一的，也就是我们在某个Column Families下面都是一致的类型，那么在上层应用处理数据的时候就会方便很多，直接按照同样的数据解析方式进行数据解析然后计算就好了。</p>
+<p>Bigtable中关于<code>column Key</code>的生成规则就是这样的<code>familiy:quilifier</code>，用一句话解释就是，某个列下的某个特征的数据，如果我们不关心到底是哪个标记下的数据，那么可以直接使用<code>familiy:*</code>，这样的查询语法直接就把一列数据都给拉出来了。</p>
+<h3 id="Bigtable中的Timestap"><a href="#Bigtable中的Timestap" class="headerlink" title="Bigtable中的Timestap"></a>Bigtable中的Timestap</h3><p>Bigtable中的时间戳是用来实现多版本访问的，因为Bigtable的设计上其实是一个增量存储，删除的部分是在Bigtable内部的GC阶段完成的，具体可以参考LevelDB的后台线程收集垃圾的过程。</p>
+<h2 id="API-和存储方式"><a href="#API-和存储方式" class="headerlink" title="API 和存储方式"></a>API 和存储方式</h2><h3 id="API"><a href="#API" class="headerlink" title="API"></a>API</h3><p>Bigtable提供的API可以通过这样两段程序描述</p>
+<p>写入和删除过程：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Table * T = OpenOrDie(<span class="string">"/tablefile"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function">RowMutation <span class="title">r1</span><span class="params">(T, <span class="string">"rowKey"</span>)</span></span>;</span><br><span class="line">r1.Set(<span class="string">"columnkey"</span>, <span class="string">"data"</span>);</span><br><span class="line">r1.Delete(<span class="string">"columnkey"</span>);</span><br><span class="line">Operation op;</span><br><span class="line">Applay(&amp;op, &amp;r1);</span><br></pre></td></tr></table></figure>
+<p>读取过程：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Scanner <span class="title">scanner</span><span class="params">(T)</span></span>;</span><br><span class="line">ScanStream * stream;</span><br><span class="line">stream = ScannerFetchColumnFamily(<span class="string">"column family"</span>);</span><br><span class="line">stream -&gt; SetAllVersions();</span><br><span class="line"><span class="keyword">for</span>(; strea -&gt; Done(); stream -&gt; Next())&#123;</span><br><span class="line">  <span class="comment">// ops</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们发现Bigtable的删除和新增数据都被叫做了写入过程，然后读取呢，其实是通过一个迭代器模式进行读取的。同时Bigtable提供了简单的单行事务支持，也就是通过版本号（Timestamp）实现了简单的MVCC，应该是Bigtable内部会对这样的一个元组进行上锁 (rowKey,column,timestamp) 这样就相当于在一个Cell上实现了原子的RWM。</p>
+<h3 id="存储方式"><a href="#存储方式" class="headerlink" title="存储方式"></a>存储方式</h3><p>Bigtable也可以被看作是一个数据库，一般来说，数据库的存储基本单元是一个一个的块（block），而随着数据的增多，多个块也就组成了类似的大块，Bigtable实现的是Google的SSTable格式，其中一个Block的大小是64KB，多个块组成了一个SSTable文件，当检索一个SSTable文件的时候，Bigtable会将SSTable文件内的索引部分直接放到内存中，然后根据索引去检索块（其实就是将一个一个的数据块从磁盘上搬运到内存中，很像Mysql的BufferPool）。</p>
+<p>Bigtable既然是一个<code>高可用</code>的数据库，那么一定是不存在单点问题的，这里Bigtable使用的是Google内部的Chubby组件，来协调数据replica过程，首先Bigtable节点会选出一个主，来负责接受客户端的请求，然后写入成功后将数据拷贝到其slave节点上。</p>
+<h2 id="Bigtable的实现"><a href="#Bigtable的实现" class="headerlink" title="Bigtable的实现"></a>Bigtable的实现</h2><p>在实现上，Bigtable分成了三部分，分别是客户端程序，master-server（协调节点，类似Hadoop的Namenode），tablet-server（存储节点，类似Hadoop的Datanode）。</p>
+<h3 id="Master节点的职责"><a href="#Master节点的职责" class="headerlink" title="Master节点的职责"></a>Master节点的职责</h3><p>Google的很多分布式轮子都是没有放弃主的，也就是还是会有主节点在进行分布式协调。</p>
+<p>在Bigtable中，Client负责和Master节点通信，来拿到实际的数据分区表，然后和对应的Tablet Server通信，把数据写进去，或者把数据删除掉。所以在整个Bigtable中，保持高可用的第一步就是利用Chubby完成Master的集群化，保证一个主节点的高可用，同时在Master集群前使用SLB完成负载均衡，保证流量能均衡的打到多个主节点上。</p>
+<h3 id="Tablet-Server"><a href="#Tablet-Server" class="headerlink" title="Tablet Server"></a>Tablet Server</h3><p>TabletServer 就是Bigtable中真实存储数据的节点了，上文我们知道Tablet通过将数据格式化成SStable进行存储，在实现上，Google的Tablet是通过Leveldb实现的。为了提升存储效率，Tablet Server在维护数据上，当存储的数据达到了某个阀值会自动的进行分裂，分裂后会改变表中数据的位置信息。</p>
+<h2 id="Tablet-的位置"><a href="#Tablet-的位置" class="headerlink" title="Tablet 的位置"></a>Tablet 的位置</h2><p>首先我们来看一张图</p>
+<p><img src="/2019/12/08/bigtable/bigtable2.png" alt=""></p>
+<p>首先是一个Chubby files，这个东西呢，其实可以当作一个分布式系统上的指针，直接指向的就是某个Root Tablet，然后这个RootTablet其实是一个地址表，指向了一个二级地址表，二级地址表最终指向了数据表，其实还很像BTree的索引方式的，Bigtable对这个二级索引表有了一个要求，就是二级索引表不能再分裂了，因为在分布式系统上的寻址操作，远远高于磁盘上的寻址操作。</p>
+<p>那么这个索引信息是根据什么维护的呢？是的就是根据Bigtable定义中的rowkey维护的。</p>
+<p>那么既然客户端是直接和Tablet Server交互的，这个地址表其实就像DNS一样还挺重要的，主要的步骤</p>
+<ol>
+<li>Client 发现某个客户端缓存的地址是错误的，也就是引用到了错误的Chubby Files</li>
+<li>递归删除Cache中的这个Chubby 信息</li>
+<li>如果当前Cache的缓存为空，那么去Master通信拿到新的表地址信息</li>
+</ol>
+<p>当然在Client启动的时候，就是和Master通信，来获取这个信息，当Cache Miss的时候也是去Master进行信息的更新。</p>
+<h2 id="Tablet-放置"><a href="#Tablet-放置" class="headerlink" title="Tablet 放置"></a>Tablet 放置</h2><p>Bigtable最重要的部分了，上面可能理解起来比较难一点，因为看起来都是拆解的分析的，现在需要把上面的这些概念都合并到一起，首先我们拥有概念和设计分别如下：</p>
+<ol>
+<li>Master节点负责监控Tablet Server的运行状态</li>
+<li>Master节点负责和Client进行元信息通信，交换Tablet位置信息（METADATA）</li>
+<li>Tablet Server 负责保持数据的存储能力（Tablet Server 负责和GFS通信，完成数据的存储，并保持数据的稳定，进行数据分裂等操作）</li>
+<li>Tablet内数据的组织是按照RowKey进行排序的，所以在任意一个TabletServer中所有的索引是全局有序的。</li>
+</ol>
+<p>那么怎么放置和reblance这些tablet呢？这个问题其实和K8S中的调度问题也差不多（略懂K8S-_-），问题拆解以后，就是把目标物放到目标的位置，然后这个事情就完事了。当然这里会提出一个问题，数据冗余备份保持高可用怎么办，诶，好问题啊，论文里没有讲怎么实现备份，但是备份这个事，你想一想是不是和multi-raft还蛮像的，我觉得TabletServer自己实现了一波内部的选举，然后在内部实现了一个multi-paxos实现了数据的replica，备份完成了以后会到主节点进行注册。然后客户端再找Master要信息的时候就简单多了，Master不仅知道某个Tablet在那几个机器上还知道备份信息，当然要是比较坑，直接备份都跪了，那也没办法了，毕竟分布式没有银弹。</p>
+<h3 id="客户端建立一个新的Tablet怎么办？"><a href="#客户端建立一个新的Tablet怎么办？" class="headerlink" title="客户端建立一个新的Tablet怎么办？"></a>客户端建立一个新的Tablet怎么办？</h3><p>在上面讨论了，客户端直接和TabletServer进行数据交互，如果是一个新的RowKey，那么客户端的代码应该是这样的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Table * T = OpenOrDie(<span class="string">"/newtable"</span>);</span><br><span class="line"></span><br><span class="line"><span class="function">RowMutation <span class="title">r1</span><span class="params">(T, <span class="string">"rowKey"</span>)</span></span>;</span><br><span class="line">r1.Set(<span class="string">"columnkey"</span>, <span class="string">"data"</span>);</span><br><span class="line">r1.Delete(<span class="string">"columnkey"</span>);</span><br><span class="line">Operation op;</span><br><span class="line">Applay(&amp;op, &amp;r1);</span><br></pre></td></tr></table></figure>
+<p>那么客户端一定在缓存内找不到对应的元信息，也就是集群中没有这个tablet的存储位置，那么Master会寻找一个位置（TabletServer）来建立这个新的Tablet元信息，当然也会同步更新内部的数据，然后Master会利用Chubby 完成新增信息的同步，同步到其他的Master节点上。然后再返回给客户端这个Tablet的信息。</p>
+<h3 id="Master怎么发现TabletServer的呢？"><a href="#Master怎么发现TabletServer的呢？" class="headerlink" title="Master怎么发现TabletServer的呢？"></a>Master怎么发现TabletServer的呢？</h3><p>这个也好办，Master启动了以后会在Chubby服务中注册一个Server目录，然后TabletServer启动了以后，在这个Server目录下注册自己，相当于完成了一个独占锁的创建（其实是注册Tablet Sever下的全部Tablet信息），然后这样一个Tablet就被注册上了，是不是很像微服务架构中的服务注册中心，Master会通过Chubby提供的接口监听到这个注册事件，然后更新Master的元信息表。</p>
+<h3 id="TabletServer崩溃了怎么办？"><a href="#TabletServer崩溃了怎么办？" class="headerlink" title="TabletServer崩溃了怎么办？"></a>TabletServer崩溃了怎么办？</h3><p>TabletServer崩溃的时候，相当于节点丢失了，那么注册在Chubby上的锁也应该被去除，所以，这里就是我们经常见到的RedLock中的租期的概念，简单描述一下流程吧</p>
+<ol>
+<li>TabletServer启动后在Chubby的Master 注册的目录下完成自己的Tablet注册</li>
+<li>利用Chubby给这些Tablet信息创建一个过期时间（相当于租期的概念）</li>
+<li>TabletServer 会定期的续约，一旦续约失败，那么Master会主动调度一个新的TabletServer来承接这个Tablet信息（具体用哪个呢？也就是TabletServcer Replica机制会更新Master的元信息）</li>
+</ol>
+<h3 id="Master如何主动摘除？"><a href="#Master如何主动摘除？" class="headerlink" title="Master如何主动摘除？"></a>Master如何主动摘除？</h3><p>Master节点负责在整个系统中维护一个良好的数据均衡和请求均衡，那么Master一定是可以进行TabletServer节点摘除的，但是摘除的时候，这个TabletServer上是有数据的怎么办呢？也是上文说的TabletServer负责进行自助选主，完成一个又一个Tablet的数据一致性（这里其实应该是在保持最终一致，选用的协议可能比较简单）</p>
+<h2 id="TabletServer的服务方式"><a href="#TabletServer的服务方式" class="headerlink" title="TabletServer的服务方式"></a>TabletServer的服务方式</h2><p>论文中这个地方其实就是简单讲了讲LevelDB的抽象概念。所以我也就不多说了，Memtable走天下。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>后面的论文其实没有什么解释的必要了，因为都是性能比对和一些性能优化，比如利用Bloom filter 快速检查一个RowKey，利用压缩技术（Snappy，RowKey的前缀压缩）提升空间利用率，还有错误恢复等等等，这些都是建立在Bigtable对数据抽象的基础上，Bigtable最大的亮点其实是将行存储和列存储混合到了一起。而在实现上没有脱离中心化的集群设计，非常简单且实用的设计思路。</p>
 
       
     </div>
@@ -448,8 +521,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -464,7 +546,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -475,7 +557,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">categories</span>
                 </a>
               </div>
@@ -486,7 +568,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
@@ -525,6 +607,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BigTable解决的问题"><span class="nav-number">1.</span> <span class="nav-text">BigTable解决的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#BigTable的数据模型"><span class="nav-number">1.1.</span> <span class="nav-text">BigTable的数据模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解释上面的三个概念"><span class="nav-number">1.1.1.</span> <span class="nav-text">解释上面的三个概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BigTable中的Rows"><span class="nav-number">1.1.2.</span> <span class="nav-text">BigTable中的Rows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bigtable中的Column-Families"><span class="nav-number">1.1.3.</span> <span class="nav-text">Bigtable中的Column Families</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bigtable中的Timestap"><span class="nav-number">1.1.4.</span> <span class="nav-text">Bigtable中的Timestap</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API-和存储方式"><span class="nav-number">1.2.</span> <span class="nav-text">API 和存储方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#API"><span class="nav-number">1.2.1.</span> <span class="nav-text">API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存储方式"><span class="nav-number">1.2.2.</span> <span class="nav-text">存储方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bigtable的实现"><span class="nav-number">1.3.</span> <span class="nav-text">Bigtable的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Master节点的职责"><span class="nav-number">1.3.1.</span> <span class="nav-text">Master节点的职责</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tablet-Server"><span class="nav-number">1.3.2.</span> <span class="nav-text">Tablet Server</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tablet-的位置"><span class="nav-number">1.4.</span> <span class="nav-text">Tablet 的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tablet-放置"><span class="nav-number">1.5.</span> <span class="nav-text">Tablet 放置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端建立一个新的Tablet怎么办？"><span class="nav-number">1.5.1.</span> <span class="nav-text">客户端建立一个新的Tablet怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Master怎么发现TabletServer的呢？"><span class="nav-number">1.5.2.</span> <span class="nav-text">Master怎么发现TabletServer的呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TabletServer崩溃了怎么办？"><span class="nav-number">1.5.3.</span> <span class="nav-text">TabletServer崩溃了怎么办？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Master如何主动摘除？"><span class="nav-number">1.5.4.</span> <span class="nav-text">Master如何主动摘除？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TabletServer的服务方式"><span class="nav-number">1.6.</span> <span class="nav-text">TabletServer的服务方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -719,6 +817,26 @@
   
 
   
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
   
 
 
