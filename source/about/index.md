@@ -1,20 +1,11 @@
 ---
-title: 关于
+title: About
 date: 2018-05-13 18:20:44
 ---
 
-一个在开水团写java的非典型程序员。
+Currently I mainly writing Elixir/Elang in my company to maintain the IM system.
 
-### VPN优惠连接
+I am interested in Distributed System and Database, specially Query Engine.
 
-https://bywave.pro/aff.php?aff=860
-
-### 联系我
-
-leemast3r@gmail.com
-
-### 简介
-
-上班写Java和Golang，下班写Rust，爱好分布式系统。
 
 
